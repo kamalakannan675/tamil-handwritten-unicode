@@ -260,13 +260,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST',
                 body: formData
             });
-            const data = await response.json();
 
-            if (data.success) {
-                displayResult(data);
+            let data;
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                data = await response.json();
             } else {
-                showError(data.error || 'Recognition failed.');
+                await response.text();
+                if (!response.ok) {
+                    showError(`Recognition failed: Server returned HTTP ${response.status} (${response.statusText || 'Error'}).`);
+                } else {
+                    showError('Recognition failed: Server returned non-JSON response.');
+                }
+                return;
             }
+
+            if (!response.ok || !data.success) {
+                showError(data.error || `Recognition failed with HTTP ${response.status}.`);
+                return;
+            }
+
+            displayResult(data);
         } catch (err) {
             showError(`Network connection error: ${err.message}`);
         } finally {
@@ -291,13 +305,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ image: base64Image })
             });
-            const data = await response.json();
 
-            if (data.success) {
-                displayResult(data);
+            let data;
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                data = await response.json();
             } else {
-                showError(data.error || 'Drawing recognition failed.');
+                await response.text();
+                if (!response.ok) {
+                    showError(`Drawing recognition failed: Server returned HTTP ${response.status} (${response.statusText || 'Error'}).`);
+                } else {
+                    showError('Drawing recognition failed: Server returned non-JSON response.');
+                }
+                return;
             }
+
+            if (!response.ok || !data.success) {
+                showError(data.error || `Drawing recognition failed with HTTP ${response.status}.`);
+                return;
+            }
+
+            displayResult(data);
         } catch (err) {
             showError(`Network connection error: ${err.message}`);
         } finally {

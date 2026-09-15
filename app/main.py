@@ -46,20 +46,34 @@ def health_check():
 
 @app.route('/api/health', methods=['GET'])
 def health():
-    engine = get_inference_engine()
-    return jsonify({
-        'status': 'healthy',
-        'model_loaded': engine.model is not None,
-        'checkpoint_path': engine.checkpoint_path,
-        'num_classes': NUM_CLASSES,
-        'timestamp': datetime.now().isoformat()
-    })
+    try:
+        engine = get_inference_engine()
+        model_ok = engine.model is not None
+        ckpt_exists = os.path.exists(engine.checkpoint_path)
+        ckpt_size = os.path.getsize(engine.checkpoint_path) if ckpt_exists else 0
+        return jsonify({
+            'status': 'healthy' if model_ok else 'unhealthy',
+            'model_loaded': model_ok,
+            'checkpoint_path': engine.checkpoint_path,
+            'checkpoint_size_bytes': ckpt_size,
+            'load_error': getattr(engine, 'load_error', None),
+            'num_classes': NUM_CLASSES,
+            'timestamp': datetime.now().isoformat()
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'error': str(e),
+            'timestamp': datetime.now().isoformat()
+        }), 500
 
 @app.route('/api/predict', methods=['POST'])
-
 def predict():
     try:
         engine = get_inference_engine()
+        if engine.model is None:
+            err = getattr(engine, 'load_error', 'Model weights could not be loaded.')
+            return jsonify({'success': False, 'error': f'Model unavailable: {err}'}), 500
         image_bytes = None
 
         # Check 1: Multipart file upload
@@ -159,6 +173,24 @@ def export_pdf_route():
         download_name='tamil_recognized_text.pdf',
         mimetype='application/pdf'
     )
+
+@app.errorhandler(400)
+def handle_bad_request(e):
+    return jsonify({'success': False, 'error': f'Bad Request: {str(e)}'}), 400
+
+@app.errorhandler(404)
+def handle_not_found(e):
+    return jsonify({'success': False, 'error': 'Endpoint not found'}), 404
+
+@app.errorhandler(413)
+def handle_too_large(e):
+    return jsonify({'success': False, 'error': 'Uploaded file exceeds maximum limit of 10 MB.'}), 413
+
+@app.errorhandler(500)
+@app.errorhandler(Exception)
+def handle_server_error(e):
+    app.logger.error(f"Unhandled server error: {e}", exc_info=True)
+    return jsonify({'success': False, 'error': f'Server error: {str(e)}'}), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

@@ -1,10 +1,10 @@
-﻿services:
+services:
   - type: web
     name: tamil-handwritten-unicode
     runtime: python
     plan: free
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app.main:app --bind 0.0.0.0:$PORT
+    buildCommand: (git lfs pull || true) && pip install -r requirements.txt
+    startCommand: gunicorn app.main:app --bind 0.0.0.0:$PORT --workers 1 --timeout 120
     healthCheckPath: /health
     envVars:
       - key: PYTHON_VERSION
