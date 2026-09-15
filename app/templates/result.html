@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recognition Result - Tamil Handwritten OCR</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1 class="main-title">Recognition Result</h1>
+            <p class="sub-title"><a href="/">&larr; Return to Character Recognition</a></p>
+        </header>
+
+        <main class="result-standalone card">
+            <div class="glyph-container-large">
+                <span class="tamil-glyph-large">{{ unicode_char }}</span>
+            </div>
+            <p class="meta-row"><strong>Unicode Codepoint:</strong> {{ codepoints }}</p>
+            <p class="meta-row"><strong>Model Confidence:</strong> {{ confidence }}%</p>
+            <p class="meta-row"><strong>Class ID:</strong> {{ class_id }}</p>
+            <div class="action-bar">
+                <a href="/" class="btn btn-primary">Recognize Another Character</a>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

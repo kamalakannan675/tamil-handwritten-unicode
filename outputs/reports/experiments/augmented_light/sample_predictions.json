@@ -1,0 +1,512 @@
+[
+  {
+    "sample_index": 22664,
+    "actual_class": 14,
+    "actual_unicode": "க்",
+    "actual_codepoint": "U+0B95 U+0BCD",
+    "predicted_class": 14,
+    "predicted_unicode": "க்",
+    "predicted_codepoint": "U+0B95 U+0BCD",
+    "confidence_percent": 99.12,
+    "status": "CORRECT",
+    "top3": [
+      {
+        "rank": 1,
+        "class_id": 14,
+        "char": "க்",
+        "codepoints": "U+0B95 U+0BCD",
+        "confidence_percent": 99.12
+      },
+      {
+        "rank": 2,
+        "class_id": 17,
+        "char": "கீ",
+        "codepoints": "U+0B95 U+0BC0",
+        "confidence_percent": 0.39
+      },
+      {
+        "rank": 3,
+        "class_id": 154,
+        "char": "ே",
+        "codepoints": "U+0BC7",
+        "confidence_percent": 0.21
+      }
+    ]
+  },
+  {
+    "sample_index": 5676,
+    "actual_class": 92,
+    "actual_unicode": "ள்",
+    "actual_codepoint": "U+0BB3 U+0BCD",
+    "predicted_class": 92,
+    "predicted_unicode": "ள்",
+    "predicted_codepoint": "U+0BB3 U+0BCD",
+    "confidence_percent": 96.1,
+    "status": "CORRECT",
+    "top3": [
+      {
+        "rank": 1,
+        "class_id": 92,
+        "char": "ள்",
+        "codepoints": "U+0BB3 U+0BCD",
+        "confidence_percent": 96.1
+      },
+      {
+        "rank": 2,
+        "class_id": 44,
+        "char": "ண்",
+        "codepoints": "U+0BA3 U+0BCD",
+        "confidence_percent": 1.57
+      },
+      {
+        "rank": 3,
+        "class_id": 116,
+        "char": "ன்",
+        "codepoints": "U+0BA9 U+0BCD",
+        "confidence_percent": 1.41
+      }
+    ]
+  },
+  {
+    "sample_index": 10356,
+    "actual_class": 49,
+    "actual_unicode": "ணூ",
+    "actual_codepoint": "U+0BA3 U+0BC2",
+    "predicted_class": 49,
+    "predicted_unicode": "ணூ",
+    "predicted_codepoint": "U+0BA3 U+0BC2",
+    "confidence_percent": 28.8,
+    "status": "CORRECT",
+    "top3": [
+      {
+        "rank": 1,
+        "class_id": 49,
+        "char": "ணூ",
+        "codepoints": "U+0BA3 U+0BC2",
+        "confidence_percent": 28.8
+      },
+      {
+        "rank": 2,
+        "class_id": 48,
+        "char": "ணு",
+        "codepoints": "U+0BA3 U+0BC1",
+        "confidence_percent": 23.3
+      },
+      {
+        "rank": 3,
+        "class_id": 102,
+        "char": "று",
+        "codepoints": "U+0BB1 U+0BC1",
+        "confidence_percent": 9.66
+      }
+    ]
+  },
+  {
+    "sample_index": 9463,
+    "actual_class": 125,
+    "actual_unicode": "க்ஷ",
+    "actual_codepoint": "U+0B95 U+0BCD U+0BB7",
+    "predicted_class": 125,
+    "predicted_unicode": "க்ஷ",
+    "predicted_codepoint": "U+0B95 U+0BCD U+0BB7",
+    "confidence_percent": 42.21,
+    "status": "CORRECT",
+    "top3": [
+      {
+        "rank": 1,
+        "class_id": 125,
+        "char": "க்ஷ",
+        "codepoints": "U+0B95 U+0BCD U+0BB7",
+        "confidence_percent": 42.21
+      },
+      {
+        "rank": 2,
+        "class_id": 152,
+        "char": "க்ஷு",
+        "codepoints": "U+0B95 U+0BCD U+0BB7 U+0BC1",
+        "confidence_percent": 9.41
+      },
+      {
+        "rank": 3,
+        "class_id": 147,
+        "char": "க்ஷூ",
+        "codepoints": "U+0B95 U+0BCD U+0BB7 U+0BC2",
+        "confidence_percent": 4.63
+      }
+    ]
+  },
+  {
+    "sample_index": 428,
+    "actual_class": 114,
+    "actual_unicode": "ழு",
+    "actual_codepoint": "U+0BB4 U+0BC1",
+    "predicted_class": 18,
+    "predicted_unicode": "கு",
+    "predicted_codepoint": "U+0B95 U+0BC1",
+    "confidence_percent": 27.12,
+    "status": "INCORRECT",
+    "top3": [
+      {
+        "rank": 1,
+        "class_id": 18,
+        "char": "கு",
+        "codepoints": "U+0B95 U+0BC1",
+        "confidence_percent": 27.12
+      },
+      {
+        "rank": 2,
+        "class_id": 42,
+        "char": "டு",
+        "codepoints": "U+0B9F U+0BC1",
+        "confidence_percent": 14.98
+      },
+      {
+        "rank": 3,
+        "class_id": 72,
+        "char": "மு",
+        "codepoints": "U+0BAE U+0BC1",
+        "confidence_percent": 10.65
+      }
+    ]
+  },
+  {
+    "sample_index": 22020,
+    "actual_class": 151,
+    "actual_unicode": "ஜீ",
+    "actual_codepoint": "U+0B9C U+0BC0",
+    "predicted_class": 149,
+    "predicted_unicode": "ஜ்",
+    "predicted_codepoint": "U+0B9C U+0BCD",
+    "confidence_percent": 32.17,
+    "status": "INCORRECT",
+    "top3": [
+      {
+        "rank": 1,
+        "class_id": 149,
+        "char": "ஜ்",
+        "codepoints": "U+0B9C U+0BCD",
+        "confidence_percent": 32.17
+      },
+      {
+        "rank": 2,
+        "class_id": 98,
+        "char": "ற்",
+        "codepoints": "U+0BB1 U+0BCD",
+        "confidence_percent": 15.47
+      },
+      {
+        "rank": 3,
+        "class_id": 151,
+        "char": "ஜீ",
+        "codepoints": "U+0B9C U+0BC0",
+        "confidence_percent": 15.19
+      }
+    ]
+  },
+  {
+    "sample_index": 4194,
+    "actual_class": 36,
+    "actual_unicode": "ஞு",
+    "actual_codepoint": "U+0B9E U+0BC1",
+    "predicted_class": 36,
+    "predicted_unicode": "ஞு",
+    "predicted_codepoint": "U+0B9E U+0BC1",
+    "confidence_percent": 84.92,
+    "status": "CORRECT",
+    "top3": [
+      {
+        "rank": 1,
+        "class_id": 36,
+        "char": "ஞு",
+        "codepoints": "U+0B9E U+0BC1",
+        "confidence_percent": 84.92
+      },
+      {
+        "rank": 2,
+        "class_id": 54,
+        "char": "து",
+        "codepoints": "U+0BA4 U+0BC1",
+        "confidence_percent": 14.3
+      },
+      {
+        "rank": 3,
+        "class_id": 60,
+        "char": "நு",
+        "codepoints": "U+0BA8 U+0BC1",
+        "confidence_percent": 0.61
+      }
+    ]
+  },
+  {
+    "sample_index": 22332,
+    "actual_class": 95,
+    "actual_unicode": "ளீ",
+    "actual_codepoint": "U+0BB3 U+0BC0",
+    "predicted_class": 118,
+    "predicted_unicode": "னி",
+    "predicted_codepoint": "U+0BA9 U+0BBF",
+    "confidence_percent": 25.01,
+    "status": "INCORRECT",
+    "top3": [
+      {
+        "rank": 1,
+        "class_id": 118,
+        "char": "னி",
+        "codepoints": "U+0BA9 U+0BBF",
+        "confidence_percent": 25.01
+      },
+      {
+        "rank": 2,
+        "class_id": 119,
+        "char": "னீ",
+        "codepoints": "U+0BA9 U+0BC0",
+        "confidence_percent": 11.64
+      },
+      {
+        "rank": 3,
+        "class_id": 46,
+        "char": "ணி",
+        "codepoints": "U+0BA3 U+0BBF",
+        "confidence_percent": 9.96
+      }
+    ]
+  },
+  {
+    "sample_index": 25681,
+    "actual_class": 2,
+    "actual_unicode": "ஆ",
+    "actual_codepoint": "U+0B86",
+    "predicted_class": 2,
+    "predicted_unicode": "ஆ",
+    "predicted_codepoint": "U+0B86",
+    "confidence_percent": 99.75,
+    "status": "CORRECT",
+    "top3": [
+      {
+        "rank": 1,
+        "class_id": 2,
+        "char": "ஆ",
+        "codepoints": "U+0B86",
+        "confidence_percent": 99.75
+      },
+      {
+        "rank": 2,
+        "class_id": 109,
+        "char": "வூ",
+        "codepoints": "U+0BB5 U+0BC2",
+        "confidence_percent": 0.24
+      },
+      {
+        "rank": 3,
+        "class_id": 1,
+        "char": "அ",
+        "codepoints": "U+0B85",
+        "confidence_percent": 0.0
+      }
+    ]
+  },
+  {
+    "sample_index": 21985,
+    "actual_class": 116,
+    "actual_unicode": "ன்",
+    "actual_codepoint": "U+0BA9 U+0BCD",
+    "predicted_class": 44,
+    "predicted_unicode": "ண்",
+    "predicted_codepoint": "U+0BA3 U+0BCD",
+    "confidence_percent": 72.44,
+    "status": "INCORRECT",
+    "top3": [
+      {
+        "rank": 1,
+        "class_id": 44,
+        "char": "ண்",
+        "codepoints": "U+0BA3 U+0BCD",
+        "confidence_percent": 72.44
+      },
+      {
+        "rank": 2,
+        "class_id": 116,
+        "char": "ன்",
+        "codepoints": "U+0BA9 U+0BCD",
+        "confidence_percent": 22.88
+      },
+      {
+        "rank": 3,
+        "class_id": 92,
+        "char": "ள்",
+        "codepoints": "U+0BB3 U+0BCD",
+        "confidence_percent": 2.03
+      }
+    ]
+  },
+  {
+    "sample_index": 14569,
+    "actual_class": 142,
+    "actual_unicode": "ஸூ",
+    "actual_codepoint": "U+0BB8 U+0BC2",
+    "predicted_class": 142,
+    "predicted_unicode": "ஸூ",
+    "predicted_codepoint": "U+0BB8 U+0BC2",
+    "confidence_percent": 36.6,
+    "status": "CORRECT",
+    "top3": [
+      {
+        "rank": 1,
+        "class_id": 142,
+        "char": "ஸூ",
+        "codepoints": "U+0BB8 U+0BC2",
+        "confidence_percent": 36.6
+      },
+      {
+        "rank": 2,
+        "class_id": 93,
+        "char": "ள",
+        "codepoints": "U+0BB3",
+        "confidence_percent": 25.12
+      },
+      {
+        "rank": 3,
+        "class_id": 141,
+        "char": "ஸு",
+        "codepoints": "U+0BB8 U+0BC1",
+        "confidence_percent": 16.04
+      }
+    ]
+  },
+  {
+    "sample_index": 9055,
+    "actual_class": 152,
+    "actual_unicode": "க்ஷு",
+    "actual_codepoint": "U+0B95 U+0BCD U+0BB7 U+0BC1",
+    "predicted_class": 152,
+    "predicted_unicode": "க்ஷு",
+    "predicted_codepoint": "U+0B95 U+0BCD U+0BB7 U+0BC1",
+    "confidence_percent": 35.23,
+    "status": "CORRECT",
+    "top3": [
+      {
+        "rank": 1,
+        "class_id": 152,
+        "char": "க்ஷு",
+        "codepoints": "U+0B95 U+0BCD U+0BB7 U+0BC1",
+        "confidence_percent": 35.23
+      },
+      {
+        "rank": 2,
+        "class_id": 147,
+        "char": "க்ஷூ",
+        "codepoints": "U+0B95 U+0BCD U+0BB7 U+0BC2",
+        "confidence_percent": 26.84
+      },
+      {
+        "rank": 3,
+        "class_id": 128,
+        "char": "க்ஷீ",
+        "codepoints": "U+0B95 U+0BCD U+0BB7 U+0BC0",
+        "confidence_percent": 7.23
+      }
+    ]
+  },
+  {
+    "sample_index": 22906,
+    "actual_class": 141,
+    "actual_unicode": "ஸு",
+    "actual_codepoint": "U+0BB8 U+0BC1",
+    "predicted_class": 141,
+    "predicted_unicode": "ஸு",
+    "predicted_codepoint": "U+0BB8 U+0BC1",
+    "confidence_percent": 93.35,
+    "status": "CORRECT",
+    "top3": [
+      {
+        "rank": 1,
+        "class_id": 141,
+        "char": "ஸு",
+        "codepoints": "U+0BB8 U+0BC1",
+        "confidence_percent": 93.35
+      },
+      {
+        "rank": 2,
+        "class_id": 142,
+        "char": "ஸூ",
+        "codepoints": "U+0BB8 U+0BC2",
+        "confidence_percent": 4.53
+      },
+      {
+        "rank": 3,
+        "class_id": 139,
+        "char": "ஸி",
+        "codepoints": "U+0BB8 U+0BBF",
+        "confidence_percent": 0.88
+      }
+    ]
+  },
+  {
+    "sample_index": 23533,
+    "actual_class": 22,
+    "actual_unicode": "சி",
+    "actual_codepoint": "U+0B9A U+0BBF",
+    "predicted_class": 22,
+    "predicted_unicode": "சி",
+    "predicted_codepoint": "U+0B9A U+0BBF",
+    "confidence_percent": 99.12,
+    "status": "CORRECT",
+    "top3": [
+      {
+        "rank": 1,
+        "class_id": 22,
+        "char": "சி",
+        "codepoints": "U+0B9A U+0BBF",
+        "confidence_percent": 99.12
+      },
+      {
+        "rank": 2,
+        "class_id": 23,
+        "char": "சீ",
+        "codepoints": "U+0B9A U+0BC0",
+        "confidence_percent": 0.7
+      },
+      {
+        "rank": 3,
+        "class_id": 16,
+        "char": "கி",
+        "codepoints": "U+0B95 U+0BBF",
+        "confidence_percent": 0.07
+      }
+    ]
+  },
+  {
+    "sample_index": 19236,
+    "actual_class": 91,
+    "actual_unicode": "லூ",
+    "actual_codepoint": "U+0BB2 U+0BC2",
+    "predicted_class": 91,
+    "predicted_unicode": "லூ",
+    "predicted_codepoint": "U+0BB2 U+0BC2",
+    "confidence_percent": 86.96,
+    "status": "CORRECT",
+    "top3": [
+      {
+        "rank": 1,
+        "class_id": 91,
+        "char": "லூ",
+        "codepoints": "U+0BB2 U+0BC2",
+        "confidence_percent": 86.96
+      },
+      {
+        "rank": 2,
+        "class_id": 103,
+        "char": "றூ",
+        "codepoints": "U+0BB1 U+0BC2",
+        "confidence_percent": 3.82
+      },
+      {
+        "rank": 3,
+        "class_id": 123,
+        "char": "ஷு",
+        "codepoints": "U+0BB7 U+0BC1",
+        "confidence_percent": 2.88
+      }
+    ]
+  }
+]

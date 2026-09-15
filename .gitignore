@@ -1,0 +1,54 @@
+# Python & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Jupyter & IDE
+.ipynb_checkpoints
+.vscode/
+.idea/
+
+# Uploads & Temporary files
+app/static/uploads/*
+!app/static/uploads/.gitkeep
+outputs/exports/*
+!outputs/exports/.gitkeep
+outputs/reports/paper_pages/
+temp/
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Checkpoints & Experiments
+# Ignore redundant intermediate experiment duplicate checkpoints to stay within Git LFS quota
+model/checkpoints/augmented_light/
+model/checkpoints/augmented_strong/
+model/checkpoints/experiments/**/best_model.pt
+
+# Ensure the selected production model checkpoint is tracked
+!model/checkpoints/best_model.pt

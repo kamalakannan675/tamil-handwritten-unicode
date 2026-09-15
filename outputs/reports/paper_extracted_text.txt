@@ -1,0 +1,1148 @@
+=== PAGE 1 ===
+ReceivedJune21,2021,acceptedJuly5,2021,dateofpublicationJuly13,2021,dateofcurrentversionJuly23,2021.
+DigitalObjectIdentifier10.1109/ACCESS.2021.3096823
+uTHCD: A New Benchmarking for
+Tamil Handwritten OCR
+NOUSHATHSHAFFI ANDFAIZALHAJAMOHIDEEN
+DepartmentofInformationTechnology,UniversityofTechnologyandAppliedSciences,SuharPC311,Oman
+Correspondingauthor:NoushathShaffi(noushath.mys@gmail.com)
+ABSTRACT TherobustnessofatypicalHandwrittencharacterrecognitionsystemreliesontheavailability
+of comprehensive supervised data samples. There has been considerable work reported in the literature
+aboutcreatingthedatabaseforseveralIndicscripts,buttheTamilscripthasonlyonestandardizeddatabase
+up to date. This paper presents the work done to create an exhaustive and extensive unconstrained Tamil
+Handwritten Character Database (uTHCD). The samples were generated from around 850 native Tamil
+volunteersincludingschool-goingkids,homemakers,universitystudents,andfaculty.Thedatabaseconsists
+of about 91000 samples with nearly 600 samples in each of 156 classes. This isolated character database
+is made publicly available as raw images and Hierarchical Data File (HDF) compressed file. The paper
+also presents several possible use cases of the proposed uTHCD database using Convolutional Neural
+Networks (CNN) to classify handwritten Tamil characters. Several experiments demonstrate that training
+on the proposed database helps traditional and contemporary classifiers perform on par or better than the
+existingdatasetwhentestedwithunseendata.Withthisdatabase,weexpecttosetanewbenchmarkinTamil
+handwrittencharacterrecognitionandserveasalaunchpadfordevelopingrobustlanguagetechnologiesfor
+theTamilscript.
+INDEX TERMS Convolutionalneuralnetwork(CNN),documentanalysis,handwritingrecognition,Indic
+scripts,opticalcharacterrecognition,Tamilhandwrittencharacterdatabase.
+NOMENCLATURE I. INTRODUCTION
+Acronyms Tamils or Tamilians is one of the world’s oldest surviv-
+CM ConfusionMatrix ing ethnolinguistic groups with a demographic population
+CNN ConvolutionalNeuralNetwork currently estimated to be around 76 million with a history
+ePCP enhancedPiece-wiseCoveringbyParallelogram of this language dating back over 2000 years [1], [2]. Out
+FPR FalsePositiveRate of22officiallanguagesofIndia,itistheonlylanguagethat
+GT GroundTruth has been considered an official language outside of India,
+HDF HierarchicalDataFormat asinSrilankaandSingapore[3].Inaddition,scriptsofseveral
+HPL HPL-iso-tamil-charDataset minorityIndianlanguagessuchasBaduga,Irula,Saurashtra,
+KNN K-NearestNeighbour and Paniya are written in Tamil although its spoken version
+OCR OpticalCharacterRecognition isentirelydifferentfromthatofTamil[3].
+PCP Piece-wiseCoveringbyParallelogram Even though a sizeable population around the globe uses
+RF RandomForest theTamillanguageasoneoftheofficialorasborrowedscript-
+SOTA State-of-the-Art inglanguages,researchinTamilhandwritingrecognitionin
+SVM SupportVectorMachine several application domains has not reached its complete
+TPR TruePositiveRate maturity[4]–[6].TamilHandwrittencharacterrecognitionis
+one such challenging research topic for close to 4 decades
+The associate editor coordinating the review of this manuscript and now [7], [8]. Despite this, it continues to offer many chal-
+approvingitforpublicationwasGustavoOlague . lenges which keeps the research community active even till
+VOLUME9,2021 ThisworkislicensedunderaCreativeCommonsAttribution4.0License.Formoreinformation,seehttps://creativecommons.org/licenses/by/4.0/ 101469
+
+=== PAGE 2 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+date [9], [10]. The OCR of printed documents has been throughonlinedata(asintheHPLdatabase)donotrepresent
+considered a problem solved par human accuracy or even these variations. Moreover, capturing these variationsin the
+better [11]–[13]. However, the OCR of Tamil handwritten databasewillprovemoreeffectiveindevolopingrobustalgo-
+documentposescriticalchallenges(forex:overlappingchar- rithms. Especially when processing offline documents such
+acter patterns, complex character formation, diverse writing aslegalandlegacydocuments,handwrittenformconversions
+styles even within the writing of a single user, etc.) which andthelike.
+necessitate rectifiable steps before being deployed in real Inthisstudy,wepresentthedevelopmentofanexhaustive
+time[14]. database with handwritings involving many Tamil writers
+The research in this field is equally instigated by many and its use-cases from OCR perspectives. The prominent
+application-oriented domains such as document structure contributionofthisworkcanbeoutlinedasbelow:
+analysis and segmentation, writer identification in forensic
+1) Asuccinctpresentationwithappropriatesignpostingof
+intelligence, digitization of legal and legacy documents [5],
+thecompleteprocessinvolvedincreatingstandardized
+[12],[15]–[17].Moreover,sinceTamillanguageisoneofthe
+TamilHandwrittencharactersamples.
+officiallanguagesinIndia,Srilanka,andSingapore,theavail-
+2) Thisdatabaseismadepubliclyavailabletotheresearch
+ability of a robust Tamil handwritten OCR would pave the
+community along with ground truth (GT) for rapid
+wayfortheautomationofalargeswathofofficialdocuments.
+prototypingandbenchmarkingpurposes.
+Extensive work relating to the Indic script has been
+3) SeveralCNN-centricexperimentationswereconducted
+reported in this field of handwriting recognition which is
+to create the benchmark. Furthermore, the popular
+evidentthroughnumerouspublications[18].Thiswasmainly
+VGG16 pre-trained ImageNet model was fine-tuned
+possible due to the availability of standardized databases of
+fortheclassificationofTamilcharactersandtheirper-
+many Indic scripts [19]–[29]. There are about 19 standard-
+formancewasanalyzed.
+izedhandwrittendatasetsavailableforIndicscriptssuchas
+4) Intending to analyze the benefit of the proposed
+Devanagari,Bengali,Telugu,Oriya,Tamiletc[18].
+database,severaltraditionalandSOTAclassifierswere
+The recent survey of handwritten Indic OCR technolo-
+trainedusingtheproposedandexistingdatabases.
+gies [18] reveals that out of 19 databases, only a solitary
+Themainmotivationsbehindcarryingoutthisworkare:
+standardizeddatabase[19],[30]isavailableforTamilscript
+developed by HP Labs, India.1 This database is publicly 1) Non-availability of multiple databases that can pose
+available and was created using online pen coordinates by diverse challenges inherent in a typical offline hand-
+applying a simple piece-wise interpolation process. Most writingOCR.
+of the work reported in Tamil handwriting recognition has 2) Non-existenceofastandardizedhandwritingdatabase
+relied mainly on this database [9], [10]. However, for more thatcancapturevariationsemergingfromofflinepro-
+objective study and to evaluate the true efficacy of state- cessingofdocuments.
+of-the-art(SOTA) algorithms, having multiple standardized 3) Toevaluateobjectivelyseveralclassicalmachinelearn-
+publicly available datasets exhibiting a variety of inherent ing and SOTA deep learning algorithms using the
+writing variations can only add more value to the resulting uTHCDdatabaseandbenchmarktheresults.Thiswill
+experimentalanalysis. act as a catalyst in advancing research in Tamil hand-
+UnliketheHPLdatabase[19],[30],theuTHCDdatabase writingrecognition.
+isaunifiedcollectionofsamplescollectedfrombothoffline Thisworkisanextensionofthepreviouslypublishedpaper
+online modes. In the offline mode, samples were collected where we had reported the preliminary work [31] done in
+byaskingvolunteerstowriteonaphysicalformwithoutany creatingtheuTHCDdatabase.2
+restriction on the writing tool (pen, pencil, gel pen, sketch Organization of the rest of this manuscript is as fol-
+pen, etc.). In the online mode, volunteers were asked to lows: Section II describes the details about the Tamil
+write samples using a digital writing pad on a digital form script,anoverviewofexistingTamilhandwrittendatabases,
+(a predefined grid image). In both processes, the samples and works reported using them. Section-III presents the
+written by volunteers are extracted and stored eventually as systematized process involved in creating this database,
+imagefiles. such as data collection, preprocessing, verification, and
+While online samples successfully capture different writ- making the database suitable for the experimentation
+ing styles, salient features of offline samples pose even process. In Section-IV, we set the new benchmark for
+morechallenges.Specifically,sharpboundaries,discontinu- this database through the application of standard CNN
+ity of stroke occurring due to scanning and several subse- algorithms. Section-V presents the comparative study
+quent preprocessing, variable thickness of character stroke between the proposed dataset against the existing dataset
+due to the usage of different writing tools add more varia- using traditional and contemporary classifiers. Finally, the
+tion to the database. Offline counterpart samples generated
+2Asasequel,thispaperextendsinseveralwayssuchasbroadeneddata
+1ThisdatabaseisofficiallyknownasHPL-iso-Tamil-char.Forbrevity, collectionprocess,groundtruthpreparation,makingdatasetpubliclyavail-
+werefertoitasHPLdatabaseinrestofthepaper. able,etcarefewprominentimprovementsamongseveralothercontributions.
+101470 VOLUME9,2021
+
+=== PAGE 3 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+FIGURE1. Vowels,consonants,ayuthaezhuthuandgranthalettersoftamilscript.
+FIGURE2. Compoundcharacterformationforaconsonantwithsetofvowels.
+conclusion and future avenues based on this work are pre- databasedevelopedbyHPlabsIndia,availablefortheTamil
+sentedinSection-VI. OCRdomain[18].
+1) THEHPLINDIADATABASE:THE
+II. BACKGROUNDSTUDY
+HPL-ISO-TAMIL-CHARDATABASE
+A. TAMILSCRIPT
+Thisdatabasecontainsavaryingnumberofisolatedcharacter
+The Tamil script contains 12 vowels, 18 consonants, and
+samplesineachof156distinctcharacterclasses.Mostofthe
+onespecialcharacterknownasAyudhaEzhuthu.Additional
+characterclasseshavearound500samples,whilefewclasses
+five consonants known as Grantha Letters are borrowed
+have about 270 samples. The maximum number of samples
+from Sanskrit and English to represent words/syllables of
+in a class is 527, while the minimum is 271. The database
+north Indian and English origin [2]. Hence the script con-
+consistsoftwoseparaterepositoriesfortrainingandtesting.
+tains36uniquebasicletters[12vowels+18consonants+
+Therearearound50691and26926samplesavailablerespec-
+1 Ayudha Ezhuthu + 5 Granthas]. Fig.1 shows these basic
+tively for training and testing purposes [19]. The database
+characters. The combination of twelve vowels and eighteen
+contains77617samplesintotalfromallclasses.
+consonants gives rise to 216 compound characters resulting
+ThesampleswerewrittenbynativeTamilwritersandcol-
+in 247 characters [216+12+18+1]. Example formation
+lectedusingHPTabletPCs.Asmentionedearlier,imagesof
+of compound characters for a consonant is shown in the
+sampleswerecreatedthroughaninterpolationprocessusing
+figure Fig.2. Furthermore, the five grantha letters combine
+onlinepencoordinateswithaconstantthickeningfactorand
+withtwelvevowelssimilarlytoformadditional60compound
+are available for download in a bi-level TIFF format. Fig.5
+letters, leading to 312 characters [247 + 5 Granthas + 60
+showssomesampleimagesofthisdatabase.Moredetailsof
+Compound Granthas]. The entire character set comprising
+thisdatabasecanbefoundonthelipitoolkitwebsite[30].This
+312 characters of the script is shown in Fig.3 [2]. How-
+databaseisthede-factostandardamongtheresearchcommu-
+ever, the 156 distinct characters (shaded grey) can uniquely
+nity for Tamil OCR. One can easily find numerous quality
+represent these 312 characters. This is because, as depicted
+papers in the literature that used this database [32]–[35].
+in Fig.4, two different syllables of the word [Ko-vai] can
+KavithaandSrimathi[32]haverecentlyusedthisdatabaseto
+berepresentedusingfivedistinctcharacters(numbersinthe
+testtheefficacyof9-layerCNNarchitecturewhichachieved
+figureindicatetheunderlyingclassnumber).
+a training accuracy of 95.16% and test accuracy of 97.7%.
+However,thisdatabasehasthefollowinglimitations:
+B. EXISTINGTAMILHANDWRITTENDATABASE 1) Imbalance in the dataset: Several classes are under-
+Acomprehensivedatabaseplaysavitalroleintheadvance- represented in this collection. The machine learning
+mentofanyresearchtopic[19].Itwillfacilitateresearchersto algorithms learn to predict the dominant classes cor-
+rapidlyevaluatenewmodelsanddeveloprobustalgorithms, rectlymoreoftenthantheunderrepresentedclass[36].
+especiallywhentheunderlyingdatabaseisunconstrainedand Due to an imbalance in the dataset, algorithms using
+comprehensive.Theavailabilityofacomprehensivedatabase this collection will have to use different evaluation
+canalsohelptoobjectivelyassessthetrueefficacy/limitations metrics such as F1 score per class, recall per class,
+of SOTA algorithms [18]. Developing a robust Tamil OCR precision per class other than just accuracy. Another
+system necessitates a large and extensive database [10]. optionwouldbetoresamplethedatasetsothatthedata
+As mentioned earlier, there is only a single standardized is balanced either by augmentation or undersampling
+VOLUME9,2021 101471
+
+=== PAGE 4 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+FIGURE3. Completecharactersetoftamilscript.
+2) Constrained Data Collection: All samples are col-
+lectedbydigitalmeans.However,asmentionedearlier,
+such samples are not true representatives of samples
+oftenseeninofflineOCRapplications.
+2) AD-HOCDATABASES
+One can find numerous works in the literature that present
+handwritten Tamil OCR algorithms by training them on
+databasescreatedin-house[9],[37]–[40].Manyworksappar-
+FIGURE4. Twosyllables(notamong156classes)representedby
+ently collected minimal data [37], [38]. Kowsalya and Peri-
+5distinctcharactersofthedatabase.
+asamy [38] proposed an algorithm for Tamil OCR by
+usingelephant-herdoptimization.Forexperimentalpurposes,
+(throwawayexamplesofdominantclasses).Onlythen the authors have made use of limited samples collected
+themodeldevelopedusingthisdatabasecanbesuitable from different native Tamil speakers. Jose and Wahi [39]
+forreal-worldapplications. have collected samples from 100 users, with each class
+101472 VOLUME9,2021
+
+=== PAGE 5 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+3) Various other methods proposed by different authors
+in the literature are giving good performance only on
+data prepared in an ad-hoc way. Therefore, such an
+algorithm cannot be reliably deployed for practical
+applications.
+Weovercomethegapsmentionedabovebypresentingthe
+comprehensive uTHCD database in this paper. The uTHCD
+databasewillbethesecondpublicrepositoryforTamilOCR
+purposes. Thus, the research community can evaluate the
+algorithms on multiple databases instead of relying on a
+single database that contains only online samples. Table 1
+summarisessomenoteworthyTamilhandwritingdatarepos-
+itories that are reported. The asterisk alongside the name of
+thedatabaseindicatesthattheyarenotdesignedprimarilyfor
+OCRpurposesbutforspecifichandwritingrecognitiontasks.
+TABLE1. Descriptionofsometamilhandwritingdatabases.
+FIGURE5. SampleimagesfromtheHPLdatabase.
+having 100 samples. There is no mention of how many
+classes are considered for data collection and experimenta-
+tion. Shanthi and Duraiswamy [40] have trained the system
+with 35441 characters belonging to 106 Tamil characters.
+The database was created through the contribution of
+117volunteers.Thetestdatahad6048samplesbelongingto
+only34characterclasses.Vinothenietal.[9],havecreateda
+databasecomprising54600sampleswith350samplesineach
+of156 categories.This workdoesnot indicatethetrain-test
+split.
+Itcanbeascertainedthatad-hocdatabasessufferfromsev-
+eral drawbacks such as in-house creation, publicly unavail-
+able, in-comprehensiveness and insufficient samples. This
+will impedethe research community incarrying out acom-
+parativeanalysisofalgorithmsproposedintheliterature[19].
+At least, if these databases are made publicly available,
+the research community will have choices and can con- III. DATABASEWORK
+tributetoeasyprototypingandevaluationofnewTamilOCR The database creation is a laborious process that involves
+models. many tasks such as sample collection, data extraction, car-
+Based on this survey of the literature, the following gaps rying out necessary postprocessing, verification, and finally
+areidentified:
+making it ready for experimentation by associating it with
+1) Unlike any other languages such as English, Ara- GT.Theprotocolwefollowedadherestostandardsadopted
+bic, or even certain Indic scripts such as Devanagari, in the database creation literature [19], [22], [25], [43] as
+Bangla,Oriya,etc.,therearenomultiplestandardized anymistakewouldnullifyalleffortsandaffectbenchmarking
+publiclyavailabledatabasesforHandwrittentheTamil process. The overall process involved is as shown in Fig.6.
+OCRprocesswhichcouldinvolvediversityofwriting Thissectionsuccinctlypresentsallstepsinvolvedincreating
+stylesbymanypeople[18]. thisdatabaseandpossiblyservesasafutureguideformore
+2) Majority of the standard papers deal with the HPL similarworks.
+dataset.Thisdatabasehelpedtriggeranampleamount
+of research in offline Tamil handwriting recognition. A. SAMPLECOLLECTION
+However, few limitations exist, such as insufficient Thedatabaseisaunifiedcollectionofsamplescollectedfrom
+samplesincertainclassesandsamplesnotbeingatrue offline and online modes. The overall process involved in
+representativeofofflinescanneddocuments. both is the same except that the online mode was relatively
+VOLUME9,2021 101473
+
+=== PAGE 6 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+FIGURE6. TheimportantstepsinthecreationofuTHCDdatabase.
+straightforward as it did not necessitate preprocessing the sample would not drift much from the typical writing
+documentthroughtheskewestimationstep. styleoftheTamilscript[19].
+TheofflinedatacollectionprocessstartswithtwoA4-sized Themosttime-consumingpartofdatacollectionwasinthe
+forms,namelyform-1andform-2,eachhavinga10×8sized
+offlinemodeasitinvolvedawaitingperiodwherewecould
+gridwithaspecificplaceandspaceforwritingeachcharacter. notreliablyreceivealltheformsfromvolunteerscourieredto
+The form-1 collects samples of the first 80 characters of differentpartsoftheworld.
+Tamil script, and the remaining 76 characters were filled in
+form-2. In total, 400 forms (200 each of form-1 and form- B. PREPROCESSINGANDSAMPLEEXTRACTION
+2) were distributed to 400 different volunteers. Hence, each Theofflinedatacollectionformsarefirstdigitizedat300DPI
+volunteereitherfillsform-1orform-2;thereby,200complete throughanHPflatbedmulti-functionalscanner.Thescanned
+sets of samples pertaining to 156 classes were collected. imagewasthenassignedauniquethree-digitnumberbetween
+Each volunteer was requested to fill one form only because 001 to 600, indicating the volunteer code. After digitizing
+castingacompletesetof156characterswouldcausepossible theform,itundergoesspecificpreprocessingstepsbeforean
+lethargyandmayleadtounnecessaryprocessingofsamples automatedtaskextractsindividualcharacterspresentineach
+thatarenotatruerepresentativeoftheunderlyingcharacter formusingasimplePythonscript.Atfirst,thescannedimage
+class. A sample physical form used in this data collection Imgwasbinarizedusingsimpleglobalthresholding(whereT
+processisshowninFig.7. isapresetthreshold):
+A similar high-resolution grid image (digital form) was
+(cid:40)
+designed for an online sample collection process. Each vol- Img(x,y)= 1, ifImg(x,y)≥T (1)
+unteer was asked to write in the predefined space like the 0, otherwise
+offline mode. The samples written by volunteers using a
+Subsequently, median filtering and size-based connected
+digital writing pad were later extracted and saved as image
+component empirical analysis were carried out to eliminate
+files. The samples collected in the offline and online mode
+isolated pixels and irrelevant clusters of pixels arising due
+were curated to contain approximately 600 samples from
+to various reasons such as dust in the scanner bed, liquid
+each class. The online and offline samples are constituting
+spillage, smudging, etc. The scanned image was then skew
+around 70% and 30% of the database, respectively. This
+corrected using the ePCP algorithm [44]. This algorithm
+whole process involved contributions from around 450 vol-
+accurately computes the skew angle by searching for white
+unteersoveraperiodof2years.Thedatacollectionhappened
+sections(thelongestpossiblerunofwhitepixels)atdifferent
+amongstudentsandstaffbelongingtoseveralschools,univer-
+angles.Theanglethatproducesmaximumwhitesectionsis
+sities,andcommunityplaceswheretherearesizeablenative
+deemedastheskewangleofthedocument[44].Weexercised
+Tamilspeakers.Thedatahasbeencollectedfromvolunteers
+extremecautionwhilefeedingthepageduringthescanning
+belongingtodifferentagegroups,gender,andvaryinghand-
+process to ensure minimal skew. This helped us keep the
+edness.Thestatisticaldistributionofvolunteerdetailsshown
+ePCPprofilingintherangeof−5◦to+5◦withanincrement
+inFig.8.
+of 0.1◦ for each step, ensuring minimal computation. The
+Somequalitychecksweensuredduringthisprocessare:
+same steps were repeated for digital forms as well, except
+1) Thevolunteerwasaskedtoprovidethesamplewithin that they were not subjected to the skew correction step for
+the cells in the grid to not overlap with characters obviousreasons.Thepseudocodeoftheoverallpreprocessing
+in adjacent cells. A negligible amount of samples stepsappliedisgiveninAlgorithm-1.
+breached this, but it was easy for us to discard such As both offline and online samples were collected by
+samplesduringtheverificationprocess. asking volunteers to write within the grid, we used starting
+2) Each volunteer must have formally studied the Tamil coordinatesofthegrid,andwithappropriateheightandwidth
+languageasaprimary/secondarylanguageduringtheir increments resulted in the accurate extraction of character
+school. This ensures that writing style captured in the samples.Sampleswereaggregatedinoneofthe156classes
+101474 VOLUME9,2021
+
+=== PAGE 7 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+FIGURE7. A10×8gridbasedsamplecollectionform.
+based on their location in the grid. In this way, each class C. SAMPLEVERIFICATION
+contains samples from both online and offline modes col- Twolevelsofverificationwerecarriedouttoensurethatsam-
+lected from all volunteers. Each sample will be saved using ples extracted are true representatives of underlying Tamil
+thefilenameconvention:xxxx_yyy,whereyyyrepresentsthe character classes. Form-by-form verification takes place in
+underlying class number and xxxx corresponds to a 4-digit Level-1, whereas in Level-2, sample-by-sample verification
+volunteernumberstartingseriallyfrom0001to0600(addi- happens. The complete verification process we followed is
+tionalMSDdigitistoaccommodatefutureexpansion).This outlinedinFig.10.
+wayyyywillalsoserveasGTforthecorrespondingsample In the Level-1 verification, we classify each form (both
+and assist in the GT verification during the final verifica- physicalordigital)intothreecategories:
+tion phase. For instance, samples in class-1 will be named 1) Fit: If the writing style of 90% or more of
+0001_001, 0002_001, 0003_001, etc. To further distinguish the samples represents the corresponding character
+between offline and online samples, the letter ‘s’ will be classes.
+affixedintheformatasxxxxs_yyyy.Somesampleofflineand 2) RelativelyFit:Ifatleast50%ofthesamplesintheform
+onlinesamplesthusextractedareshowninFig.9 representthecorrespondingcharacterclasses.
+VOLUME9,2021 101475
+
+=== PAGE 8 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+Algorithm1PreprocessingHandwrittenForms
+Input:AScannedDocumentImage(Physical/DigitalForm)
+Output:PreprocessedForm.
+METHOD:
+Step-1:BinarizetheImgusingglobalthresholding(Equation.1)
+Step-2:NoiseRemoval
+2.1:Img←ApplyMedianFilteringonImg.
+2.2:Img←ConnectedComponentAnalysisandremove.componentswhosesize≤T
+Step-3:SkewCorrectionusingePCPalgorithm
+3.1:ComputeWhiteSections(PCP)ofImgbetween-5◦to+5◦instepsof2◦.
+3.2:LetPCPθ correspondstoangleθ forwhichwhitesectionsaremaximum.
+3.3:stepSize←1.0
+whilestepSize≥0.1do
+PCPθ+ ←computewhitesectionsatangle:θ +stepSize
+PCPθ− ←computewhitesectionsatangle:θ −stepSize
+θ ←argmax(PCPθ ,PCPθ+ ,PCPθ−)
+θ
+stepSize←stepSize/2
+endwhile
+3.4:preImg←SkewcorrectImgusingcomputedskewangleθ
+This sample-by-sample manual verification occurs after the
+datafileispreprocessed,andsamplesareextractedfromthe
+fit and relatively fit categories. Then, the samples will be
+eitherdiscarded(ifthesampledoesnotrepresentanyTamil
+character class) or collected in an appropriate class. A few
+essentialcommentsfromtheLevel-2verificationprocessare:
+• Some samples had awful writing styles that were even
+hard to be recognized correctly by humans. Such sam-
+pleswereeventuallydiscarded.
+• Many characters in Tamil script look almost the same
+except for the presence or absence of a tiny loop,
+dot/holecomponent,etc.Thisminorinter-classvariation
+sometimescausesacharacterwritteninoneclasstobe
+consideredinanappropriateclassthatresemblesbest.
+• Someunintendedscratchmarksbyvolunteersaccompa-
+niedthesamples.However,weretainedsamplesbyonly
+carefully removing such marks instead of completely
+ignoring the whole sample. This was found only in
+samplescollectedinofflinemode.
+Finally, for GT verification, we used the file naming con-
+FIGURE8. Thevolunteerstatistics. vention(xxxxs_yyy)wefollowedduringthedataextraction
+process.Whiledoingsample-by-sampleverification,wealso
+3) Unfit:Ifthereisaconsiderablepercentageofsamples
+cross-verified the GT (ie yyy) from the filename to ensure
+that deviate much from the conventional style of the
+it belongs to the correct class. In this way, a simple Python
+character.
+scripthelpedusgenerateaGTfilewithtwocolumnsofdata
+The data deemed unfit are excluded from the rest of the that has filenames and corresponding class numbers as the
+process and will not be collected in the eventual database. groundtruth.
+Theremainingdatainthefitandrelativelyfitcategoriesare
+subjecttopreprocessingandsampleextractionprocesses. D. THEuTHCD:UNCONSTRAINEDTAMIL
+TheLevel-2verificationhastwomainobjectives:
+HANDWRITTENCHARACTERDATABASE
+1) Thesampleextractedrepresentsoneofthe156classes The samples thus collected after arduous processes is our
+ofTamilscript. current uTHDC database with provision for subsequent
+2) EnsureGTassociatedwiththesampleconformstothe expansion. There were varying numbers of samples in each
+underlyingclass. class, but for data balancing and ease of future expansion,
+101476 VOLUME9,2021
+
+=== PAGE 9 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+FIGURE9. SampleofflineandonlineimagesintheuTHCDdatabase.
+TABLE2. Detailsofvariousrepositoriesofproposeddatabase.
+AllfourrepositoriesoftheuTHCDdatabasearepublicly
+available(inthishyperlink)attheKagglewebsite-apopular
+onlinedatasciencecommunity.Researcherscanusethepro-
+videdhyperlinktovisittherepository.Inaddition,thedown-
+loadabledatabaseisavailableintwodifferentformats:
+1) The HDF5 format: The train and test set are stored
+as Python NumPy multidimensional arrays by names
+x_train, y_train, x_test, and y_test. These arrays can
+then be compressed and stored in a single HDF5 file
+format. Availability of the database through this for-
+mat will enable researchers to rapidly acquire the
+data, which will be suitable for direct experimenta-
+tion without much preprocessing. The details of data
+FIGURE10. TheverificationprocessinvolvedinuTHCDdatabase.
+arrangement inside the HDF5 file (.h5 extension) and
+supportingPythoncodetoextractthetrainandtestset
+welimitedthenumberofsamplesineachclasstobeapprox- aregiveninAppendix.
+imately 600. All 156 character classes of this database and 2) The Raw Image format: The total of 90950 images
+correspondingclassidareasshowninFig.11.Themapping areavailableasasinglecompressedRARfile,includ-
+ofUnicodesequenceswith156classesintheuTHDCisgiven ing ground truth files for both train and test fold-
+inAppendix. ers. Researchers can then acquire this data according
+The final database contains a total of 90950 images. The to their implementation preferences. The images are
+offlinesamplesconstitutearound30%oftotalsamples,and storedinbinaryformat.
+therestofallsamplesareonlinesamples.Thedatacollected
+areavailableasseparaterepositorieswithdifferenttrain-test IV. BENCHMARKING
+proportionsviz70-30(uTHCD_a),80-20(uTHCD_b),85-15 Convolutional Neural Networks (CNNs) have dominated
+(uTHCD_c)and90-10(uTHCD_d).Weensuredtrainandtest most of the recent technological advancements in Artificial
+folderstocontainbothofflineandonlinesamples.Arandom- Intelligence,especiallyinimagerecognitiontasks[45].The
+izedprocesswasusedincreatingtheserepositories.Details main reason for that is the availability of large datasets,
+abouteachoftheserepositoriesaretabulatedinTab.2. massivelyparallelizableGPUs,andabroadspectrumofopen
+VOLUME9,2021 101477
+
+=== PAGE 10 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+FIGURE11. Mappingofclassnumberandtamilcharacters.
+deep learning frameworks [46]. The CNNs are also vastly 2) Subsequently, we leverage a pre-trained SOTA CNN
+famous for simultaneously circumventing the high dimen- and fine-tune it to classify Tamil characters using the
+sionalityproblemandextractingrobustfeaturesforcomputer proposeddatabase.
+vision tasks [47]. There are three main building blocks of a This set of experiments establishes several benchmarks for
+CNN:i)convolutionallayers,ii)zeroormorepoolinglayers, theproposeddatabaseusingSOTAclassificationalgorithms.
+andiii)oneormorefullyconnectedlayers.Variousarchitec- As this study predominantly uses the CNN architectures
+tures have been proposed in the literature by varying these forreportingtheuse-casescenariosoftheproposeddataset,
+buildingblocks[45]–[48],whichhaveobtainedoutstanding the overall flow diagram of the model building using CNN
+results. is shown in Fig.12. The processing starts by loading the
+In this section, we present possible use cases for the pro- uTHCDtrainandtestsets(eitherRAWimagesorHDF5for-
+posed uTHCD database by conducting the following set of mat). Then, experiments are conducted by considering a
+experiments: 70:30train-testsplit(theuTHCD_arepository).Thishelpsto
+1) WefirstlearnaCNNfromscratchwithminimalbuild- comparetheresultswiththeexistingdatabaseasthenumber
+ing blocks. This set of experiments demonstrates sev- of test samples is comparable in both repositories. Firstly,
+eral use cases of the proposed database to address the validation set can be extracted from the training set by
+the OCR classification problem from typical CNN slicingthelast7270samples(relevantPythoncodesaregiven
+perspectives. in Appendix). In the next step, the data suitable for model
+101478 VOLUME9,2021
+
+=== PAGE 11 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+FIGURE12. Thesequenceflowdiagramofmodelbuilding.
+trainingisprepared.So,theimagefiles(x_train,x_test,and benchmarking using CNN models [49]. Accuracy refers to
+x_val)areallnormalizedtohavethevaluesintherange[0,1], thefractionofcorrectlyclassifiedsamplesoverallsamples.
+and the corresponding ground truth values (y_train, y_test Specificityisthefractionofsamplesclassifiedasbelonging
+andy_val)areone-hotencoded. to the negative class over a total number of examples in
+The CNN model can now be created with the proposed thenegativeclass.Inthecontextofmulticlassclassification,
+sequence of Convolutional(ConvNet), Pooling (MaxPool), it can be interpreted as a fraction of samples correctly clas-
+andfullyconnected(FC)layers.Inthisstep,wecaninstead sified as belonging to other classes over a total number of
+leverage an existing SOTA CNN model (as discussed in samples belonging to different classes. This measure helps
+Section IV-B). The model can then be configured with a todiscoverthefalsepositiverate(FPR)as1-specificity.The
+presetlearningrate,optimizer,etc.Finally,themodelisready sensitivity(orrecall)measuresthetruepositiverate(TPR)—
+to be trained for a fixed number of epochs with specific afractionofallsamplescorrectlyclassifiedasbelongingto
+callbacks. We made use of the EarlyStoppingy Keras call- the same class over a total number of samples belonging to
+back–thishelpstoterminatethetrainingprocesswhenthe same class. Finally, the F1-score is a weighted average of
+lossisnolongerdecreasing.Ithasaregularizationeffectas precision and recall. The FPR, TPR, and F1-score reported
+well, in addition to assisting in optimal usage of processor areaveragevaluesobtainedwiththeonevs.allstrategy[49].
+resources.Finally,thetrainedmodelcanbesavedforfurther Implementation and subsequent evaluation were car-
+testingpurposes. ried out on a machine with GPU (NVIDIA GeForce
+We used four performance metrics: accuracy, specificity, MX330) running on top of an Intel i7 1.6 GHz proces-
+sensitivity(recall),andF1-scoretoevaluateandestablishthe sor with 16GB RAM. The entire work was implemented
+VOLUME9,2021 101479
+
+=== PAGE 12 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+FIGURE13. ThebasicCNNarchitectureused.
+using Tensorflow end-to-end machine learning library with shown in Fig.16. It can be noted that the performance of
+Keras API using Python 3.7.10 environment. Furthermore, Adam, Nadam, and RMSProp is comparable to each other
+TensorRT 6.0neural network optimizer was synced with while they perform significantly better than AdaGrad and
+NVIDIA to optimize memory consumption, throughput, AdaDelta.Furthermore,thebehavioroftheseoptimizerswas
+latency,andpowerefficiency. similarwhenwechangedtheαfrom10−3to10−6instepsof
+10−1.Basedonthisempiricalevidence,wefixedtheAdam
+A. BASICCNNARCHITECTURE optimizerwithalearningrateα = 0.001forallsubsequent
+WeaimtodesignaminimalistCNNarchitecturetoestablish experiments.
+baseline accuracy for the proposed database. The research Next,weexperimentedtodeterminetheoptimalvaluefor
+community can then offer efficient CNN architectures to batch size as it is a consequential hyperparameter in any
+demonstraterobustperformanceusingtheuTHCDdatabase. network that controls the overall dynamics of the network
+Wedesignedseveralcombinationsofarchitecturesbyvarying architecture [51]. We varied the batch size starting from 25
+differenttypesofCNNlayerswitharestrictionofnotusing to 212 in steps of a power of 2. The plot of train, test,
+more than two layers for each layer type (not counting the and validation accuracy vs. batch size is shown in Fig.14.
+final classification layer). The combination that yielded the ThiswasimplementedwiththeEarlyStoppingKerascallback
+best training accuracy is the proposed CNN architecture, observed on validation loss. From Fig.14, we can see that
+asshowninFig.13.Asimilararchitecturealsoyieldedopti- batchsizedoesnotsignificantlyimpacttheaccuracy.Hence,
+malresultsforvariouscomputervisionproblems[50]. we can conclude that algorithms using this database on a
+The CNN architecture has two convolutional layers, two CNNcanpreferamini-batchgradientdescentwith32asan
+pooling layers, and two fully connected dense layers. The optimalvalueforthebatchsizethatyieldsthesameaccuracy
+inputlayercontains64×64sizedimages.Thearchitecture
+without compromising much on the computational burden
+canberepresentedas:64C2−MP2−64C2−MP2−1024N−
+andspeedofthelearningmodel.
+5128N, where nCj indicates a convolutional layer with n Apart from the learning rate, optimizer function, and
+filtersandj×jkernel,MPk referstoamaxpoollayerwith batchsize,anotherinfluentialhyper-parameterknownasthe
+k ×k kernel, and fN refers to a fully connected layer with activation function that must be fixed. Several activation
+N neurons.Theoutputlayerisaclassifierwiththesoftmax functions such as tanh, sigmoid, ReLU, etc., are available
+activationfunctiontoclassify156classes. for assisting the CNN to learn the complex patterns in the
+ThestudyofoptimalvaluesforhyperparametersofCNN data.Weusedactivationfunctionswhicharegenerallyused
+is a challenging task, and it is data dependent [46]. The in the literature [52] – Rectified Linear Unit (ReLU) for
+learning rate hyper-parameter α has a significant impact hidden layers and softmax for the final classification layer.
+as the convergence of the model heavily depends on this The ReLU and softmax activation functions are defined as
+parameter which needs to be carefully fixed to an optimal below:
+value before tuning other hyperparameters. We conducted
+an initial set of experiments by independently learning our ReLU(x) = max(0,x) (2)
+CNNmodelusingdifferentoptimizers.Theperformanceof
+e(xi)
+these models (for α = 0.001) observed for 35 epochs is softmax(x) = σ(x)= (3)
+i i (cid:80) e(xj)
+j
+101480 VOLUME9,2021
+
+=== PAGE 13 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+FIGURE14. Accuracyforvaryingbatchsizes.
+FIGURE15. Performanceontrainingvsvalidationsets.
+wherex i istheinputvector.Finally,theXavierinitializerwas TABLE3. HyperparametersvaluesusedintheCNNarchitecture.
+used to initiate the kernel values. For the rest of the CNN
+based-experiments,unlessexplicitlymentioned,thehyperpa-
+rametervaluesusedareshowninthetable-3.
+Toobtainaholisticideaaboutthebehavioroftheproposed
+CNNarchitecture,wefirsttrainedthemodelfor200epochs
+(withoutthetriggeroftheEarlyStoppingcallback).Theplot
+of accuracy and loss for training and validation sets are as
+demonstratedinFig.15.Wecanobservethatalthoughtrain-
+ing accuracy and loss have converged around ten epochs, function by outputting the class label corresponding to the
+thevalidationlosskeepsincreasing.Thisisbecausethetrain- highest probability. It does not consider the magnitude of
+ing accuracy/loss of a set is evaluated through the softmax corresponding class probability. In other words, although a
+VOLUME9,2021 101481
+
+=== PAGE 14 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+TABLE4. Dropoutintheconvolutionallayers.
+betweentheseclassesareonlythroughthepresenceor
+absenceofi)asmallhollowcircleinthetop(knownas
+Anurava),orii)aloopattheendoftheupperstrokeor
+iii)justelongationoftheprimarystroke.Observeevery
+sixclassesstartingseriallyfromclass14to142,which
+representsuchcompoundcharacters.
+FIGURE16. Performanceofdifferentoptimizerswithα=0.001.
+• Severalotherconsonants(forexample,class15and21,
+67and79)havehighsimilarityintheirshapeduetothe
+samereasonsoutlinedabove.
+correctly classified sample with marginal probability con-
+• Particular class triplets exhibit a very high similarity
+tributes to the accuracy, the model is still penalized with
+between them, for example (140, 141, 142),(126, 127,
+loss.Thefluctuatingvalidationaccuracyisduetothemodel
+128)etc.Thishighsimilaritycoupledwithuniquewrit-
+pickingspuriouspatternsalongsomeusefulones.Thisbase-
+ing styles further diminishes the already slight varia-
+line model resulted in a training accuracy of 99.61% with a
+tion that exists between these class triplets leading to
+validationaccuracyof92%.
+misclassification.
+Next, we used the test set to evaluate the efficacy of the
+Some of these observations are reflected in the CMs shown
+model.Thetestsetobtainedanaccuracyof87.00%.Consid-
+inFig.19.Hencewecanconcludethatthemisclassifications
+ering the fact that human level performance can get nearly
+that we observed are mainly due to the structural properties
+0% error for handwritten OCR cases(which is also known
+oftheTamilscript.
+as Bayes error/optimal error), these results indicate that the
+Wenextconductedexperimentstoresolvetheproblemof
+proposedmodelsuffersfromthehighvarianceproblem.This
+high variance our model suffered. One of the first things to
+isbecausetheproposedCNNmodeloverfitsthetrainingdata
+try when there is a high variance problem is regularization.
+butperformssignificantlylesswithunseentestdata.Thiscan
+Dropout is a popular regularization technique that we used
+beaddressedindifferentwayssuchasimplementingregular-
+toresolvethehigh-varianceissue.Srivastavaetal.[53],who
+izationtechniquesorevenimplementingamoreappropriate
+introduced the original dropout layer concept, used dropout
+networkarchitecture.Ideally,theresultshouldindicatealow
+(withprobability=0.5)ineachofthefullyconnectedlayers.
+varianceandlowbiassituationwherethereisnotmuchgap
+Itwasnotusedontheconvolutionallayers.So,weconducted
+inthetrainandtesterror.
+thefirstseriesofexperimentsbyvaryingthedropoutratein
+Fig.17 shows the plot of misclassification errors for
+the fully connected dense layers only. The result is shown
+156classes.Someexamplemisclassifiedsamplesareshown
+in Fig.20. The dropout probability of 0.45 and 0.5 curtailed
+in Fig.18. For the misclassification study, the confusion
+the train and test accuracy gap, thereby slight improvement
+matrices3 (CMs)separatelyforsetofvowelsand18sample
+towardsthehighvarianceproblem.Therefore,itcanbeascer-
+compoundcharactersaredrawn,asshowninFig.19.Welist
+tained that these results comply with what was suggested
+below some error analysis we carried out by observing the
+in[53].
+GT associated with misclassified samples (Use Fig.11 for
+Oflate,astudy[54]proposedapplyingthedropoutstrategy
+reference):
+in the convolutional layers as well, however, with a much
+• Misclassificationhappensbetweenshortvowels(Kuril)
+lower value of probability (0.1 or 0.2). Hence, to further
+and long vowels (Nedil), which differ in their overall
+mitigatethehighvarianceproblem,keepingthedropoutrate
+shape with minor changes (e.g.:elongation of a stroke,
+of 0.5 in the dense layers, we conducted the next set of
+presenceoftinymodifier,etc.).Class1to12represents
+experimentsbytryingthedropoutintheconvolutionallayers.
+thesevowels.
+Theresultsaretabulatedintable-4.Thebestaccuracyonthe
+• Thereisahighbetween-classsimilarityamongthecom-
+test set was obtained for a dropout probability of 0.10 and
+pound characters formed out of vowel-consonant com-
+0.05 in conv1 and conv2 layers, respectively which further
+binations, leading to misclassification. The differences
+shrunkthegapbetweenthetrainandtestaccuracy.However,
+thetestaccuracyneedsfurtherimprovement.
+3TheCMsweredrawnbytrainingseparatelywithmentionedvowelsand
+The final set of experiments for this basic CNN was
+setofcompoundcharacterssincevisualizinga156classCMisnoteasily
+decipherable conducted to further shrink the train and test accuracy gap
+101482 VOLUME9,2021
+
+=== PAGE 15 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+FIGURE17. Misclassificationcountfor156classes–Totalmisclassificationis3650outof28080samples.
+FIGURE18. Someexamplemisclassifiedsamplesfromthetestset(T:True,P:Predicted).
+through data augmentation techniques. Data augmentation TABLE5. Resultsforvaryingaugmentationfactors.
+aimstosupplementthetrainingsetbysynthesizingartificial
+data from actual data [55]. Data augmentation has a reg-
+ularization effect and hence reduces the overfitting of the
+model [55]. We augmented the training data by applying
+four variations: i) rotation (up to ±15 degrees), zoom (with
+0.2 factor), and horizontal/vertical shift variations (up to
+20 pixels) to the original samples. One or more of these
+variations were applied to a sample to generate additional
+examples. Fig.21 shows the example augmented images of balanced with an equal number of samples in all classes.
+a character (class 7). This experiment was conducted with Secondly, a randomly chosen training image transforms as
+establishedoptimaldropoutprobabilitiesineachlayerofthe mentioned earlier, and with this, the training set remained
+model. relatively balanced. Results after augmentation using these
+Two types of augmentation strategies were applied to two types are respectively shown in Table-5 and Fig.22.
+generate additional samples. Firstly, every image in the TheDiffcolumnshowsthedifferencebetweentrainandtest
+trainingsetisaugmentedbyimplementingoneormoremen- accuracy,whichwasinitially12.6%withouttheapplication
+tionedvariance.Thisway,thetrainingsetremainedperfectly ofregularizationtechniques.
+VOLUME9,2021 101483
+
+=== PAGE 16 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+FIGURE19. Confusionmatrices:Setofvowels(Left)andsetofcompoundcharacters(Right).
+FIGURE20. DropoutintheDenselayers.
+Itcanbeobservedfromboththeseresultsthatthevalida- validation set as that of the training set can also lead to
+tion accuracy is getting better as the augmentation factor is good validation accuracy. The test set accuracy has reached
+increased. It can be for many reasons, such as the valida- 93.32%afterdataaugmentation,whichisabout3%increase.
+tion set becoming relatively easier compared to artificially Thetrainingaccuracyisnotdrasticallycomingdown,which
+induced variations in the training set. In addition, the val- may be due to using moderate values for transformations
+idation set is evaluated using all neurons in contrast to while augmenting the training set. Nevertheless, this set of
+the aggressively dropped neurons during the training phase. experimentsdemonstratedconventionalwaystomitigatethe
+Furthermore, having a similar sample distribution for the highvarianceproblemourmodelinitiallysuffered.
+101484 VOLUME9,2021
+
+=== PAGE 17 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+FIGURE21. Sampleaugmentedimagesbelongingtoacharacter[Row-1:
+Rotation,Row-2:HorizontalShift,Row-3:VerticalShift,Row-4:Zoom,
+Row-5:Multipleeffects].
+FIGURE23. Thefine-tunedVGG16modelarchitecture.
+FIGURE22. Train,testandvalidationaccuracyforvaryingaugmentation
+factors.
+it. First, all input samples were converted to 3D space
+(64 × 64 × 3) to comply with the VGG16 architecture
+B. USINGAFINE-TUNEDCNNARCHITECTURE– specifications.Then,theVGG16modelwasre-purposedby
+TRANSFERLEARNING retaining the ImageNet weights and removing the top layer.
+Finally, establishing a benchmark for the uTHCD dataset, We added two dense layers to fine-tune the model using
+especiallyusingaCNN,wouldbeincompletewithoutadopt- the uTHCD database, as shown in Fig.23. This architecture
+ing the transfer-learning approach. Transfer learning is a produced the optimal results compared to the models based
+process where we reuse a model for a task different than onadifferentcombinationofVGG16layers,whichincluded
+it was primarily learned [56]. Transfer learning offers sev- replacingjustthetoplayerandconsideringonlythefirstfew
+eral advantages such as i) offering a better starting point convolutional blocks of VGG16. We carried out two types
+to the new task in hand, ii) deep learning of a model with ofexperimentswiththepre-trainedmodel:withdropoutand
+comparativelylesserdata,iii)rapidtrainingprocesssinceit withoutdropout,asshowninFig.24.
+leveragesapre-trainedmodelwithoptimalweights,iv)serves Someobservationsbasedonthistransferlearningexperi-
+as a feature extraction model, etc [57]. Hence, we used a mentareasbelow:
+popular pre-trained model of the ImageNet challenge [58] 1) The model required only around eight epochs to con-
+and reported its performances with various configurations. verge, which is around 1 of the number of epochs
+3
+Thiswillserveasafuturereferenceforefficacycomparisons needed to converge in the basic CNN model we pro-
+ofpre-trainedmodelsontheuTHCDdatabase. posed.ThisisduetothefactthatweusedtheImageNet
+Inspired by the demonstrated performance of the kernelweightsratherthantrainingitfromscratch.This
+VGG16modelrecentlyonvarioustasks[52],[59],welever- isanadvantageintermsofthetrainingtimeofusinga
+aged the pre-trained VGG16 [47] model by fine-tuning pre-trainedmodel.
+VOLUME9,2021 101485
+
+=== PAGE 18 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+FIGURE24. ResultoffinetunedVGG16model[Left:WithDropout,Right:WithoutDropout].
+TABLE6. Establishedbenchmark.
+2) The accuracy of the model on test data is 92.32% Table-6summarizesthebenchmarkweestablishedforthe
+which is no better than the basic CNN architec- proposeduTHCDdatabaseusingthevariousCNNmodels.
+ture we used. However, the basic model required
+three times the augmented data to achieve this. The
+V. COMPARATIVESTUDYANDCLASSIFICATION
+essenceofusingapre-trainedmodelliesinhoweffec-
+RESULTSUSINGSOTA
+tively the model generalizes with lesser training sam-
+In this section, we compare the proposed uTHCD database
+ples. Hence, the transfer learning approach helped us
+withtheexistingHPLdatabase.Wedothisbyfirstcompar-
+achieve on par performance on test data without data
+ing the salient features of these two databases highlighting
+augmentation.
+prominentfeaturesthatpotentiallyleadtobetterOCRaccu-
+3) The model without dropout rapidly overfits the data.
+racy. Furthermore, classification results using traditional
+This may be because the problem we are trying
+machinelearningandSOTAalgorithmareanalyzed.
+to solve is far simpler than the ImageNet chal-
+lenge for which VGG16 weights were originally
+established. A. SIGNIFICANCEOFTHEPROPOSEDuTHCDDATABASE
+4) Althoughthepre-trainedmodelwithdropoutovercame Compared to the HPL database, the uTHCD database has
+the overfitting problem, its performance on training
+substantialbenefits,mainlyfromOCRuse-caseperspectives:
+data is lesser than the basic CNN model we pro-
+1) Modern deep learning algorithms for OCR need a
+posed.Thisisduetousingthepre-trainedweightswith
+considerable amount of samples to develop a robust
+frozen layers. Setting those layers to trainable mode
+model[61].TheuHTCDdatabasehas90950samples
+withafinelytunedlearningratewouldprobablywork
+withapproximately600sampleseachfrom156classes
+best[60].
+withtheprovisiontoenhancemoreinthecomingyears.
+101486 VOLUME9,2021
+
+=== PAGE 19 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+This is around 13000 samples more compared to the TABLE7. Comparisonofexistingandproposeddatabases.
+existingHPLdatabase.
+2) Unlike the HPL dataset, the uTHCD database is a
+unified collection of both offline and online samples.
+Asmentionedearlier,theofflinesamplescaptureuseful
+characteristics of scanned handwritten samples such
+as distortion due to overwriting, variable thickness
+of strokes, and stroke discontinuity (due to usage of
+different writing tools). These are in addition to cap-
+turing various writing styles through online samples
+(Refer Fig.9). Hence, the OCR models created using
+theuHTCDdatabasewillcapturetheseinherentchar-
+acteristicsofascanneddocument;thereby,robustper-
+formance is expected for automatic form processing.
+TheHPLdatasetcapturesonlydifferentwritingstyles
+Thetable-7providesaquickcomparisonbetweenuTHCD
+(ReferFig.5).
+andtheHPLdatabase.
+3) As the HPL dataset is synthetically created from
+theonlinepencoordinatesthroughinterpolationtech-
+B. CLASSIFICATIONRESULTSUSINGSOTA
+nique [30], characters formed have single-pixel width
+Next, we report the results of some traditional and SOTA
+strokes. On the other hand, the offline samples of the
+classification algorithms using the proposed uTHCD and
+uTHCDdatabasehaveinstancesofthesamecharacter
+existing HPL datasets. The objective is to know the benefit
+having a variable thickness of strokes as we had no
+of the proposed dataset over the HPL dataset. We imple-
+restriction on usage of writing media. Consequently,
+mentedRandomForest(RF)[62],SupportVectorMachines
+thepercentageofforegroundpixelsisnearly20%com-
+(SVM) [63], and k-Nearest Neighbor (KNN) [64] classifi-
+pared to approximately 2% in HPL data. This high
+cationalgorithms.TheRFalgorithmwasimplementedwith
+degree of sparseness sometimes impedes the perfor-
+100decisiontrees,andKNNmodelswereevaluatedbyhav-
+manceofsomealgorithms.
+ing the optimal K value. Results of these algorithms were
+4) Each of the 156 classes has a uniform number
+presentedusingbothrawpixelvaluesandfeaturesextracted
+of samples, whereas the HPL database has sev-
+using a pre-trained VGG16 model. Additionally, we used
+eral under-represented classes. The machine learn-
+the the fine-tuned VGG16 CNN architecture to observe the
+ing based OCR algorithms can not robustly model
+performanceonrespectivetestsetsoftheuTHCDandHPL
+under-representedclasses[36].
+datasets.
+5) TheuTHCDdatabaseismadepubliclyavailablewith
+Theaccuracyofthesealgorithmsusingthesetwodatabases
+multiple proportions of train-test splits, and thus it
+isshowninFig.25.
+canbe usedtotest theefficacy oftraditionalmachine
+Some crucial observations we made through this experi-
+learningandmoderndeeplearningalgorithmswithout
+mentareasbelow:
+muchprocessingofdata.
+6) The uTHCD database is available in both RAW and 1) TheresultsofRF,SVM,andKNNclassifiersproduced
+convenient HDF5 format, facilitating rapid OCR pro- undesirableresultsusingtheHPLdatabase.Thisprob-
+totyping and model testing. In addition, our database lemisprimarilyduetothesingle-pixelwidththickness
+does not require any processing and is available in a ofcharacters,leadingtoahighdegreeofsparsenessin
+ready-to-use form. However, the HPL database needs theHPLdata.
+someprocessing.Forinstance,theGTdatafortraining 2) During the bootstrap data aggregation step of the RF
+samples are not provided. Hence, initial processing algorithm,thesparsenessinimagematricesleadstothe
+of HPL dataset is required at least with supervised highly correlated decision trees as they are randomly
+algorithms. sampled.Thiswillresultintheformationofaweaker
+7) The HPL dataset has some errors in the GT data. ensembleofdecisiontrees.
+For instance, the test image 00043 is wrongly asso- 3) Asimilarreasoningcanbemadefortheperformanceof
+ciated with GT class id 129 when it actually repre- theKNNalgorithmonHPLdata.TheKNNalgorithm
+sents the class id 78. The uTHCD sample collection performed worst with raw pixel values. The reason
+intheproposedworkunderwenttwolevelsofmanual couldbeagainduetothesingle-pixelwidthcharacter
+verificationprocesses.Thisensuredsamplescollected patterns. The algorithm will have difficulty matching
+andassociatedGTarerepresentativeoftheunderlying a pattern with another sample, especially when these
+class. patternsarejustsinglepixelwidth.
+8) In the future, we will expand the uTHCD database to 4) The SVM performs relatively better with raw pixel
+catertotheever-evolvingresearchinthisfield. values compared to RF and KNN classifiers. This is
+VOLUME9,2021 101487
+
+=== PAGE 20 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+FIGURE25. Resultsoftraditionalclassificationalgorithmsusingtheproposedandexistingdataset.
+becausetheSVMprimarilymaximizesthemargin,and
+henceitdependsonthedistancebetweenthedifferent
+datapoints.
+5) The points mentioned above can be substanti-
+ated through a simple transfer learning approach
+where the raw pixel values were transformed into
+a rich feature maps represented by the pre-trained
+VGG16 model [58]. The VGG16 model was trained
+on millions of images, and hence it captures complex
+features at different layers through its kernels. This is
+the main reason for the enhanced accuracy of these
+classifiersintransformedfeaturespace.
+6) The traditional classifiers RF, SVM, and KNN algo-
+FIGURE26. Performanceofdifferentclassifierswhentrainedusing
+rithmsproducedundesirableresultsifdirectpixelval-
+uTHCDandHPLdatasets.
+ueswereused.Thishasacascadingeffect;forinstance,
+anensembleofclassifiersapproachmayfailtoperform
+wellduetothefailureofconstituentclassifierstomodel TheresultsareasshowninFig.26.Itcanbeascertainedthat
+thedatareliably[65]. trainingontheproposeduTHCDdatabasehelpsclassifiersto
+7) Performance of these classifiers with the uTHCD performeitherbetteroronparincontrasttowhenclassifiers
+database was acceptable. This is mainly because the were trained using the HPL database. It is mainly because
+sparseness is not substantial in the uTHCD database. theuTHCDdatabaseincludesbothonlineandofflinesamples
+Furthermore, as expected, the VGG16 feature space helpingmodels tocaptureawide varietyofreal-timevaria-
+enhanced the classifiers’ performance due to the pos- tions.Furthermore,theonlinesamplespresentintheuTHCD
+sibleeliminationofredundancyexpressedthroughraw databaseallowclassifierstomodelthecommonlyexhibited
+pixelvalues. HPLdatasetvariations.Hence,theperformanceontheHPL
+This experiment suggests that the HPL dataset needs to be testwasbetterwhentrainedusingtheproposeddatabase.
+representedinabetterfeaturespacebeforeareliableclassi- Theseexperimentssuggestthatthestate-of-the-artclassi-
+fiercanbemodeledusingit. ficationalgorithmstrainedontheuTHCDdatabaseperform
+Anotherexperimentwasconductedwherewetraineddif- better on test samples never seen during the training phase.
+ferent classifiers with uTHCD samples but tested with the Furthermore, we believe that factors affecting handwritten
+HPLdatasetandvice-versa.Theobjectiveofthistestwasto patterns(diversewritingstyles,usageofunconstrainedwrit-
+determinetherobustnessofmodelsagainstreal-timeunseen ingtools,distortions,strokediscontinuity)arewellcaptured
+variationscapturedthroughtheunderlyingtrainingset. throughonlineandofflinesamplesoftheuTHCD.Asaresult,
+WeusedtheuTHCD_asettobeonparwiththeHPLtest itcanhelpachieverobustresultsforreal-timeOCRtestcases
+set size. To be uniform, we considered 26000 samples for aswell.
+testing from respective test sets. The results of RF, SVM, Nevertheless, the existence of multiple standardized
+andKNNalgorithmswithtransformedVGG16featuremaps databases has several benefits. A majority of scientific
+were only considered since direct raw pixels yielded poor study relies on the presence of standardized datasets for
+results when both trained and tested using the HPL dataset. investigating a particular problem. It will facilitate research
+101488 VOLUME9,2021
+
+=== PAGE 21 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+communities to focus on proposing solutions rather than
+going through laborious data collection tasks. Moreover,
+to test the efficiency of algorithms, it is essential to use
+multifaceteddatatotestallcornercases.Ingeneral,thecorner
+casesdonotcomefromonesetofdatabutmultipledatasets.
+Hence, both existing and proposed datasets lead to bench-
+markingnewsolutionsforTamilhandwrittenOCR,leadingto
+robustlanguagetechnologiesinvolvingspeech,handwriting
+andtextsamples.
+VI. CONCLUSIONANDFUTUREWORK
+Works relating to Tamil Handwritten character recognition
+havereliedonasolitarystandardizeddatabaseforthelongest
+time. However, having multiple standardized databases for
+a research problem can contribute positively in many ways
+to the advancement of that research field. In this work,
+wedelineatedtheextensiveworkinvolvedincreatingacom-
+prehensive handwritten Tamil isolated character database.
+Thisdatabaseconsistsofhandwrittensamplescollectedfrom
+bothphysicalanddigitalforms.Thedatabaseandnecessary
+groundtruthdatahavebeenmadepubliclyavailableinboth
+RAWandHDF5formats.Ourworkpresentedmanyusecases
+for this dataset by applying CNN models for classification
+Listing.1. PythonCodetoExtractuTHCDDataset
+purposes and reporting the baseline accuracy. Additionally,
+we also ascertained that models trained on the proposed
+databaseachievebetterOCRaccuracywhentestedonunseen
+data.
+In the future, the proposed database can be augmented illustrated as shown in Fig.27. The file has a directory-like
+through the application of generative adversarial networks. structure with two groups of datasets labeled as Train data
+The resulting expansion may pose more challenges to the and Test data. Within the Train data group, the size nor-
+ever-evolvingfeatureextractionalgorithmsanddeeplearning malized 62870 uTHCD_a train images are stored in a 3D
+framework. Various studies can be conducted to determine matrix, namely x_train, and the corresponding class labels
+the fundamental efficacy/limitations of the state-of-the-art are stored in the 1D vector y_train. The size of x_train and
+feature extraction and classification algorithms for Tamil y_train are respectively (62870, 64, 64) and (62870,1). The
+OCR using the uTHCD database. Furthermore, it would be 28080testimagesandcorrespondinglabelsintheTestData
+particularlyinterestingtoseetheapplicationoftheuTHCD group are likewise stored respectively in x_test and y_test
+databaseintheperformanceofcharacterpatternoverlapping variables.
+usingapatternseparationnetwork[14]. Given this file structure, the Python code shown in
+The creation of this database is expected to contribute Listing1toextractthetrainandtestdataisrelativelystraight-
+to the efficient model development for Tamil OCR, facil- forward. Lines 1-2 import two Python packages: NumPy
+itate the research community to objectively evaluate the and h5py. The NumPy package is necessary to represent
+state-of-the-artalgorithms,andinstigatemoreresearchwork the extracted train and test data as multidimensional arrays
+inTamilhandwritingcharacterrecognition. suitable for subsequent computational processes. The h5py
+moduleisutilizedtoextractthedatasetsfromtheHDFformat
+APPENDIX filewiththe.h5extension.
+HIERARCHICALDATAFORMAT(HDF) Line3readstheuTHCDcompressedhdf5file.Lines4-5
+FORTHEuTHDCDATABASE extract the base group items and print their names (‘Train
+This section demonstrates the HDF5 file structure of the Data’ and ‘Test Data’). Line 6 extracts the ‘Train Data’
+uTHCD database and explains the method of extracting groupfollowedbyLines7-8thatprintthedatasetwithinthis
+train,test,andvalidationsetsfromitusingasimplePython group(x_trainandy_train).Similarly,Line9andLines10-11
+script.WhilethecodedemonstratesextractingtheuTHCD_a respectively extract the ‘Test Data’ group and print the
+repository, the same is also applicable for the remaining dataset within it (x_test and y_test). Lines 12-15 respec-
+repositories. tivelyextractx_train,y_train,x_test,andy_testandrepresent
+The HDF5 file is a convenient file format with.h5 exten- them as multidimensional arrays. Once these datasets are
+sion to store and organize huge data [66]. The file struc- extracted, Lines 16-19 extracts the validation set out of the
+ture used to organize the uTHCD database in this format is trainingset.
+VOLUME9,2021 101489
+
+=== PAGE 22 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+FIGURE27. DataorganizationofuTHCDinHDF5fileformat.
+FIGURE28. Charactertoclassmappingwithunicode.
+We can use the same code to extract the rest of the input image to corresponding editable Tamil character can
+uTHCD repositories of varying train-test split proportions. bedoneusingUnicodecharacterencodingofTamilscriptas
+Additional details to convert the classification result of an showninFig.28andFig.29.
+101490 VOLUME9,2021
+
+=== PAGE 23 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+FIGURE29. Charactertoclassmappingwithunicode–continued.
+ACKNOWLEDGMENT [8] M. Chandrasekaran, R. Chandrasekaran, and G. Siromoney, ‘‘Context
+The authors would like to profoundly thank reviewers for dependentrecognitionofhandprintedTamilcharacters,’’inProc.Int.Conf.
+Syst.ManCybern.,vol.2,1983,pp.786–790.
+their critical reading and thoughtful comments, which sig-
+[9] C.Vinotheni,S.L.Pandian,andG.Lakshmi,‘‘Modifiedconvolutional
+nificantly improved the overall quality of the work. They neuralnetworkoftamilcharacterrecognition,’’inAdvancesinDistributed
+would also like to thank Dr. Mufti Mahmud, Nottingham ComputingandMachineLearning(LectureNotesinNetworksandSys-
+tems),vol.127,A.Tripathy,M.Sarkar,J.Sahoo,K.C.Li,andS.Chinara,
+Trent University, for several resourceful discussions during
+Eds. Singapore: Springer, 2021, doi: 10.1007/978-981-15-4218-
+thisresearchstudy. 3_46.
+[10] R.B.LincyandR.Gayathri,‘‘Optimallyconfiguredconvolutionalneural
+REFERENCES networkforTamilhandwrittencharacterrecognitionbyimprovedlionopti-
+[1] I.Mahadevan,EarlyTamilEpigraphyFromtheEarliestTimestotheSixth mizationmodel,’’MultimediaToolsAppl.,vol.80,no.4,pp.5917–5943,
+CenturyAD(H.O.Series),vol.62.Cambridge,U.K.:HarvardUniv.Press, Feb.2021.
+2003. [11] H. Choudhury and S. R. M. Prasanna, ‘‘Handwriting recognition
+[2] S.B.Steever,‘‘Tamilwriting,’’inTheWorld’sWritingSystems.NewYork, using sinusoidal model parameters,’’ Pattern Recognit. Lett., vol. 121,
+NY,USA:OxfordUniv.Press,1996,pp.426–430. pp.87–96,Apr.2019.
+[3] L.CampbellandV.Grondona,‘‘Review:Ethnologue:Languagesofthe [12] T.M.Ghanim,M.I.Khalil,andH.M.Abbas,‘‘Comparativestudyon
+worldbyRaymondG.Gordon,’’Language,vol.84,no.3,pp.636–641, deepconvolutionneuralnetworksDCNN-basedofflinearabichandwriting
+2008. recognition,’’IEEEAccess,vol.8,pp.95465–95482,2020.
+[4] P.B.PatiandA.G.Ramakrishnan,‘‘OCRinIndianscripts:Asurvey,’’
+[13] Current State of OCR: Is it a Solved Problem in 2021?
+IETETech.Rev.,vol.22,no.3,pp.217–227,May2005.
+Accessed:May4,2021.[Online].Available:https://research.aimultiple.
+[5] U.PalandB.B.Chaudhuri,‘‘Indianscriptcharacterrecognition:Asur-
+com/ocr-technology/
+vey,’’PatternRecognit.,vol.37,no.9,pp.1887–1899,Sep.2004.
+[14] N. Modhej, A. Bastanfard, M. Teshnehlab, and S. Raiesdana, ‘‘Pattern
+[6] A. Chaudhuri, K. Mandaviya, P. Badelia, and S. K. Ghosh, ‘‘Optical
+separation network based on the hippocampus activity for handwritten
+character recognition systems,’’ in Optical Character Recognition Sys-
+recognition,’’IEEEAccess,vol.8,pp.212803–212817,2020.
+temsforDifferentLanguagesWithSoftComputing(StudiesinFuzziness
+andSoftComputing),vol.352.Cham,Switzerland:Springer,2017,doi: [15] A.Singh,K.Bacchuwar,andA.Bhasin,‘‘AsurveyofOCRapplications,’’
+10.1007/978-3-319-50252-6_2. Int.J.Mach.Learn.Comput.,vol.2,no.3,p.314,2012.
+[7] G.Siromoney,R.Chandrasekaran,andM.Chandrasekaran,‘‘Computer [16] X.-F.Yue,S.-X.Jiao,L.-Q.Han,andH.-Z.LI,‘‘SurveyofOCRandits
+recognitionofprintedTamilcharacters,’’PatternRecognit.,vol.10,no.4, applicationsinpatternrecognition,’’HebeiJ.Ind.Sci.Technol.,vol.23,
+pp.243–247,Jan.1978. no.5,p.312,2006.
+VOLUME9,2021 101491
+
+=== PAGE 24 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+[17] X.Peng,H.Cao,S.Setlur,V.Govindaraju,andP.Natarajan,‘‘Multilingual [39] T. MJose and A. Wahi, ‘‘Recognition of Tamil handwritten charac-
+OCRresearchandapplications:Anoverview,’’inProc.4thInt.Workshop ters using Daubechies wavelet transforms and feed-forward backprop-
+Multilingual(OCR-MOCR),2013,pp.1–8. agation network,’’ Int. J. Comput. Appl., vol. 64, no. 8, pp.26–29,
+[18] R. Sharma and B. Kaushik, ‘‘Offline recognition of handwritten Indic Feb.2013.
+scripts:Astate-of-the-artsurveyandfutureperspectives,’’Comput.Sci. [40] N. Shanthi and K. Duraiswamy, ‘‘A novel SVM-based handwritten
+Rev.,vol.38,Nov.2020,Art.no.100302. Tamilcharacterrecognitionsystem,’’PatternAnal.Appl.,vol.13,no.2,
+[19] M.Agrawal,A.S.Bhaskarabhatla,andS.Madhvanath,‘‘Datacollection pp.173–180,May2010.
+forhandwritingcorpuscreationinIndicscripts,’’inProc.Int.Conf.Speech [41] S. Thadchanamoorthy, N. D. Kodikara, H. L. Premaretne, U. Pal, and
+Lang. Technol. Oriental COCOSDA (ICSLT-COCOSDA), New Delhi, F.Kimura, ‘‘Tamil handwritten city name database development and
+India,Nov.2004. recognition for postal automation,’’ in Proc. 12th Int. Conf. Document
+[20] A.Alaei,P.Nagabhushan,andU.Pal,‘‘AbenchmarkKannadahandwritten Anal.Recognit.,Aug.2013,pp.793–797.
+document dataset and its segmentation,’’ in Proc. Int. Conf. Document [42] B. Nethravathi, C. Archana, K. Shashikiran, A. G. Ramakrishnan, and
+Anal.Recognit.,Sep.2011,pp.141–145. V.Kumar,‘‘CreationofahugeannotateddatabaseforTamilandKan-
+[21] N. Das, J. M. Reddy, R. Sarkar, S. Basu, M. Kundu, M. Nasipuri,
+nada OHR,’’ in Proc. 12th Int. Conf. Frontiers Handwriting Recognit.,
+andD.K.Basu,‘‘Astatistical–topologicalfeaturecombinationforrecog-
+Nov.2010,pp.415–420.
+nition of handwritten numerals,’’ Appl. Soft Comput., vol. 12, no. 8,
+[43] S.A.Mahmoud,I.Ahmad,W.G.Al-Khatib,M.Alshayeb,M.T.Parvez,
+pp.2486–2495,Aug.2012.
+V.Märgner,andG.A.Fink,‘‘KHATT:AnopenArabicofflinehandwritten
+[22] P. K. Singh, R. Sarkar, N. Das, S. Basu, M. Kundu, and M. Nasipuri,
+textdatabase,’’PatternRecognit.,vol.47,no.3,pp.1096–1112,2014.
+‘‘Benchmark databases of handwritten Bangla-Roman and Devanagari-
+[44] P.DeyandS.Noushath,‘‘E-PCP:Arobustskewdetectionmethodfor
+Romanmixed-scriptdocumentimages,’’MultimediaToolsAppl.,vol.77,
+scanneddocumentimages,’’PatternRecognit.,vol.43,no.3,pp.937–948,
+no.7,pp.8441–8473,Apr.2018.
+Mar.2010.
+[23] N. Das, R. Sarkar, S. Basu, M. Kundu, M. Nasipuri, and D. K. Basu,
+[45] A.Krizhevsky,I.Sutskever,andG.E.Hinton,‘‘ImageNetclassification
+‘‘Ageneticalgorithmbasedregionsamplingforselectionoflocalfeatures
+withdeepconvolutionalneuralnetworks,’’inProc.Adv.NeuralInf.Pro-
+inhandwrittendigitrecognitionapplication,’’Appl.SoftComput.,vol.12,
+cess.Syst.(NIPS),vol.25,Dec.2012,pp.1097–1105.
+no.5,pp.1592–1606,May2012.
+[46] C.Szegedy,W.Liu,Y.Jia,P.Sermanet,S.Reed,D.Anguelov,D.Erhan,
+[24] N. Das, S. Basu, R. Sarkar, M. Kundu, M. Nasipuri, and D.K.Basu,
+V. Vanhoucke, and A. Rabinovich, ‘‘Going deeper with convolutions,’’
+‘‘An improved feature descriptor for recognition of handwritten
+Bangla alphabet,’’ 2015, arXiv:1501.05497. [Online]. Available: http://
+inProc.IEEEConf.Comput.Vis.PatternRecognit.(CVPR),Jun.2015,
+pp.1–9.
+arxiv.org/abs/1501.05497
+[25] N. Das, K. Acharya, R. Sarkar, S. Basu, M. Kundu, and M. Nasipuri, [47] K.SimonyanandA.Zisserman,‘‘Verydeepconvolutionalnetworksfor
+‘‘AbenchmarkimagedatabaseofisolatedBanglahandwrittencompound large-scaleimagerecognition,’’2014,arXiv:1409.1556.[Online].Avail-
+characters,’’Int.J.DocumentAnal.Recognit.,vol.17,no.4,pp.413–431, able:http://arxiv.org/abs/1409.1556
+Dec.2014. [48] F. Chollet, ‘‘Xception: Deep learning with depthwise separable convo-
+[26] N.Das,R.Sarkar,S.Basu,P.K.Saha,M.Kundu,andM.Nasipuri,‘‘Hand- lutions,’’ in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR),
+written bangla character recognition using a soft computing paradigm Jul.2017,pp.1251–1258.
+embedded in two pass approach,’’ Pattern Recognit., vol. 48, no. 6, [49] D. M. W. Powers, ‘‘Evaluation: From precision, recall and
+pp.2054–2071,Jun.2015. F-measure to ROC, informedness, markedness and correlation,’’ 2020,
+[27] R. Sarkar, N. Das, S. Basu, M. Kundu, M. Nasipuri, and D. K. Basu, arXiv:2010.16061.[Online].Available:http://arxiv.org/abs/2010.16061
+‘‘CMATERdb1: A database of unconstrained handwritten Bangla and [50] M.Z.Alom,T.M.Taha,C.Yakopcic,S.Westberg,P.Sidike,M.S.Nasrin,
+Bangla–Englishmixedscriptdocumentimage,’’Int.J.DocumentAnal. M.Hasan,B.C.VanEssen,A.A.S.Awwal,andV.K.Asari,‘‘Astate-of-
+Recognit.,vol.15,no.1,pp.71–83,Mar.2012. the-artsurveyondeeplearningtheoryandarchitectures,’’Electron,vol.8,
+[28] U.BhattacharyaandB.B.Chaudhuri,‘‘Databasesforresearchonrecog- no.3,p.292,Mar.2019.
+nitionofhandwrittencharactersofIndianscripts,’’inProc.8thInt.Conf. [51] Y.Bengio,‘‘Practicalrecommendationsforgradient-basedtrainingofdeep
+DocumentAnal.Recognit.(ICDAR),2005,pp.789–793. architectures,’’inNeuralNetworks:TricksoftheTrade(LectureNotesin
+[29] K. S. Dash, N. B. Puhan, and G. Panda, ‘‘Odia character recognition: ComputerScience),vol.7700,G.Montavon,G.B.Orr,andK.R.Müller,
+A directional review,’’ Artif. Intell. Rev., vol. 48, no. 4, pp.473–497, Eds. Berlin, Germany: Springer, 2012, doi: 10.1007/978-3-642-35289-
+Dec.2017. 8_26.
+[30] The HPL Isolated Handwritten Tamil Character Dataset. [52] S.Singh,A.Sharma,andV.K.Chauhan,‘‘OnlinehandwrittenGurmukhi
+Accessed: May 4, 2021 [Online]. Available: http://lipitk.sourceforge. wordrecognitionusingfine-tuneddeepconvolutionalneuralnetworkon
+net/datasets/tamilchardata.htm offlinefeatures,’’Mach.Learn.Appl.,vol.5,Sep.2021,Art.no.100037.
+[31] F.HajamohideenandS.Noushath,‘‘Kalanjiyam:Unconstrainedoffline [53] N. Srivastava, G. Hinton, A. Krizhevsky, I. Sutskever, and
+tamilhandwrittendatabase,’’inComputerVision,Graphics,andImage R.Salakhutdinov, ‘‘Dropout: A simple way to prevent neural networks
+Processing(LectureNotesinComputerScience),vol.10481,S.Mukherjee fromoverfitting,’’J.Mach.Learn.Res.,vol.15,no.1,pp.1929–1958,
+etal.,Eds.Cham,Switzerland:Springer,2017,doi:10.1007/978-3-319- 2014.
+68124-5_24. [54] S.ParkandN.Kwak,‘‘Analysisonthedropouteffectinconvolutional
+[32] B.R.KavithaandC.Srimathi,‘‘Benchmarkingonofflinehandwritten
+neural networks,’’ in Computer Vision—ACCV 2016 (Lecture Notes in
+Tamilcharacterrecognitionusingconvolutionalneuralnetworks,’’J.King
+Computer Science), vol. 10112, S. H. Lai, V. Lepetit, K. Nishino, and
+SaudUniv.Comput.Inf.Sci.,Jun.2019,doi:10.1016/j.jksuci.2019.06.004.
+Y.Sato,Eds.Cham,Switzerland:Springer,2017,doi:10.1007/978-3-319-
+[33] R.KunwarandA.G.Ramakrishnan,‘‘Onlinehandwritingrecognitionof
+54184-6_12.
+Tamilscriptusingfractalgeometry,’’inProc.Int.Conf.DocumentAnal.
+[55] C.ShortenandT.M.Khoshgoftaar,‘‘Asurveyonimagedataaugmentation
+Recognit.,Sep.2011,pp.1389–1393.
+fordeeplearning,’’J.BigData,vol.6,no.1,pp.1–48,Dec.2019.
+[34] A. G. Ramakrishnan and K. B. Urala, ‘‘Global and local features for
+[56] M.A.KoandS.Poruran,‘‘OCR-Nets:Variantsofpre-trainedCNNfor
+recognitionofonlinehandwrittennumeralsandTamilcharacters,’’inProc.
+urduhandwrittencharacterrecognitionviatransferlearning,’’Procedia
+4thInt.WorkshopMultilingual(OCRMOCR),2013,pp.1–5.
+[35] P.VijayaraghavanandM.Sra,‘‘HandwrittenTamilrecognitionusinga Comput.Sci.,vol.171,pp.2294–2301,Jan.2020.
+convolutionalneuralnetwork,’’inProc.Int.Conf.Inf.,Commun.,Eng. [57] L. Torrey and J. Shavlik, ‘‘Transfer learning,’’ in Handbook of
+Technol.(ICICET),2014,pp.1–4. Research on Machine Learning Applications and Trends: Algorithms,
+[36] G. Strang, Linear Algebra and Learning From Data. London, U.K.: methods, and Techniques. Hershey, PA, USA: IGI Global, 2010,
+Wellesley,2019. pp.242–264.
+[37] P.BanumathiandG.M.Nasira,‘‘HandwrittenTamilcharacterrecognition [58] O.Russakovsky,J.Deng,H.Su,J.Krause,S.Satheesh,S.Ma,Z.Huang,
+using artificial neural networks,’’ in Proc. Int. Conf. Process Autom., A.Karpathy,A.Khosla,M.Bernstein,A.C.Berg,andL.Fei-Fei,‘‘Ima-
+ControlComput.,Jul.2011,pp.1–5. geNet large scale visual recognition challenge,’’ Int. J. Comput. Vis.,
+[38] S. Kowsalya and P. S. Periasamy, ‘‘Recognition of Tamil handwritten vol.115,no.3,pp.211–252,Dec.2015.
+character using modified neural network with aid of elephant herding [59] M.ShorfuzzamanandM.S.Hossain,‘‘MetaCOVID:ASiameseneural
+optimization,’’MultimediaToolsAppl.,vol.78,no.17,pp.25043–25061, networkframeworkwithcontrastivelossforn-shotdiagnosisofCOVID-
+Sep.2019. 19patients,’’PatternRecognit.,vol.113,May2021,Art.no.107700.
+101492 VOLUME9,2021
+
+=== PAGE 25 ===
+N.Shaffi,F.Hajamohideen:uTHCD:NewBenchmarkingforTamilHandwrittenOCR
+[60] S.Kornblith,J.Shlens,andQ.V.Le,‘‘DobetterImageNetmodelstransfer FAIZAL HAJAMOHIDEEN received the Ph.D.
+better?’’inProc.IEEE/CVFConf.Comput.Vis.PatternRecognit.(CVPR), degree in 2017. He is currently a Lecturer with
+Jun.2019,pp.2661–2671. theDepartmentofInformationTechnology,Uni-
+[61] C.Boufenar,A.Kerboua,andM.Batouche,‘‘Investigationondeeplearn- versity of Technology and College of Applied
+ingforoff-linehandwrittenArabiccharacterrecognition,’’Cognit.Syst. Sciences (UTAS), Sohar, Oman. He has over
+Res.,vol.50,pp.180–195,Aug.2018. 20yearsofexperienceinresearchandeducation
+[62] T.K.Ho,‘‘Randomdecisionforests,’’inProc.3rdInt.Conf.Document
+field. He has gained industrial oriented certifi-
+Anal.Recognit.,vol.1,Aug.1995,pp.278–282.
+catesinnetworkingandoperatingsystems.Hehas
+[63] M.A.Hearst,S.T.Dumais,E.Osman,J.Platt,andB.Scholkopf,‘‘Support
+designed,developed,anddeliveredtechnicaltrain-
+vector machines,’’ IEEE Intell. Syst. Appl., vol. 13, no. 4, pp.18–28,
+inginvarioussubjectssuchasnetworking,cloud
+Jul./Aug.2008.
+computing,cybersecurity,andbigdataanalysis.Hehasledmanyresearch
+[64] T. Cover and P. Hart, ‘‘Nearest neighbor pattern classification,’’ IEEE
+projects in the subject area. He has acquired funded research projects,
+Trans.Inf.Theory,vol.IT-13,no.1,pp.21–27,Jan.1967.
+[65] R.Polikar,‘‘Ensemblebasedsystemsindecisionmaking,’’IEEECircuits such as URG-TRC, Oman, and OCCI, Oman. He has good knowledge
+Syst.Mag.,vol.6,no.3,pp.21–45,Sep.2006. about Linux-based SDN, Big Data Hadoop, NS3, and Python3 tools for
+[66] TheHDF5LibraryandFileFormat.Accessed:May31,2021.[Online]. research. He was involved in the Research Council (TRC), Oman, spon-
+Available:https://www.hdfgroup.org/solutions/hdf5/ soredimageprocessingandmachinelearningand4Gworkshops.Hehas
+clearedacertificatewithintellectualpropertysponsoredbyUTAS.Hehas
+publishedarticlesinnationalandinternationaljournals.Hehascoauthored
+and published in international journals. His areas of interests are image
+NOUSHATH SHAFFI received the B.Sc., mas- processing,deeplearning,cloudcomputing,andhybridnetworks.Heisan
+ter’s,andPh.D.degreesinimageprocessingfrom ActiveMemberoftheScientificResearchDepartment(SRD)andrepresent-
+theUniversityofMysore,in2001,2004,and2008, ing Information Technology Department, UTAS. He has participated and
+respectively. presentedIEEEandIETconferences.
+AfterhisPh.D.,hejoinedHPLabs,India,where
+heworkedpredominantlyondocumentimagepro-
+cessing.Histopicofresearchwasfacerecognition.
+PriortojoiningCAS,Sohar,in2009,hehasbeen
+working as a Research Consultant with Hewlett
+PackardLaboratories,India,since2007.Heiscur-
+rentlyworkingasanAssistantProfessorattheUniversityofTechnology
+andAppliedSciences(UTAS),Oman.HeisalsotheHeadoftheResearch
+Department and Technology Transfer Office at UTAS. He was part of a
+team which successfully developed and implemented an algorithm in the
+hardwareplatformtoautomaticallyskewcorrectthedocument.Hehasover
+ten(reputed)publicationsinallareasofinterestandthreeU.S.patentshave
+beenpublished.Hisresearchinterestsincludebiometrics,documentanalysis,
+andapplicationofsubspacealgorithmsforimagerecognition.Hereceived
+severalresearchgrantsfromtheResearchCouncilofOmanandrecipientof
+theNationalResearchAwardforthebestundergraduateprojectmentoredin
+theICTsector.
+VOLUME9,2021 101493
+

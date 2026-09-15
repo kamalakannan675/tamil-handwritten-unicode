@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tamil Handwritten OCR - Unicode Tamil Character Recognition</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- Google Font for Tamil (Noto Sans Tamil) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;600;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Academic Header -->
+        <header class="app-header">
+            <div class="header-badges">
+                <span class="badge academic-badge">IEEE Access Base Paper</span>
+                <span class="badge dataset-badge">uTHCD Benchmark</span>
+                <span class="badge tech-badge">PyTorch CPU &bull; 156 Classes</span>
+            </div>
+            <h1 class="main-title">Tamil Handwritten OCR</h1>
+            <p class="sub-title">Handwritten Tamil Character &rarr; Editable Unicode Tamil</p>
+        </header>
+
+        <!-- System Workflow Bar -->
+        <nav class="workflow-bar" aria-label="System Pipeline Workflow">
+            <div class="workflow-step active"><span class="step-num">1</span> Input (Upload/Draw)</div>
+            <div class="workflow-arrow">&rarr;</div>
+            <div class="workflow-step"><span class="step-num">2</span> 64×64 Preprocess</div>
+            <div class="workflow-arrow">&rarr;</div>
+            <div class="workflow-step"><span class="step-num">3</span> 156-Class CNN</div>
+            <div class="workflow-arrow">&rarr;</div>
+            <div class="workflow-step"><span class="step-num">4</span> Tamil Unicode</div>
+            <div class="workflow-arrow">&rarr;</div>
+            <div class="workflow-step"><span class="step-num">5</span> Top-3 Correct</div>
+            <div class="workflow-arrow">&rarr;</div>
+            <div class="workflow-step"><span class="step-num">6</span> Export</div>
+        </nav>
+
+        <!-- Main Workspace -->
+        <main class="workspace-grid">
+            <!-- Left Column: Input Modes (Upload / Draw) -->
+            <section class="card input-card" aria-label="Character Input Section">
+                <div class="tabs-nav" role="tablist">
+                    <button class="tab-btn active" id="tab-btn-upload" role="tab" aria-selected="true" aria-controls="panel-upload">
+                        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        Upload Image
+                    </button>
+                    <button class="tab-btn" id="tab-btn-draw" role="tab" aria-selected="false" aria-controls="panel-draw">
+                        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+                        Draw Character
+                    </button>
+                </div>
+
+                <!-- Tab Panel 1: Upload Image -->
+                <div class="tab-panel active" id="panel-upload" role="tabpanel">
+                    <div class="dropzone" id="dropzone" tabindex="0">
+                        <input type="file" id="file-input" accept=".png,.jpg,.jpeg,.bmp" hidden>
+                        <div class="dropzone-prompt" id="dropzone-prompt">
+                            <svg class="upload-cloud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/></svg>
+                            <p class="drop-text"><strong>Drag & Drop</strong> handwritten character image</p>
+                            <p class="format-text">Supported: PNG, JPG, JPEG, BMP (Max 10 MB)</p>
+                            <button type="button" class="btn btn-secondary" id="browse-btn">Choose Image</button>
+                        </div>
+                        <div class="preview-container hidden" id="preview-container">
+                            <img id="image-preview" alt="Handwritten Character Preview">
+                            <button type="button" class="btn-icon-clear" id="remove-img-btn" title="Remove image">&times;</button>
+                        </div>
+                    </div>
+                    <div class="action-bar">
+                        <button type="button" class="btn btn-primary btn-block" id="recognize-upload-btn" disabled>
+                            <span class="btn-spinner hidden" id="upload-spinner"></span>
+                            <span class="btn-label">Recognize Character</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tab Panel 2: Draw Character -->
+                <div class="tab-panel" id="panel-draw" role="tabpanel">
+                    <div class="canvas-wrapper">
+                        <canvas id="draw-canvas" width="280" height="280"></canvas>
+                        <div class="canvas-hint">Draw a single Tamil character inside the box</div>
+                    </div>
+                    <div class="action-bar dual-actions">
+                        <button type="button" class="btn btn-secondary" id="clear-canvas-btn">
+                            Clear Drawing
+                        </button>
+                        <button type="button" class="btn btn-primary" id="recognize-draw-btn">
+                            <span class="btn-spinner hidden" id="draw-spinner"></span>
+                            <span class="btn-label">Recognize Drawing</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Error Notice Area -->
+                <div class="alert-box alert-error hidden" id="error-alert" role="alert">
+                    <span class="alert-icon">⚠️</span>
+                    <span class="alert-message" id="error-message">An error occurred.</span>
+                </div>
+            </section>
+
+            <!-- Right Column: Recognition Result & Unicode Tools -->
+            <section class="card result-card" aria-label="Recognition Results">
+                <h2 class="section-title">Recognition Result</h2>
+
+                <!-- Placeholder when no prediction made yet -->
+                <div class="empty-state" id="empty-state">
+                    <div class="empty-state-icon">&#x0B95;</div>
+                    <p class="empty-state-title">Ready for Recognition</p>
+                    <p class="empty-state-desc">Upload a character image or draw on the canvas to see the recognized Tamil Unicode output.</p>
+                </div>
+
+                <!-- Active Result Display -->
+                <div class="result-display hidden" id="result-display">
+                    <!-- Low Confidence Advisory Alert -->
+                    <div class="alert-box alert-warning hidden" id="low-conf-alert" role="alert">
+                        <span class="alert-icon">⚠️</span>
+                        <span class="alert-message"><strong>Low-confidence prediction (&lt; 50%).</strong> Please review the Top-3 alternatives below to select or verify the character.</span>
+                    </div>
+
+                    <!-- Primary Glyph Card -->
+                    <div class="primary-result-box">
+                        <div class="glyph-container">
+                            <span class="tamil-glyph" id="res-glyph">&#x0B95;</span>
+                            <span class="primary-tag">PREDICTION</span>
+                        </div>
+                        <div class="glyph-details">
+                            <div class="meta-row meta-row-top">
+                                <span class="meta-label">Primary Candidate:</span>
+                                <span class="badge badge-conf" id="confidence-level-badge">High Confidence</span>
+                            </div>
+                            <div class="meta-row">
+                                <span class="meta-label">Unicode:</span>
+                                <span class="meta-value codepoint-tag" id="res-codepoints">U+0B95</span>
+                            </div>
+                            <div class="meta-row">
+                                <span class="meta-label">Class ID:</span>
+                                <span class="meta-value" id="res-class-id">15</span>
+                            </div>
+                            <div class="confidence-box">
+                                <div class="confidence-header">
+                                    <span class="meta-label">Model Confidence:</span>
+                                    <span class="confidence-pct" id="res-confidence">96.5%</span>
+                                </div>
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" id="confidence-bar" style="width: 96.5%;"></div>
+                                </div>
+                                <p class="confidence-disclaimer">Model confidence score (softmax indicator), not statistical certainty.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top 3 Predictions -->
+                    <div class="top3-container">
+                        <div class="top3-header-row">
+                            <h3 class="subsection-title">Alternative Candidates (Top 3)</h3>
+                            <span class="top3-help-hint">Click any candidate below to replace editor output</span>
+                        </div>
+                        <div class="top3-list" id="top3-list">
+                            <!-- Populated via JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Editable Tamil Unicode Output -->
+                    <div class="editable-section">
+                        <div class="editable-header">
+                            <label for="tamil-editor" class="subsection-title">Editable Tamil Unicode</label>
+                            <span class="edit-hint">You can edit or append Tamil text manually</span>
+                        </div>
+                        <textarea id="tamil-editor" class="tamil-textarea" rows="2" spellcheck="false"></textarea>
+                        
+                        <div class="button-grid">
+                            <button type="button" class="btn btn-secondary" id="copy-btn">
+                                <span id="copy-icon">📋</span>
+                                <span id="copy-label">Copy Unicode</span>
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="export-txt-btn">
+                                📄 Export TXT
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="export-docx-btn">
+                                📝 Export DOCX
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="export-pdf-btn">
+                                📑 Export PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Session History -->
+                <div class="history-section">
+                    <div class="history-header">
+                        <h3 class="subsection-title">Current Session History</h3>
+                        <button type="button" class="btn-text" id="clear-history-btn">Clear</button>
+                    </div>
+                    <div class="history-list" id="history-list">
+                        <p class="history-empty" id="history-empty">No recent predictions in this session.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Academic Footer -->
+        <footer class="app-footer">
+            <p><strong>Tamil Handwritten Character Recognition & Unicode Conversion System</strong></p>
+            <p>Master of Computer Applications (MCA) Project &bull; Benchmark: IEEE Access uTHCD (156 Classes)</p>
+            <p class="disclaimer">Note: Probabilities represent Model Confidence on the isolated character input.</p>
+        </footer>
+    </div>
+
+    <!-- Script inclusion -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

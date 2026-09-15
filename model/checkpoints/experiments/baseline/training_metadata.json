@@ -1,0 +1,70 @@
+{
+  "project_title": "Tamil Handwritten Character Recognition and Unicode Conversion System",
+  "dataset_path": "D:\\Projects\\Tamil_Handwritten_Unicode_Project\\data\\hdf5_uTHCD_compressed.h5",
+  "dataset_split": {
+    "train_samples_used": 5000,
+    "val_samples_used": 1000,
+    "total_available_train": 55000,
+    "total_available_val": 7870,
+    "total_available_test": 28080
+  },
+  "architecture": "uTHCDNet (Figure 13 baseline: 32C3-MP2-64C3-MP2-1024FC-512FC-156FC)",
+  "num_classes": 156,
+  "image_size": [
+    64,
+    64
+  ],
+  "optimizer": "Adam",
+  "learning_rate": 0.001,
+  "batch_size": 32,
+  "epochs": 5,
+  "random_seed": 42,
+  "device": "cpu",
+  "best_epoch": 5,
+  "best_val_accuracy": 81.1,
+  "best_val_loss": 0.709,
+  "total_training_time_seconds": 1108.3,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 4.7076,
+      "train_acc": 5.44,
+      "val_loss": 2.9968,
+      "val_acc": 36.9,
+      "epoch_time_seconds": 209.85
+    },
+    {
+      "epoch": 2,
+      "train_loss": 2.3405,
+      "train_acc": 42.1,
+      "val_loss": 1.2158,
+      "val_acc": 68.2,
+      "epoch_time_seconds": 235.31
+    },
+    {
+      "epoch": 3,
+      "train_loss": 1.2668,
+      "train_acc": 65.66,
+      "val_loss": 0.8734,
+      "val_acc": 77.0,
+      "epoch_time_seconds": 218.42
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.8218,
+      "train_acc": 77.3,
+      "val_loss": 0.7734,
+      "val_acc": 79.2,
+      "epoch_time_seconds": 205.11
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.5501,
+      "train_acc": 83.44,
+      "val_loss": 0.709,
+      "val_acc": 81.1,
+      "epoch_time_seconds": 212.59
+    }
+  ],
+  "timestamp": "2026-09-15T01:03:11.911330"
+}

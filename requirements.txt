@@ -1,0 +1,11 @@
+torch>=2.0.0
+torchvision>=0.15.0
+h5py>=3.8.0
+numpy>=1.22.0
+Pillow>=9.0.0
+scikit-learn>=1.2.0
+matplotlib>=3.6.0
+Flask>=3.0.0
+python-docx>=1.0.0
+reportlab>=4.0.0
+gunicorn>=21.2.0

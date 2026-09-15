@@ -1,0 +1,10 @@
+{
+  "total_test_samples": 28080,
+  "top1_accuracy_percent": 71.84,
+  "top3_accuracy_percent": 87.1,
+  "macro_precision": 0.7422,
+  "macro_recall": 0.7184,
+  "macro_f1": 0.7186,
+  "weighted_f1": 0.7186,
+  "checkpoint_evaluated": "best_model.pt"
+}
