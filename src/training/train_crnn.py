@@ -99,7 +99,7 @@ def train_one_epoch(model: nn.Module,
                     train_loader: DataLoader,
                     criterion: nn.Module,
                     optimizer: torch.optim.Optimizer,
-                    scaler: torch.cuda.amp.GradScaler,
+                     scaler: torch.amp.GradScaler,
                     device: torch.device,
                     use_amp: bool = True,
                     log_interval: int = 50) -> float:
@@ -119,7 +119,7 @@ def train_one_epoch(model: nn.Module,
         optimizer.zero_grad()
         
         if use_amp and device.type == 'cuda':
-            with torch.cuda.amp.autocast():
+            with torch.amp.autocast('cuda'):
                 logits = model(images)
                 log_probs = logits.log_softmax(2)
                 loss = criterion(log_probs, targets, input_lengths, target_lengths)
@@ -240,9 +240,9 @@ def main():
     model = TamilCRNN(num_classes=num_classes, in_channels=1, hidden_size=args.hidden_size).to(device)
     criterion = nn.CTCLoss(blank=0, zero_infinity=True)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate, weight_decay=1e-5)
-    scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2, verbose=True)
+    scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2)
     use_amp = (not args.no_amp) and (device.type == 'cuda')
-    scaler = torch.cuda.amp.GradScaler(enabled=use_amp)
+    scaler = torch.amp.GradScaler('cuda', enabled=use_amp)
     
     start_epoch = 1
     best_val_cer = float('inf')
