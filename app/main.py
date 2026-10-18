@@ -129,6 +129,69 @@ def predict():
         app.logger.error(f"Inference error: {str(e)}", exc_info=True)
         return jsonify({'success': False, 'error': f'Internal inference error: {str(e)}'}), 500
 
+# Global cached instance of Full-Page OCR Engine
+_full_page_ocr_engine = None
+
+def get_full_page_ocr_engine():
+    global _full_page_ocr_engine
+    if _full_page_ocr_engine is None:
+        try:
+            from src.ocr.full_page_ocr import TamilFullPageOCR
+            ckpt_path = os.path.join(os.path.dirname(__file__), '..', 'checkpoints', 'crnn', 'best_model.pt')
+            vocab_path = os.path.join(os.path.dirname(__file__), '..', 'reports', 'tamil_ctc_char_vocab.json')
+            _full_page_ocr_engine = TamilFullPageOCR(
+                checkpoint_path=os.path.abspath(ckpt_path),
+                vocab_path=os.path.abspath(vocab_path),
+                device='cpu'
+            )
+        except Exception as e:
+            app.logger.error(f"Failed to initialize FullPageOCR: {e}", exc_info=True)
+            _full_page_ocr_engine = None
+    return _full_page_ocr_engine
+
+@app.route('/api/ocr/document', methods=['POST'])
+def ocr_document():
+    """
+    Full-Page Handwritten Tamil Document OCR Endpoint.
+    Accepts: Multipart image file upload or base64 JSON payload.
+    Returns: Complete formatted Tamil Unicode text, line & word bounding boxes, and statistics.
+    """
+    try:
+        engine = get_full_page_ocr_engine()
+        if engine is None:
+            return jsonify({'success': False, 'error': 'Full-Page OCR engine could not be initialized'}), 500
+
+        image_bytes = None
+        if 'image' in request.files:
+            file = request.files['image']
+            if file.filename == '':
+                return jsonify({'success': False, 'error': 'No document image selected'}), 400
+            if not allowed_file(file.filename):
+                return jsonify({'success': False, 'error': 'Unsupported file format'}), 400
+            image_bytes = file.read()
+        elif request.is_json:
+            data = request.get_json()
+            if not data or 'image' not in data:
+                return jsonify({'success': False, 'error': 'Missing image in request'}), 400
+            b64_data = data['image']
+            if ',' in b64_data:
+                b64_data = b64_data.split(',', 1)[1]
+            image_bytes = base64.b64decode(b64_data)
+        else:
+            return jsonify({'success': False, 'error': 'Request must be multipart or json'}), 400
+
+        if not image_bytes:
+            return jsonify({'success': False, 'error': 'Empty image payload received'}), 400
+
+        pil_img = Image.open(io.BytesIO(image_bytes))
+        result = engine.process_document(pil_img)
+        result['success'] = True
+        return jsonify(result), 200
+
+    except Exception as e:
+        app.logger.error(f"Full-page OCR error: {e}", exc_info=True)
+        return jsonify({'success': False, 'error': f'Document OCR processing error: {str(e)}'}), 500
+
 @app.route('/api/export/txt', methods=['POST'])
 def export_txt():
     data = request.get_json(silent=True) or request.form
