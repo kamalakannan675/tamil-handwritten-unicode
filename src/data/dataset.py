@@ -142,13 +142,12 @@ class TamilWordDataset(Dataset):
         # 1. Check extracted directory on disk
         if self.extracted_dir:
             basename = os.path.basename(img_rel_path)
-            # Try direct paths (including Kaggle's double-nested structure like train/train/1.jpg):
+            # Try direct paths:
             candidates = [
-                os.path.join(self.extracted_dir, self.split, img_rel_path),
-                os.path.join(self.extracted_dir, self.split, self.split, basename),
-                os.path.join(self.extracted_dir, img_rel_path),
-                os.path.join(self.extracted_dir, self.split, basename),
-                os.path.join(self.extracted_dir, basename),
+                os.path.join(self.extracted_dir, self.split, self.split, basename), # e.g. train/train/21.jpg
+                os.path.join(self.extracted_dir, img_rel_path),                     # e.g. train/21.jpg
+                os.path.join(self.extracted_dir, self.split, basename),             # e.g. train/21.jpg
+                os.path.join(self.extracted_dir, basename),                         # e.g. 21.jpg
             ]
             for cand in candidates:
                 if os.path.exists(cand):
