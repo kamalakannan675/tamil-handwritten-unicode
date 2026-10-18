@@ -13,5 +13,50 @@
     "Macro F1": 0.9328,
     "Weighted F1": 0.9328,
     "Training Time (s)": 25344.32
+  },
+  {
+    "Split": "80/20",
+    "Train Samples": 64584,
+    "Val Samples": 7176,
+    "Test Samples": 19190,
+    "Best Epoch": 19,
+    "Best Val Acc (%)": 96.99,
+    "Test Top-1 Acc (%)": 92.42,
+    "Test Top-3 Acc (%)": 98.47,
+    "Macro Precision": 0.9258,
+    "Macro Recall": 0.9248,
+    "Macro F1": 0.9243,
+    "Weighted F1": 0.9242,
+    "Training Time (s)": 314.8
+  },
+  {
+    "Split": "85/15",
+    "Train Samples": 69638,
+    "Val Samples": 7738,
+    "Test Samples": 13574,
+    "Best Epoch": 16,
+    "Best Val Acc (%)": 96.7,
+    "Test Top-1 Acc (%)": 94.45,
+    "Test Top-3 Acc (%)": 99.22,
+    "Macro Precision": 0.9459,
+    "Macro Recall": 0.9453,
+    "Macro F1": 0.9448,
+    "Weighted F1": 0.9445,
+    "Training Time (s)": 336.47
+  },
+  {
+    "Split": "90/10",
+    "Train Samples": 73710,
+    "Val Samples": 8190,
+    "Test Samples": 9050,
+    "Best Epoch": 16,
+    "Best Val Acc (%)": 96.68,
+    "Test Top-1 Acc (%)": 95.36,
+    "Test Top-3 Acc (%)": 99.04,
+    "Macro Precision": 0.9542,
+    "Macro Recall": 0.9542,
+    "Macro F1": 0.9536,
+    "Weighted F1": 0.9535,
+    "Training Time (s)": 357.23
   }
 ]

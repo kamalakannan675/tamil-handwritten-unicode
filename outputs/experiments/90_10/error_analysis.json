@@ -1,0 +1,185 @@
+{
+  "total_misclassifications": 420,
+  "most_frequently_confused_pairs": [
+    {
+      "true_class_id": 128,
+      "true_char": "க்ஷீ",
+      "true_codepoints": "U+0B95 U+0BCD U+0BB7 U+0BC0",
+      "predicted_class_id": 152,
+      "predicted_char": "க்ஷு",
+      "predicted_codepoints": "U+0B95 U+0BCD U+0BB7 U+0BC1",
+      "error_count": 10
+    },
+    {
+      "true_class_id": 135,
+      "true_char": "ஹு",
+      "true_codepoints": "U+0BB9 U+0BC1",
+      "predicted_class_id": 134,
+      "predicted_char": "ஹீ",
+      "predicted_codepoints": "U+0BB9 U+0BC0",
+      "error_count": 10
+    },
+    {
+      "true_class_id": 129,
+      "true_char": "ஜு",
+      "true_codepoints": "U+0B9C U+0BC1",
+      "predicted_class_id": 151,
+      "predicted_char": "ஜீ",
+      "predicted_codepoints": "U+0B9C U+0BC0",
+      "error_count": 8
+    },
+    {
+      "true_class_id": 136,
+      "true_char": "ஹூ",
+      "true_codepoints": "U+0BB9 U+0BC2",
+      "predicted_class_id": 135,
+      "predicted_char": "ஹு",
+      "predicted_codepoints": "U+0BB9 U+0BC1",
+      "error_count": 7
+    },
+    {
+      "true_class_id": 80,
+      "true_char": "ர்",
+      "true_codepoints": "U+0BB0 U+0BCD",
+      "predicted_class_id": 20,
+      "predicted_char": "ச்",
+      "predicted_codepoints": "U+0B9A U+0BCD",
+      "error_count": 6
+    },
+    {
+      "true_class_id": 124,
+      "true_char": "ஷூ",
+      "true_codepoints": "U+0BB7 U+0BC2",
+      "predicted_class_id": 123,
+      "predicted_char": "ஷு",
+      "predicted_codepoints": "U+0BB7 U+0BC1",
+      "error_count": 6
+    },
+    {
+      "true_class_id": 11,
+      "true_char": "ஓ",
+      "true_codepoints": "U+0B93",
+      "predicted_class_id": 10,
+      "predicted_char": "ஒ",
+      "predicted_codepoints": "U+0B92",
+      "error_count": 5
+    },
+    {
+      "true_class_id": 48,
+      "true_char": "ணு",
+      "true_codepoints": "U+0BA3 U+0BC1",
+      "predicted_class_id": 120,
+      "predicted_char": "னு",
+      "predicted_codepoints": "U+0BA9 U+0BC1",
+      "error_count": 5
+    },
+    {
+      "true_class_id": 97,
+      "true_char": "ளூ",
+      "true_codepoints": "U+0BB3 U+0BC2",
+      "predicted_class_id": 96,
+      "predicted_char": "ளு",
+      "predicted_codepoints": "U+0BB3 U+0BC1",
+      "error_count": 5
+    },
+    {
+      "true_class_id": 130,
+      "true_char": "ஜூ",
+      "true_codepoints": "U+0B9C U+0BC2",
+      "predicted_class_id": 129,
+      "predicted_char": "ஜு",
+      "predicted_codepoints": "U+0B9C U+0BC1",
+      "error_count": 5
+    },
+    {
+      "true_class_id": 46,
+      "true_char": "ணி",
+      "true_codepoints": "U+0BA3 U+0BBF",
+      "predicted_class_id": 118,
+      "predicted_char": "னி",
+      "predicted_codepoints": "U+0BA9 U+0BBF",
+      "error_count": 4
+    },
+    {
+      "true_class_id": 85,
+      "true_char": "ரூ",
+      "true_codepoints": "U+0BB0 U+0BC2",
+      "predicted_class_id": 84,
+      "predicted_char": "ரு",
+      "predicted_codepoints": "U+0BB0 U+0BC1",
+      "error_count": 4
+    },
+    {
+      "true_class_id": 96,
+      "true_char": "ளு",
+      "true_codepoints": "U+0BB3 U+0BC1",
+      "predicted_class_id": 97,
+      "predicted_char": "ளூ",
+      "predicted_codepoints": "U+0BB3 U+0BC2",
+      "error_count": 4
+    },
+    {
+      "true_class_id": 123,
+      "true_char": "ஷு",
+      "true_codepoints": "U+0BB7 U+0BC1",
+      "predicted_class_id": 122,
+      "predicted_char": "ஷீ",
+      "predicted_codepoints": "U+0BB7 U+0BC0",
+      "error_count": 4
+    },
+    {
+      "true_class_id": 126,
+      "true_char": "க்ஷ்",
+      "true_codepoints": "U+0B95 U+0BCD U+0BB7 U+0BCD",
+      "predicted_class_id": 125,
+      "predicted_char": "க்ஷ",
+      "predicted_codepoints": "U+0B95 U+0BCD U+0BB7",
+      "error_count": 4
+    },
+    {
+      "true_class_id": 147,
+      "true_char": "க்ஷூ",
+      "true_codepoints": "U+0B95 U+0BCD U+0BB7 U+0BC2",
+      "predicted_class_id": 152,
+      "predicted_char": "க்ஷு",
+      "predicted_codepoints": "U+0B95 U+0BCD U+0BB7 U+0BC1",
+      "error_count": 4
+    },
+    {
+      "true_class_id": 152,
+      "true_char": "க்ஷு",
+      "true_codepoints": "U+0B95 U+0BCD U+0BB7 U+0BC1",
+      "predicted_class_id": 147,
+      "predicted_char": "க்ஷூ",
+      "predicted_codepoints": "U+0B95 U+0BCD U+0BB7 U+0BC2",
+      "error_count": 4
+    },
+    {
+      "true_class_id": 2,
+      "true_char": "ஆ",
+      "true_codepoints": "U+0B86",
+      "predicted_class_id": 109,
+      "predicted_char": "வூ",
+      "predicted_codepoints": "U+0BB5 U+0BC2",
+      "error_count": 3
+    },
+    {
+      "true_class_id": 10,
+      "true_char": "ஒ",
+      "true_codepoints": "U+0B92",
+      "predicted_class_id": 11,
+      "predicted_char": "ஓ",
+      "predicted_codepoints": "U+0B93",
+      "error_count": 3
+    },
+    {
+      "true_class_id": 57,
+      "true_char": "ந",
+      "true_codepoints": "U+0BA8",
+      "predicted_class_id": 99,
+      "predicted_char": "ற",
+      "predicted_codepoints": "U+0BB1",
+      "error_count": 3
+    }
+  ]
+}

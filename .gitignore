@@ -52,3 +52,7 @@ model/checkpoints/experiments/**/best_model.pt
 
 # Ensure the selected production model checkpoint is tracked
 !model/checkpoints/best_model.pt
+
+# Ignore large experiment weights and downloaded zip archives
+outputs/experiments/**/*.pt
+outputs/*.zip

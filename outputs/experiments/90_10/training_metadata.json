@@ -1,0 +1,192 @@
+{
+  "project_title": "Tamil Handwritten Character Recognition and Unicode Conversion System",
+  "dataset_path": "/kaggle/working/tamil-handwritten-unicode/data/hdf5_uTHCD_90_10_split.h5",
+  "dataset_split": {
+    "train_samples_used": 73710,
+    "val_samples_used": 8190,
+    "total_available_train": 73710,
+    "total_available_val": 8190
+  },
+  "architecture": "uTHCDNet (Figure 13 baseline: 32C3-MP2-64C3-MP2-1024FC-512FC-156FC)",
+  "num_classes": 156,
+  "image_size": [
+    64,
+    64
+  ],
+  "augmentation_mode": "light",
+  "experiment_name": "90_10",
+  "optimizer": "Adam",
+  "learning_rate": 0.001,
+  "batch_size": 64,
+  "epochs_completed": 20,
+  "target_epochs": 20,
+  "random_seed": 42,
+  "device": "cuda",
+  "best_epoch": 16,
+  "best_val_accuracy": 96.68,
+  "best_val_loss": 0.1157,
+  "total_training_time_seconds": 357.23,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 1.7601,
+      "train_acc": 56.07,
+      "val_loss": 0.3735,
+      "val_acc": 88.75,
+      "epoch_time_seconds": 17.45
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.7289,
+      "train_acc": 78.99,
+      "val_loss": 0.264,
+      "val_acc": 92.38,
+      "epoch_time_seconds": 16.74
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.5669,
+      "train_acc": 83.43,
+      "val_loss": 0.2133,
+      "val_acc": 93.43,
+      "epoch_time_seconds": 16.85
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.4812,
+      "train_acc": 85.72,
+      "val_loss": 0.1897,
+      "val_acc": 94.59,
+      "epoch_time_seconds": 16.83
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.4242,
+      "train_acc": 87.47,
+      "val_loss": 0.1613,
+      "val_acc": 95.21,
+      "epoch_time_seconds": 16.82
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.3845,
+      "train_acc": 88.42,
+      "val_loss": 0.1591,
+      "val_acc": 95.47,
+      "epoch_time_seconds": 16.82
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.3534,
+      "train_acc": 89.14,
+      "val_loss": 0.147,
+      "val_acc": 95.6,
+      "epoch_time_seconds": 16.81
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.3299,
+      "train_acc": 89.98,
+      "val_loss": 0.1432,
+      "val_acc": 95.81,
+      "epoch_time_seconds": 16.8
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.3155,
+      "train_acc": 90.39,
+      "val_loss": 0.1386,
+      "val_acc": 95.91,
+      "epoch_time_seconds": 16.83
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.3031,
+      "train_acc": 90.77,
+      "val_loss": 0.13,
+      "val_acc": 96.02,
+      "epoch_time_seconds": 16.79
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.2868,
+      "train_acc": 91.17,
+      "val_loss": 0.1264,
+      "val_acc": 96.26,
+      "epoch_time_seconds": 16.77
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.2755,
+      "train_acc": 91.36,
+      "val_loss": 0.1204,
+      "val_acc": 96.65,
+      "epoch_time_seconds": 16.78
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.2606,
+      "train_acc": 91.89,
+      "val_loss": 0.1321,
+      "val_acc": 96.26,
+      "epoch_time_seconds": 16.78
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.2535,
+      "train_acc": 92.14,
+      "val_loss": 0.1237,
+      "val_acc": 96.2,
+      "epoch_time_seconds": 16.76
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.2469,
+      "train_acc": 92.4,
+      "val_loss": 0.1251,
+      "val_acc": 96.36,
+      "epoch_time_seconds": 16.72
+    },
+    {
+      "epoch": 16,
+      "train_loss": 0.2427,
+      "train_acc": 92.49,
+      "val_loss": 0.1157,
+      "val_acc": 96.68,
+      "epoch_time_seconds": 16.83
+    },
+    {
+      "epoch": 17,
+      "train_loss": 0.2329,
+      "train_acc": 92.75,
+      "val_loss": 0.1197,
+      "val_acc": 96.47,
+      "epoch_time_seconds": 16.75
+    },
+    {
+      "epoch": 18,
+      "train_loss": 0.2257,
+      "train_acc": 92.93,
+      "val_loss": 0.1154,
+      "val_acc": 96.56,
+      "epoch_time_seconds": 16.76
+    },
+    {
+      "epoch": 19,
+      "train_loss": 0.2217,
+      "train_acc": 93.09,
+      "val_loss": 0.1174,
+      "val_acc": 96.63,
+      "epoch_time_seconds": 16.82
+    },
+    {
+      "epoch": 20,
+      "train_loss": 0.2212,
+      "train_acc": 93.11,
+      "val_loss": 0.1173,
+      "val_acc": 96.54,
+      "epoch_time_seconds": 16.76
+    }
+  ],
+  "timestamp": "2026-10-18T07:18:10.116144"
+}
