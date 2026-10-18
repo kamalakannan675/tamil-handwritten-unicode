@@ -13,6 +13,10 @@ Features:
 
 import os
 import sys
+# Bootstrap: ensure project root is on sys.path when run as a plain script
+# (e.g. `python src/training/train_crnn.py` from the repo root)
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
 import json
 import time
 import argparse

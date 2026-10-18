@@ -11,6 +11,9 @@ Evaluates trained checkpoint on validation or test partitions:
 
 import os
 import sys
+# Bootstrap: ensure project root is on sys.path when run as a plain script
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
 import json
 import time
 import argparse
