@@ -47,7 +47,10 @@ def evaluate_model(checkpoint_path: str = 'model/checkpoints/best_model.pt',
                    output_dir: str = 'outputs/reports',
                    device_str: str = 'cpu'):
     os.makedirs(output_dir, exist_ok=True)
-    device = torch.device(device_str)
+    if device_str == 'auto' or not device_str:
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    else:
+        device = torch.device(device_str)
 
     print("=" * 60)
     print("uTHCD MODEL TEST EVALUATION")
