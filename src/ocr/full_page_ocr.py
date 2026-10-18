@@ -67,9 +67,18 @@ class TamilFullPageOCR:
     def preprocess_word_crop(self, pil_crop: Image.Image) -> torch.Tensor:
         """
         Converts a PIL word crop into normalized (1, 1, 64, W) tensor where W is a multiple of 4.
+        Applies adaptive contrast stretching so low-contrast mobile camera photos match
+        the training distribution (white background ~240-255, dark ink ~0-30).
         """
         gray = pil_crop.convert('L')
         orig_w, orig_h = gray.size
+        
+        # Adaptive contrast normalization for real-world photos & lighting variations
+        arr = np.array(gray, dtype=np.float32)
+        p_low, p_high = np.percentile(arr, (2, 98))
+        if (p_high - p_low) > 10:
+            arr = np.clip((arr - p_low) / (p_high - p_low) * 255.0, 0, 255)
+        gray = Image.fromarray(arr.astype(np.uint8))
         
         new_w = max(16, min(self.max_width, int(round(orig_w * self.target_height / max(1, orig_h)))))
         # Pad width to nearest multiple of 4

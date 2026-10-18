@@ -178,10 +178,16 @@ class PageSegmenter:
         result_lines = []
         for line_idx, (y1, y2) in enumerate(line_bounds):
             line_binary = binary[y1:y2, :]
+            line_h = y2 - y1
+            
+            # Dynamic space gap: between-word spacing is proportional to line height
+            adaptive_space_gap = max(4, min(self.space_gap, int(round(line_h * 0.25))))
+            adaptive_min_word = max(6, min(self.min_word_width, int(round(line_h * 0.4))))
+            
             word_bounds = segment_words_in_line(
                 line_binary,
-                min_word_width=self.min_word_width,
-                space_gap=self.space_gap
+                min_word_width=adaptive_min_word,
+                space_gap=adaptive_space_gap
             )
             
             line_words = []
