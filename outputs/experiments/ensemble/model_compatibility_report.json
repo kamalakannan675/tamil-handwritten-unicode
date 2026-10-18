@@ -1,0 +1,72 @@
+{
+  "audit_timestamp": "2026-10-18T14:28:00",
+  "production_baseline": {
+    "model_name": "70_30_production",
+    "checkpoint_path": "model/checkpoints/best_model.pt",
+    "sha256": "9f22a8c76278dae97e2741c0267af2356d9105c03e04dad8d88189de3dd5cf4e",
+    "size_bytes": 161649013,
+    "size_mb": 154.16,
+    "architecture": "uTHCDNet (32C3-MP2-64C3-MP2-1024FC-512FC-156FC)",
+    "input_shape": [1, 64, 64],
+    "output_classes": 156,
+    "best_epoch": 15,
+    "peak_val_accuracy": 96.37,
+    "test_top1_accuracy": 93.28,
+    "test_top3_accuracy": 98.73,
+    "status": "VERIFIED_ACTIVE_BASELINE"
+  },
+  "checkpoints": {
+    "70_30": {
+      "checkpoint_path": "model/checkpoints/best_model.pt",
+      "sha256": "9f22a8c76278dae97e2741c0267af2356d9105c03e04dad8d88189de3dd5cf4e",
+      "size_bytes": 161649013,
+      "num_classes": 156,
+      "best_epoch": 15,
+      "peak_val_acc": 96.37,
+      "test_top1": 93.28,
+      "test_top3": 98.73,
+      "architecture_match": true,
+      "compatibility": "COMPATIBLE"
+    },
+    "80_20": {
+      "checkpoint_path": "outputs/experiments/80_20/best_model.pt",
+      "sha256": "acb32275c66b259c7fddbdfdd35b272ca5d7de6ff8e6ef0e83bfe77166d4ff66",
+      "size_bytes": 161649461,
+      "num_classes": 156,
+      "best_epoch": 19,
+      "peak_val_acc": 96.99,
+      "test_top1": 92.42,
+      "test_top3": 98.47,
+      "architecture_match": true,
+      "compatibility": "COMPATIBLE"
+    },
+    "85_15": {
+      "checkpoint_path": "outputs/experiments/85_15/best_model.pt",
+      "sha256": "7c5a4a245ef53b7114865f98508788403e6562e8de721c72bb445f9d31450639",
+      "size_bytes": 161649461,
+      "num_classes": 156,
+      "best_epoch": 16,
+      "peak_val_acc": 96.7,
+      "test_top1": 94.45,
+      "test_top3": 99.22,
+      "architecture_match": true,
+      "compatibility": "COMPATIBLE"
+    },
+    "90_10": {
+      "checkpoint_path": "outputs/experiments/90_10/best_model.pt",
+      "sha256": "77d83edb6d398f4153385e48ce9a6fcad014f75f2c94ed76b714a7a77f4f1f80",
+      "size_bytes": 161649461,
+      "num_classes": 156,
+      "best_epoch": 16,
+      "peak_val_acc": 96.68,
+      "test_top1": 95.36,
+      "test_top3": 99.04,
+      "architecture_match": true,
+      "compatibility": "COMPATIBLE"
+    }
+  },
+  "data_leakage_audit": {
+    "leakage_detected_across_cross_split_tests": true,
+    "explanation": "The four HDF5 datasets represent independently partitioned permutations of the underlying 90,950 uTHCD samples. Sample hash analysis demonstrates that images in the Test partition of the 80/20, 85/15, and 90/10 splits partially overlap with the Training partition of the 70/30 split, and vice versa. Evaluating the ensemble on any single split's test set without accounting for this overlap causes data leakage for the models that included those samples during training. Consequently, a strictly leak-free ensemble evaluation requires a globally disjoint test set: samples never seen in the training sets of ANY of the 4 models."
+  }
+}
