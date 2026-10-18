@@ -1,0 +1,17 @@
+[
+  {
+    "Split": "70/30",
+    "Train Samples": 55000,
+    "Val Samples": 7870,
+    "Test Samples": 28080,
+    "Best Epoch": 15,
+    "Best Val Acc (%)": 96.37,
+    "Test Top-1 Acc (%)": 93.28,
+    "Test Top-3 Acc (%)": 98.73,
+    "Macro Precision": 0.9345,
+    "Macro Recall": 0.9328,
+    "Macro F1": 0.9328,
+    "Weighted F1": 0.9328,
+    "Training Time (s)": 25344.32
+  }
+]

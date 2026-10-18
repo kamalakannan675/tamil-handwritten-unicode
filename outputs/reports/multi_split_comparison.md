@@ -1,0 +1,5 @@
+# Multi-Split Benchmark Comparison (uTHCD Tamil OCR)
+
+| Split | Train Samples | Val Samples | Test Samples | Best Epoch | Best Val Acc (%) | Test Top-1 Acc (%) | Test Top-3 Acc (%) | Macro Precision | Macro Recall | Macro F1 | Weighted F1 | Training Time (s) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 70/30 | 55000 | 7870 | 28080 | 15 | 96.37 | 93.28 | 98.73 | 0.9345 | 0.9328 | 0.9328 | 0.9328 | 25344.32 |

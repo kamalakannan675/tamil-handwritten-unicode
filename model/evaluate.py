@@ -77,9 +77,20 @@ def evaluate_model(checkpoint_path: str = 'model/checkpoints/best_model.pt',
     top3_correct = 0
     total = 0
 
+    # Auto device if 'auto' or 'cuda' requested
+    if device_str in ('auto', 'cuda') and torch.cuda.is_available():
+        device = torch.device('cuda')
+    else:
+        device = torch.device(device_str if device_str != 'auto' else 'cpu')
+
     with h5py.File(hdf5_path, 'r') as f:
-        x_test_dset = f['Test Data/x_test']
-        y_test_dset = f['Test Data/y_test']
+        te_grp = f['Test Data']
+        te_x_key = next((k for k in ['x_test', 'Images', 'images'] if k in te_grp), None)
+        te_y_key = next((k for k in ['y_test', 'Labels', 'labels'] if k in te_grp), None)
+        if not te_x_key or not te_y_key:
+            raise KeyError(f"Missing test images/labels in {hdf5_path}. Keys: {list(te_grp.keys())}")
+        x_test_dset = te_grp[te_x_key]
+        y_test_dset = te_grp[te_y_key]
         n_total_test = x_test_dset.shape[0]
 
         eval_count = n_total_test if (max_test is None or max_test <= 0) else min(max_test, n_total_test)

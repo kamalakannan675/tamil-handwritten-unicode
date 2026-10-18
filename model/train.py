@@ -95,13 +95,33 @@ def save_history_csv(history, csv_path):
             writer.writerow(row)
     print(f"Saved Training History CSV to: {csv_path}")
 
+def resolve_train_val_keys(hdf5_path: str):
+    """Detects dataset keys and calculates train/val splits for 70/30, 80/20, 85/15, 90/10."""
+    with h5py.File(hdf5_path, 'r') as f:
+        tr_grp = f['Train Data']
+        tr_x_key = next((k for k in ['x_train', 'Images', 'images'] if k in tr_grp), None)
+        tr_y_key = next((k for k in ['y_train', 'Labels', 'labels'] if k in tr_grp), None)
+        if not tr_x_key or not tr_y_key:
+            raise KeyError(f"Missing train images/labels in {hdf5_path}. Keys: {list(tr_grp.keys())}")
+        n_train_full = tr_grp[tr_x_key].shape[0]
+
+    if n_train_full == 62870:
+        val_size = 7870
+    else:
+        val_size = int(round(n_train_full * 0.10))
+    train_size = n_train_full - val_size
+    return tr_x_key, tr_y_key, train_size, val_size
+
 def train_epoch_chunked(model: nn.Module, hdf5_path: str, train_indices: np.ndarray,
                         batch_size: int, criterion: nn.Module, optimizer: torch.optim.Optimizer,
-                        transform, device: torch.device, chunk_size: int = 2500) -> tuple:
+                        transform, device: torch.device, chunk_size: int = 2500,
+                        x_key: str = 'x_train', y_key: str = 'y_train',
+                        use_amp: bool = False, scaler=None) -> tuple:
     """
     Memory-efficient chunk streaming training loop.
     Reads contiguous chunks from HDF5 (fast sequential disk I/O), permutes within chunk,
-    and updates model weights in mini-batches. Peak RAM is strictly bounded under 60 MB.
+    and updates model weights in mini-batches.
+    Supports CUDA mixed-precision (AMP) for GPU acceleration.
     """
     model.train()
     running_loss = 0.0
@@ -114,8 +134,8 @@ def train_epoch_chunked(model: nn.Module, hdf5_path: str, train_indices: np.ndar
     chunk_order = np.random.permutation(num_chunks)
 
     with h5py.File(hdf5_path, 'r') as f:
-        x_dset = f['Train Data/x_train']
-        y_dset = f['Train Data/y_train']
+        x_dset = f[f'Train Data/{x_key}']
+        y_dset = f[f'Train Data/{y_key}']
 
         for c_order_idx, c_idx in enumerate(chunk_order):
             start_i = c_idx * chunk_size
@@ -143,17 +163,25 @@ def train_epoch_chunked(model: nn.Module, hdf5_path: str, train_indices: np.ndar
             for b_i in range(0, c_len, batch_size):
                 b_end = min(b_i + batch_size, c_len)
                 batch_idxs = perm[b_i:b_end]
-                bx = tensor_x[batch_idxs].to(device)
-                by = tensor_y[batch_idxs].to(device)
+                bx = tensor_x[batch_idxs].to(device, non_blocking=True)
+                by = tensor_y[batch_idxs].to(device, non_blocking=True)
 
                 if transform is not None:
                     bx = transform(bx)
 
                 optimizer.zero_grad()
-                logits = model(bx)
-                loss = criterion(logits, by)
-                loss.backward()
-                optimizer.step()
+                if use_amp and scaler is not None:
+                    with torch.cuda.amp.autocast():
+                        logits = model(bx)
+                        loss = criterion(logits, by)
+                    scaler.scale(loss).backward()
+                    scaler.step(optimizer)
+                    scaler.update()
+                else:
+                    logits = model(bx)
+                    loss = criterion(logits, by)
+                    loss.backward()
+                    optimizer.step()
 
                 running_loss += loss.item() * bx.size(0)
                 _, preds = torch.max(logits, 1)
@@ -174,7 +202,9 @@ def train_epoch_chunked(model: nn.Module, hdf5_path: str, train_indices: np.ndar
 @torch.no_grad()
 def evaluate_epoch_chunked(model: nn.Module, hdf5_path: str, val_indices: np.ndarray,
                            batch_size: int, criterion: nn.Module,
-                           device: torch.device, chunk_size: int = 2500) -> tuple:
+                           device: torch.device, chunk_size: int = 2500,
+                           x_key: str = 'x_train', y_key: str = 'y_train',
+                           use_amp: bool = False) -> tuple:
     """
     Fast sequential chunk evaluation on the validation split. Unaugmented.
     """
@@ -186,8 +216,8 @@ def evaluate_epoch_chunked(model: nn.Module, hdf5_path: str, val_indices: np.nda
     n_samples = len(val_indices)
 
     with h5py.File(hdf5_path, 'r') as f:
-        x_dset = f['Train Data/x_train']
-        y_dset = f['Train Data/y_train']
+        x_dset = f[f'Train Data/{x_key}']
+        y_dset = f[f'Train Data/{y_key}']
 
         for start_i in range(0, n_samples, chunk_size):
             end_i = min(start_i + chunk_size, n_samples)
@@ -205,11 +235,16 @@ def evaluate_epoch_chunked(model: nn.Module, hdf5_path: str, val_indices: np.nda
 
             for b_i in range(0, c_len, batch_size):
                 b_end = min(b_i + batch_size, c_len)
-                bx = tensor_x[b_i:b_end].to(device)
-                by = tensor_y[b_i:b_end].to(device)
+                bx = tensor_x[b_i:b_end].to(device, non_blocking=True)
+                by = tensor_y[b_i:b_end].to(device, non_blocking=True)
 
-                logits = model(bx)
-                loss = criterion(logits, by)
+                if use_amp:
+                    with torch.cuda.amp.autocast():
+                        logits = model(bx)
+                        loss = criterion(logits, by)
+                else:
+                    logits = model(bx)
+                    loss = criterion(logits, by)
 
                 running_loss += loss.item() * bx.size(0)
                 _, preds = torch.max(logits, 1)
@@ -241,29 +276,28 @@ def run_training(args):
     os.makedirs(ckpt_dir, exist_ok=True)
     os.makedirs('outputs/reports', exist_ok=True)
 
-    # Check total available samples in dataset
-    with h5py.File(args.dataset_path, 'r') as f:
-        total_train_available = f['Train Data/x_train'].shape[0]  # 62870
-
-    val_size = 7870
-    train_size = total_train_available - val_size  # 55000
+    # Resolve keys and split sizes dynamically for 70/30, 80/20, 85/15, 90/10
+    x_key, y_key, train_size, val_size = resolve_train_val_keys(args.dataset_path)
 
     # Determine train & val sample count
     actual_train_count = train_size if (args.max_train is None or args.max_train <= 0) else min(args.max_train, train_size)
     actual_val_count = val_size if (args.max_val is None or args.max_val <= 0) else min(args.max_val, val_size)
 
-    # Deterministic slicing per paper Listing 1
-    # Train is first 55000 (or first actual_train_count)
+    # Deterministic train & val indices
     train_indices = np.arange(0, actual_train_count)
-    # Val is last 7870 (or slice of actual_val_count)
     val_start = train_size
     val_indices = np.arange(val_start, val_start + actual_val_count)
+
+    use_amp = bool(device.type == 'cuda' and getattr(args, 'amp', True))
+    scaler = torch.cuda.amp.GradScaler() if use_amp else None
 
     print("=" * 70)
     print("uTHCD TAMIL HANDWRITTEN CHARACTER RECOGNITION - TRAINING")
     print("=" * 70)
-    print(f"Device:               {device}")
+    print(f"Device:               {device} (AMP mixed precision: {use_amp})")
     print(f"Random Seed:          {args.seed}")
+    print(f"Dataset Path:         {args.dataset_path}")
+    print(f"Dataset Keys:         Train=Train Data/{x_key}, {y_key}")
     print(f"Target Epochs:        {args.epochs}")
     print(f"Batch Size:           {args.batch_size}")
     print(f"Learning Rate:        {args.learning_rate}")
@@ -271,7 +305,7 @@ def run_training(args):
     print(f"Training Samples:     {actual_train_count} (out of {train_size})")
     print(f"Validation Samples:   {actual_val_count} (out of {val_size}, strictly unaugmented)")
     print(f"Checkpoint Directory: {os.path.abspath(ckpt_dir)}")
-    print(f"Early Stopping:       Patience = {args.patience} epochs")
+    print(f"Early Stopping:       Patience = {args.patience} epochs (min_epochs = {args.min_epochs})")
     print("=" * 70)
 
     train_transform = get_augmentation_transform(args.augmentation)
@@ -284,20 +318,45 @@ def run_training(args):
     best_val_loss = float('inf')
     best_epoch = 0
     epochs_without_improvement = 0
+    start_epoch = 1
     history = []
     start_total_time = time.time()
 
     best_checkpoint_path = os.path.join(ckpt_dir, 'best_model.pt')
+    latest_checkpoint_path = os.path.join(ckpt_dir, 'latest_checkpoint.pt')
     metadata_path = os.path.join(ckpt_dir, 'training_metadata.json')
     history_json_path = os.path.join(ckpt_dir, 'training_history.json')
     history_csv_path = os.path.join(ckpt_dir, 'training_history.csv')
     curve_png_path = os.path.join(ckpt_dir, 'training_curve.png')
 
+    # Resume from checkpoint if requested or present
+    resume_path = getattr(args, 'resume', None)
+    if resume_path and os.path.exists(resume_path):
+        print(f"\n[RESUMING TRAINING] Loading checkpoint state from: {resume_path}")
+        ckpt_state = torch.load(resume_path, map_location=device)
+        if 'model_state_dict' in ckpt_state:
+            model.load_state_dict(ckpt_state['model_state_dict'])
+        if 'optimizer_state_dict' in ckpt_state and ckpt_state['optimizer_state_dict']:
+            optimizer.load_state_dict(ckpt_state['optimizer_state_dict'])
+        start_epoch = int(ckpt_state.get('epoch', 0)) + 1
+        best_val_acc = float(ckpt_state.get('val_acc', -1.0))
+        best_val_loss = float(ckpt_state.get('val_loss', float('inf')))
+        best_epoch = int(ckpt_state.get('best_epoch', ckpt_state.get('epoch', 0)))
+        print(f"  -> Resuming from Epoch {start_epoch} (Best val acc so far: {best_val_acc:.2f}%)")
+
+        # Load existing history if present
+        if os.path.exists(history_json_path):
+            try:
+                with open(history_json_path, 'r', encoding='utf-8') as f:
+                    history = json.load(f)
+            except Exception:
+                pass
+
     print("\nStarting Epoch Iterations...")
     print(f"{'Epoch':<8}{'Train Loss':<14}{'Train Acc (%)':<16}{'Val Loss':<14}{'Val Acc (%)':<16}{'Time (s)':<10}")
     print("-" * 78)
 
-    for epoch in range(1, args.epochs + 1):
+    for epoch in range(start_epoch, args.epochs + 1):
         t0 = time.time()
 
         train_loss, train_acc = train_epoch_chunked(
@@ -309,7 +368,11 @@ def run_training(args):
             optimizer=optimizer,
             transform=train_transform,
             device=device,
-            chunk_size=args.chunk_size
+            chunk_size=args.chunk_size,
+            x_key=x_key,
+            y_key=y_key,
+            use_amp=use_amp,
+            scaler=scaler
         )
 
         val_loss, val_acc = evaluate_epoch_chunked(
@@ -319,7 +382,10 @@ def run_training(args):
             batch_size=args.batch_size,
             criterion=criterion,
             device=device,
-            chunk_size=args.chunk_size
+            chunk_size=args.chunk_size,
+            x_key=x_key,
+            y_key=y_key,
+            use_amp=use_amp
         )
 
         elapsed = time.time() - t0
@@ -335,6 +401,18 @@ def run_training(args):
         history.append(record)
 
         print(f"{epoch:<8}{train_loss:<14.4f}{train_acc:<16.2f}{val_loss:<14.4f}{val_acc:<16.2f}{elapsed:<10.2f}")
+
+        # Save latest checkpoint every epoch for safe interruption recovery
+        torch.save({
+            'epoch': epoch,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            'val_acc': val_acc,
+            'val_loss': val_loss,
+            'best_epoch': best_epoch,
+            'num_classes': NUM_CLASSES,
+            'arch': 'uTHCDNet'
+        }, latest_checkpoint_path)
 
         # Checkpoint if validation accuracy strictly improved (secondary: val_loss)
         is_best = False
@@ -383,9 +461,8 @@ def run_training(args):
         'dataset_split': {
             'train_samples_used': actual_train_count,
             'val_samples_used': actual_val_count,
-            'total_available_train': 55000,
-            'total_available_val': 7870,
-            'total_available_test': 28080
+            'total_available_train': train_size,
+            'total_available_val': val_size
         },
         'architecture': 'uTHCDNet (Figure 13 baseline: 32C3-MP2-64C3-MP2-1024FC-512FC-156FC)',
         'num_classes': NUM_CLASSES,
@@ -413,7 +490,7 @@ def run_training(args):
 
     return metadata
 
-def parse_args():
+def parse_args(args_list=None):
     parser = argparse.ArgumentParser(description="Train uTHCD CNN model with streaming")
     parser.add_argument('--dataset-path', type=str, default='data/hdf5_uTHCD_compressed.h5')
     parser.add_argument('--epochs', type=int, default=20)
@@ -439,7 +516,12 @@ def parse_args():
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--checkpoint-dir', type=str, default='model/checkpoints/experiments')
     parser.add_argument('--device', type=str, default=None)
-    return parser.parse_args()
+    parser.add_argument('--resume', type=str, default=None,
+                        help="Path to checkpoint from which to resume training")
+    parser.add_argument('--no-amp', dest='amp', action='store_false',
+                        help="Disable automatic mixed precision (AMP) on CUDA")
+    parser.set_defaults(amp=True)
+    return parser.parse_args(args_list)
 
 if __name__ == '__main__':
     args = parse_args()
