@@ -68,15 +68,27 @@ class TamilWordDataset(Dataset):
         else:
             raise ValueError("Either vocab, vocab_txt_path, or valid zip_path must be provided.")
             
-        # Load Word Lexicon
+        # Load Word Lexicon (the full word list that maps vocab_id -> Tamil word string)
+        # Priority: explicit vocab_txt_path -> extracted_dir/vocab.txt -> nested zip
         self.word_lexicon: List[str] = []
         if vocab_txt_path and os.path.exists(vocab_txt_path):
             with open(vocab_txt_path, 'r', encoding='utf-8') as f:
                 self.word_lexicon = f.read().splitlines()
-        elif self.zip_path and os.path.exists(self.zip_path):
+        elif self.extracted_dir:
+            vocab_in_dir = os.path.join(self.extracted_dir, 'vocab.txt')
+            if os.path.exists(vocab_in_dir):
+                with open(vocab_in_dir, 'r', encoding='utf-8') as f:
+                    self.word_lexicon = f.read().splitlines()
+        if not self.word_lexicon and self.zip_path and os.path.exists(self.zip_path):
             with zipfile.ZipFile(self.zip_path, 'r') as z:
                 with z.open('vocab.txt') as f:
                     self.word_lexicon = f.read().decode('utf-8').splitlines()
+
+        if not self.word_lexicon:
+            raise ValueError(
+                "Word lexicon (vocab.txt) could not be loaded. "
+                "Provide vocab_txt_path=, or ensure vocab.txt exists in extracted_dir or zip_path."
+            )
                     
         # Parse split mapping file (e.g. val.txt)
         txt_filename = f"{self.split}.txt"
