@@ -129,7 +129,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: formData
             });
 
-            const data = await response.json();
+            const resText = await response.text();
+            let data;
+            try {
+                data = JSON.parse(resText);
+            } catch (jsonErr) {
+                const cleanMsg = resText.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim();
+                throw new Error(cleanMsg || `Server error (HTTP ${response.status})`);
+            }
+
             if (!response.ok || !data.success) {
                 throw new Error(data.error || 'Failed to process document.');
             }

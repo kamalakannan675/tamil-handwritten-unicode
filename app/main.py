@@ -47,17 +47,21 @@ def health_check():
 @app.route('/api/health', methods=['GET'])
 def health():
     try:
-        engine = get_inference_engine()
-        model_ok = engine.model is not None
-        ckpt_exists = os.path.exists(engine.checkpoint_path)
-        ckpt_size = os.path.getsize(engine.checkpoint_path) if ckpt_exists else 0
+        ocr_engine = get_full_page_ocr_engine()
+        ckpt_path = os.path.join(os.path.dirname(__file__), '..', 'checkpoints', 'crnn', 'best_model.pt')
+        vocab_path = os.path.join(os.path.dirname(__file__), '..', 'reports', 'tamil_ctc_char_vocab.json')
+        
+        ckpt_exists = os.path.exists(ckpt_path)
+        ckpt_size = os.path.getsize(ckpt_path) if ckpt_exists else 0
+        vocab_exists = os.path.exists(vocab_path)
+        
         return jsonify({
-            'status': 'healthy' if model_ok else 'unhealthy',
-            'model_loaded': model_ok,
-            'checkpoint_path': engine.checkpoint_path,
+            'status': 'healthy' if ocr_engine is not None else 'unhealthy',
+            'ocr_engine_loaded': ocr_engine is not None,
+            'checkpoint_exists': ckpt_exists,
             'checkpoint_size_bytes': ckpt_size,
-            'load_error': getattr(engine, 'load_error', None),
-            'num_classes': NUM_CLASSES,
+            'vocab_exists': vocab_exists,
+            'load_error': _ocr_load_error,
             'timestamp': datetime.now().isoformat()
         }), 200
     except Exception as e:
@@ -66,6 +70,22 @@ def health():
             'error': str(e),
             'timestamp': datetime.now().isoformat()
         }), 500
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    app.logger.error(f"Internal Server Error: {e}", exc_info=True)
+    return jsonify({
+        'success': False,
+        'error': f'Internal Server Error: {str(e)}'
+    }), 500
+
+@app.errorhandler(Exception)
+def unhandled_exception(e):
+    app.logger.error(f"Unhandled Exception: {e}", exc_info=True)
+    return jsonify({
+        'success': False,
+        'error': f'Server Error: {str(e)}'
+    }), 500
 
 @app.route('/api/predict', methods=['POST'])
 def predict():
@@ -131,21 +151,32 @@ def predict():
 
 # Global cached instance of Full-Page OCR Engine
 _full_page_ocr_engine = None
+_ocr_load_error = None
 
 def get_full_page_ocr_engine():
-    global _full_page_ocr_engine
+    global _full_page_ocr_engine, _ocr_load_error
     if _full_page_ocr_engine is None:
         try:
             from src.ocr.full_page_ocr import TamilFullPageOCR
             ckpt_path = os.path.join(os.path.dirname(__file__), '..', 'checkpoints', 'crnn', 'best_model.pt')
             vocab_path = os.path.join(os.path.dirname(__file__), '..', 'reports', 'tamil_ctc_char_vocab.json')
+            
+            if not os.path.exists(ckpt_path):
+                raise FileNotFoundError(f"Checkpoint not found at {os.path.abspath(ckpt_path)}")
+            if os.path.getsize(ckpt_path) < 1000:
+                raise ValueError(f"Checkpoint at {ckpt_path} is an un-downloaded Git LFS pointer ({os.path.getsize(ckpt_path)} bytes).")
+            if not os.path.exists(vocab_path):
+                raise FileNotFoundError(f"Vocabulary not found at {os.path.abspath(vocab_path)}")
+                
             _full_page_ocr_engine = TamilFullPageOCR(
                 checkpoint_path=os.path.abspath(ckpt_path),
                 vocab_path=os.path.abspath(vocab_path),
                 device='cpu'
             )
+            _ocr_load_error = None
         except Exception as e:
             app.logger.error(f"Failed to initialize FullPageOCR: {e}", exc_info=True)
+            _ocr_load_error = str(e)
             _full_page_ocr_engine = None
     return _full_page_ocr_engine
 
@@ -159,7 +190,7 @@ def ocr_document():
     try:
         engine = get_full_page_ocr_engine()
         if engine is None:
-            return jsonify({'success': False, 'error': 'Full-Page OCR engine could not be initialized'}), 500
+            return jsonify({'success': False, 'error': f'Full-Page OCR engine could not be initialized: {_ocr_load_error}'}), 500
 
         image_bytes = None
         if 'image' in request.files:
