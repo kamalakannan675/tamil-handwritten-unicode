@@ -12,6 +12,11 @@ Tests:
 """
 
 import os
+import sys
+# Bootstrap: ensure the project root is on sys.path when run as a plain script
+# (e.g. `python tests/test_crnn_dataset.py` from /kaggle/working/tamil-handwritten-unicode)
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import unittest
 import torch
 import torch.nn as nn

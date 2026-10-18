@@ -3,6 +3,10 @@ test_full_page_ocr.py - Unit and Integration Tests for Full-Page Document OCR Pi
 """
 
 import os
+import sys
+# Bootstrap: ensure the project root is on sys.path when run as a plain script
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import unittest
 import numpy as np
 from PIL import Image, ImageDraw
