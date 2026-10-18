@@ -517,8 +517,33 @@ The application is pre-configured for one-click deployment on [Render](https://r
    - **Build Command:** `pip install -r requirements.txt`
    - **Start Command:** `gunicorn app.main:app --bind 0.0.0.0:$PORT`
    - **Instance Type:** `Free`
-6. Click **Create Web Service**.
-7. Render will build the environment, install dependencies, and launch the Gunicorn WSGI server. Once the build finishes and the `/health` check succeeds, the live service URL will be active.
+---
 
-> [!NOTE]
-> On Render's Free tier, services spin down after 15 minutes of inactivity. When a new request arrives, a cold start takes approximately 30–50 seconds to initialize the container and load the PyTorch model into memory. Subsequent requests respond instantly.
+## 27. Multi-Model Ensemble Architecture & Benchmarks
+
+The system incorporates an optional multi-model probability fusion ensemble engine (`app/ensemble.py`) integrating four independently trained `uTHCDNet` models across different dataset partitions (70/30, 80/20, 85/15, and 90/10):
+
+### Supported Runtime Modes (`OCR_MODEL_MODE`):
+1. **`single`** *(Default Production Baseline)*:
+   - Uses the verified 70/30 baseline model (`model/checkpoints/best_model.pt`).
+   - Peak RAM: ~154 MB. CPU Latency: ~2.3 ms / prediction.
+   - Recommended for memory-constrained cloud environments (e.g. Render Free Tier).
+2. **`ensemble_equal`** *(Equal-Weight Probability Fusion)*:
+   - Evaluates all 4 models and averages their softmax output distributions:
+     $$P_{\text{ensemble}} = \frac{1}{4} (P_{70} + P_{80} + P_{85} + P_{90})$$
+   - Achieves **96.05% Top-1** and **99.30% Top-3** accuracy on the strictly leak-free benchmark.
+3. **`ensemble_weighted`** *(Validation-Tuned Weighted Fusion)*:
+   - Weights: $w_{70}=0.20, w_{80}=0.25, w_{85}=0.25, w_{90}=0.30$.
+   - Achieves **96.12% Top-1** and **99.27% Top-3** accuracy on the strictly leak-free benchmark (+2.52 percentage points over baseline).
+
+### Empirical Performance Comparison on Held-Out Data (3,141 Samples):
+| Strategy | Top-1 Accuracy (%) | Top-3 Accuracy (%) | Macro F1-Score | Inference Latency | Active RAM |
+|---|:---:|:---:|:---:|:---:|:---:|
+| **Single Baseline (70/30)** | 93.60% | 98.92% | 0.9364 | ~2.3 ms | ~154 MB |
+| **Equal-Weight Ensemble** | 96.05% | 99.30% | 0.9606 | ~9.2 ms | ~616 MB |
+| **Validation-Weighted Ensemble** | **96.12%** | **99.27%** | **0.9615** | ~9.2 ms | ~616 MB |
+
+For in-depth analysis and leakage disclosures, see:
+- [`docs/ENSEMBLE_IMPLEMENTATION.md`](docs/ENSEMBLE_IMPLEMENTATION.md)
+- [`docs/ENSEMBLE_EVALUATION.md`](docs/ENSEMBLE_EVALUATION.md)
+

@@ -1,0 +1,13 @@
+Evaluation_Protocol,Configuration,Total_Samples,Top1_Acc_Percent,Top3_Acc_Percent,Macro_Precision,Macro_Recall,Macro_F1,Weighted_F1
+Common_70_30_Test,70/30 (Baseline),28080,93.28,98.73,0.9345,0.9328,0.9328,0.9328
+Common_70_30_Test,80/20 Model,28080,98.32,99.83,0.9834,0.9832,0.9832,0.9832
+Common_70_30_Test,85/15 Model,28080,98.03,99.88,0.9809,0.9803,0.9802,0.9802
+Common_70_30_Test,90/10 Model,28080,98.25,99.87,0.9828,0.9825,0.9825,0.9825
+Common_70_30_Test,Equal-Weight Ensemble,28080,98.43,99.9,0.9846,0.9843,0.9843,0.9843
+Common_70_30_Test,Weighted Ensemble,28080,98.53,99.89,0.9855,0.9853,0.9852,0.9852
+Strictly_Leak_Free,70/30 (Baseline),3141,93.6,98.92,0.9392,0.938,0.9364,0.9359
+Strictly_Leak_Free,80/20 Model,3141,94.87,99.04,0.9514,0.9504,0.9492,0.9484
+Strictly_Leak_Free,85/15 Model,3141,95.51,99.3,0.9564,0.956,0.9551,0.955
+Strictly_Leak_Free,90/10 Model,3141,95.64,99.27,0.9582,0.957,0.9563,0.9561
+Strictly_Leak_Free,Equal-Weight Ensemble,3141,96.05,99.3,0.9611,0.9618,0.9606,0.9604
+Strictly_Leak_Free,Weighted Ensemble,3141,96.12,99.27,0.9623,0.9625,0.9615,0.961

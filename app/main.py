@@ -23,6 +23,7 @@ from PIL import Image
 # Ensure project root is on sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from app.inference import get_inference_engine
+from app.ensemble import get_ensemble_engine
 from app.unicode_converter import export_to_txt, export_to_docx, export_to_pdf
 from model.unicode_mapping import NUM_CLASSES
 
@@ -36,6 +37,22 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 def allowed_file(filename: str) -> bool:
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def get_active_engine():
+    """Returns active engine based on OCR_MODEL_MODE environment variable."""
+    mode = os.getenv('OCR_MODEL_MODE', 'single').lower()
+    if mode in ['ensemble', 'ensemble_equal', 'ensemble_weighted']:
+        try:
+            ens = get_ensemble_engine()
+            if mode != 'ensemble':
+                ens.set_strategy(mode)
+            else:
+                ens.set_strategy('ensemble_equal')
+            return ens
+        except Exception as e:
+            app.logger.warning(f"Ensemble initialization failed ({e}); falling back to single model.")
+            return get_inference_engine()
+    return get_inference_engine()
+
 @app.route('/')
 def index():
     return render_template('index.html', num_classes=NUM_CLASSES)
@@ -47,19 +64,35 @@ def health_check():
 @app.route('/api/health', methods=['GET'])
 def health():
     try:
-        engine = get_inference_engine()
-        model_ok = engine.model is not None
-        ckpt_exists = os.path.exists(engine.checkpoint_path)
-        ckpt_size = os.path.getsize(engine.checkpoint_path) if ckpt_exists else 0
-        return jsonify({
-            'status': 'healthy' if model_ok else 'unhealthy',
-            'model_loaded': model_ok,
-            'checkpoint_path': engine.checkpoint_path,
-            'checkpoint_size_bytes': ckpt_size,
-            'load_error': getattr(engine, 'load_error', None),
-            'num_classes': NUM_CLASSES,
-            'timestamp': datetime.now().isoformat()
-        }), 200
+        engine = get_active_engine()
+        is_ensemble = hasattr(engine, 'get_status')
+        if is_ensemble:
+            status_data = engine.get_status()
+            model_ok = status_data['models_loaded_count'] > 0
+            return jsonify({
+                'status': 'healthy' if model_ok else 'unhealthy',
+                'inference_engine': 'EnsembleInferenceEngine',
+                'active_strategy': status_data['strategy'],
+                'fallback_active': status_data['fallback_active'],
+                'models_loaded_count': status_data['models_loaded_count'],
+                'models_available': status_data['models_available'],
+                'num_classes': NUM_CLASSES,
+                'timestamp': datetime.now().isoformat()
+            }), 200
+        else:
+            model_ok = engine.model is not None
+            ckpt_exists = os.path.exists(engine.checkpoint_path)
+            ckpt_size = os.path.getsize(engine.checkpoint_path) if ckpt_exists else 0
+            return jsonify({
+                'status': 'healthy' if model_ok else 'unhealthy',
+                'inference_engine': 'SingleModelOCRInferenceEngine',
+                'model_loaded': model_ok,
+                'checkpoint_path': os.path.basename(engine.checkpoint_path),
+                'checkpoint_size_bytes': ckpt_size,
+                'load_error': getattr(engine, 'load_error', None),
+                'num_classes': NUM_CLASSES,
+                'timestamp': datetime.now().isoformat()
+            }), 200
     except Exception as e:
         return jsonify({
             'status': 'error',
@@ -70,8 +103,12 @@ def health():
 @app.route('/api/predict', methods=['POST'])
 def predict():
     try:
-        engine = get_inference_engine()
-        if engine.model is None:
+        engine = get_active_engine()
+        # Verify model availability
+        if hasattr(engine, 'models'):
+            if not engine.models:
+                return jsonify({'success': False, 'error': 'No ensemble models could be loaded.'}), 500
+        elif getattr(engine, 'model', None) is None:
             err = getattr(engine, 'load_error', 'Model weights could not be loaded.')
             return jsonify({'success': False, 'error': f'Model unavailable: {err}'}), 500
         image_bytes = None

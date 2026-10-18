@@ -1,0 +1,132 @@
+{
+  "common_benchmark_28080": [
+    {
+      "top1_accuracy_percent": 93.28,
+      "top3_accuracy_percent": 98.73,
+      "macro_precision": 0.9345,
+      "macro_recall": 0.9328,
+      "macro_f1": 0.9328,
+      "weighted_f1": 0.9328,
+      "total_samples": 28080,
+      "Configuration": "70/30 (Baseline)"
+    },
+    {
+      "top1_accuracy_percent": 98.32,
+      "top3_accuracy_percent": 99.83,
+      "macro_precision": 0.9834,
+      "macro_recall": 0.9832,
+      "macro_f1": 0.9832,
+      "weighted_f1": 0.9832,
+      "total_samples": 28080,
+      "Configuration": "80/20 Model"
+    },
+    {
+      "top1_accuracy_percent": 98.03,
+      "top3_accuracy_percent": 99.88,
+      "macro_precision": 0.9809,
+      "macro_recall": 0.9803,
+      "macro_f1": 0.9802,
+      "weighted_f1": 0.9802,
+      "total_samples": 28080,
+      "Configuration": "85/15 Model"
+    },
+    {
+      "top1_accuracy_percent": 98.25,
+      "top3_accuracy_percent": 99.87,
+      "macro_precision": 0.9828,
+      "macro_recall": 0.9825,
+      "macro_f1": 0.9825,
+      "weighted_f1": 0.9825,
+      "total_samples": 28080,
+      "Configuration": "90/10 Model"
+    },
+    {
+      "top1_accuracy_percent": 98.43,
+      "top3_accuracy_percent": 99.9,
+      "macro_precision": 0.9846,
+      "macro_recall": 0.9843,
+      "macro_f1": 0.9843,
+      "weighted_f1": 0.9843,
+      "total_samples": 28080,
+      "Configuration": "Equal-Weight Ensemble"
+    },
+    {
+      "top1_accuracy_percent": 98.53,
+      "top3_accuracy_percent": 99.89,
+      "macro_precision": 0.9855,
+      "macro_recall": 0.9853,
+      "macro_f1": 0.9852,
+      "weighted_f1": 0.9852,
+      "total_samples": 28080,
+      "Configuration": "Weighted Ensemble"
+    }
+  ],
+  "leak_free_benchmark_3141": [
+    {
+      "top1_accuracy_percent": 93.6,
+      "top3_accuracy_percent": 98.92,
+      "macro_precision": 0.9392,
+      "macro_recall": 0.938,
+      "macro_f1": 0.9364,
+      "weighted_f1": 0.9359,
+      "total_samples": 3141,
+      "Configuration": "70/30 (Baseline)"
+    },
+    {
+      "top1_accuracy_percent": 94.87,
+      "top3_accuracy_percent": 99.04,
+      "macro_precision": 0.9514,
+      "macro_recall": 0.9504,
+      "macro_f1": 0.9492,
+      "weighted_f1": 0.9484,
+      "total_samples": 3141,
+      "Configuration": "80/20 Model"
+    },
+    {
+      "top1_accuracy_percent": 95.51,
+      "top3_accuracy_percent": 99.3,
+      "macro_precision": 0.9564,
+      "macro_recall": 0.956,
+      "macro_f1": 0.9551,
+      "weighted_f1": 0.955,
+      "total_samples": 3141,
+      "Configuration": "85/15 Model"
+    },
+    {
+      "top1_accuracy_percent": 95.64,
+      "top3_accuracy_percent": 99.27,
+      "macro_precision": 0.9582,
+      "macro_recall": 0.957,
+      "macro_f1": 0.9563,
+      "weighted_f1": 0.9561,
+      "total_samples": 3141,
+      "Configuration": "90/10 Model"
+    },
+    {
+      "top1_accuracy_percent": 96.05,
+      "top3_accuracy_percent": 99.3,
+      "macro_precision": 0.9611,
+      "macro_recall": 0.9618,
+      "macro_f1": 0.9606,
+      "weighted_f1": 0.9604,
+      "total_samples": 3141,
+      "Configuration": "Equal-Weight Ensemble"
+    },
+    {
+      "top1_accuracy_percent": 96.12,
+      "top3_accuracy_percent": 99.27,
+      "macro_precision": 0.9623,
+      "macro_recall": 0.9625,
+      "macro_f1": 0.9615,
+      "weighted_f1": 0.961,
+      "total_samples": 3141,
+      "Configuration": "Weighted Ensemble"
+    }
+  ],
+  "weights_used": {
+    "70_30": 0.2,
+    "80_20": 0.25,
+    "85_15": 0.25,
+    "90_10": 0.3
+  }
+}
