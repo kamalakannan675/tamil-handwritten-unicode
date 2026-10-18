@@ -1,0 +1,78 @@
+{
+  "audit_timestamp": "2026-10-18T16:40:00",
+  "dataset_identity": {
+    "name": "IIIT-INDIC-HW Tamil Word Dataset",
+    "domain": "Offline Handwritten Tamil Word Recognition",
+    "archive_path": "datasets/raw/tamil_word_dataset.zip",
+    "archive_file_size_bytes": 5121780332,
+    "archive_file_size_gb": 4.77,
+    "uncompressed_bytes": 5130133149,
+    "uncompressed_gb": 4.78
+  },
+  "archive_contents": [
+    {"filename": "train.txt", "size_bytes": 1667489, "role": "Training image-to-vocab index mapping"},
+    {"filename": "train.zip", "size_bytes": 3752623584, "role": "Compressed JPEG images for training"},
+    {"filename": "val.txt", "size_bytes": 222874, "role": "Validation image-to-vocab index mapping"},
+    {"filename": "val.zip", "size_bytes": 572554213, "role": "Compressed JPEG images for validation"},
+    {"filename": "test.txt", "size_bytes": 331578, "role": "Test image-to-vocab index mapping"},
+    {"filename": "test.zip", "size_bytes": 802329793, "role": "Compressed JPEG images for testing"},
+    {"filename": "vocab.txt", "size_bytes": 403618, "role": "Complete line-delimited Unicode Tamil word lexicon"}
+  ],
+  "sample_counts": {
+    "train_samples": 75736,
+    "val_samples": 11598,
+    "test_samples": 16184,
+    "total_samples": 103518,
+    "split_ratios": "73.2% Train / 11.2% Val / 15.6% Test"
+  },
+  "vocabulary_audit": {
+    "total_unique_words_in_lexicon": 13294,
+    "file_encoding": "UTF-8 without BOM",
+    "distinct_words_in_train": 11565,
+    "distinct_words_in_val": 6052,
+    "distinct_words_in_test": 8140,
+    "out_of_vocabulary_words_val": 532,
+    "out_of_vocabulary_words_test": 1198,
+    "character_inventory": {
+      "total_unique_characters": 72,
+      "tamil_unicode_characters_0x0B80_0x0BFF": 71,
+      "ascii_characters": 1,
+      "ascii_char_list": ["-"],
+      "ctc_blank_reserved_index": 0,
+      "character_token_dimension": 73
+    }
+  },
+  "image_geometry_profile": {
+    "format": "JPEG (.jpg)",
+    "color_mode": "RGB (handwritten word crops on off-white/ruled paper backgrounds)",
+    "width_statistics": {
+      "min": 416,
+      "max": 2930,
+      "median": 1543,
+      "mean": 1526.5
+    },
+    "height_statistics": {
+      "min": 242,
+      "max": 315,
+      "median": 294,
+      "mean": 280.0
+    },
+    "aspect_ratio_w_over_h": {
+      "min": 1.42,
+      "max": 11.72,
+      "median": 5.44
+    },
+    "recommended_standardized_model_input_resolution": {
+      "height": 64,
+      "max_width": 512,
+      "channels": 1,
+      "preprocessing": "Grayscale conversion, aspect-ratio-preserving width resize, right-side padding, [0.0, 1.0] float32 normalization"
+    }
+  },
+  "architecture_suitability": {
+    "model_paradigm": "CNN + BiLSTM + CTC (CRNN)",
+    "is_suitable": true,
+    "justification": "Images are horizontal word crops with variable lengths and heights around 240-300px. Character labels are pure UTF-8 sequence strings without horizontal bounding boxes. The 72 unique character tokens fit seamlessly into CTC loss with index 0 reserved for the blank token.",
+    "full_page_considerations": "Dataset contains isolated word crops, not full pages or full multi-line paragraphs. Building a complete end-to-end full-page OCR system requires a document segmentation stage (text-line binarization, projection profile line-slicing, and connected-component word segmentation) feeding into this word-level CRNN recognizer."
+  }
+}

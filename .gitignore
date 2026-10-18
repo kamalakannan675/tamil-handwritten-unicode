@@ -56,3 +56,7 @@ model/checkpoints/experiments/**/best_model.pt
 # Ignore large experiment weights and downloaded zip archives
 outputs/experiments/**/*.pt
 outputs/*.zip
+
+# Tamil Word Dataset & CRNN Checkpoints (Keep immutable zip and heavy binaries out of git)
+datasets/
+checkpoints/
