@@ -6,9 +6,10 @@ Render's 512MB RAM and 500MB slug size limits.
 
 Pipeline:
 1. Otsu Adaptive Binarization (Foreground text = 1, Background = 0).
-2. Horizontal Projection Profile Line Segmentation.
-3. Vertical Projection Profile Word Segmentation with gap thresholding.
-4. Hierarchical Document Tree: Page -> Lines -> Words (with bounding boxes).
+2. Notebook ruling line filtering (removes thin horizontal notebook lines).
+3. Valley-based Horizontal Projection Profile Line Segmentation with shoulder detection.
+4. Adaptive Vertical Projection Profile Word Segmentation with dynamic gap thresholding.
+5. Hierarchical Document Tree: Page -> Lines -> Words (with bounding boxes and padded crops).
 """
 
 from typing import List, Tuple, Dict, Any
@@ -59,6 +60,29 @@ def binarize_image(pil_img: Image.Image) -> np.ndarray:
     binary = (gray_np <= thresh).astype(np.uint8)
     return binary
 
+def filter_horizontal_rules(binary: np.ndarray, min_run_ratio: float = 0.35) -> np.ndarray:
+    """
+    Suppresses thin horizontal notebook ruled lines that bridge text lines.
+    A notebook rule line is a continuous horizontal run of black pixels
+    spanning >= 35% of the page width with a thickness of only 1-2 pixels.
+    """
+    h, w = binary.shape
+    filtered = binary.copy()
+    min_run = int(w * min_run_ratio)
+    
+    for y in range(1, h - 1):
+        row = binary[y, :]
+        # Check if row is exceptionally thin (neighbors above and below are mostly blank)
+        if np.sum(row) >= min_run:
+            above = binary[y - 1, :]
+            below = binary[y + 1, :]
+            # If the stroke is isolated horizontally (thickness 1-2px)
+            thin_mask = (row == 1) & (above == 0) & (below == 0)
+            if np.sum(thin_mask) >= min_run:
+                filtered[y, thin_mask] = 0
+                
+    return filtered
+
 def moving_average(arr: np.ndarray, window_size: int = 5) -> np.ndarray:
     """Smooths 1D projection profile array."""
     if len(arr) < window_size:
@@ -67,71 +91,117 @@ def moving_average(arr: np.ndarray, window_size: int = 5) -> np.ndarray:
     return np.convolve(arr, kernel, mode='same')
 
 def segment_lines(binary: np.ndarray,
-                  min_line_height: int = 16,
+                  min_line_height: int = 10,
                   blank_ratio: float = 0.005) -> List[Tuple[int, int]]:
     """
-    Segments page into horizontal lines using projection profiles.
-    
-    Args:
-        binary: 2D array (H, W) where 1=stroke, 0=background.
-        min_line_height: Minimum height in pixels for a valid line.
-        blank_ratio: Fraction of width below which a row is considered blank space.
-        
+    Hybrid line segmentation:
+    1. Initial pass finds line bands separated by clear whitespace gaps.
+    2. Refinement pass detects deep internal valleys between prominent peaks
+       to separate touching lines caused by descenders or ruled paper.
+       
     Returns:
         List of (y_top, y_bottom) tuples.
     """
     h, w = binary.shape
-    # Horizontal projection: sum of stroke pixels per row
-    proj = np.sum(binary, axis=1)
-    smoothed = moving_average(proj, window_size=max(3, h // 100))
-    threshold = w * blank_ratio
+    proj = np.sum(binary, axis=1).astype(np.float32)
+    max_val = np.max(proj)
+    if max_val < 2.0:
+        return [(0, h)]
+        
+    blank_thresh = max(1.0, max_val * 0.04)
     
-    lines = []
-    in_line = False
+    # 1. Coarse bands separated by whitespace
+    raw_bands = []
+    in_band = False
     start_y = 0
-    
     for y in range(h):
-        val = smoothed[y]
-        if val > threshold:
-            if not in_line:
-                in_line = True
+        if proj[y] > blank_thresh:
+            if not in_band:
+                in_band = True
                 start_y = y
         else:
-            if in_line:
-                in_line = False
+            if in_band:
+                in_band = False
                 if (y - start_y) >= min_line_height:
-                    lines.append((start_y, y))
-                    
-    if in_line and (h - start_y) >= min_line_height:
-        lines.append((start_y, h))
+                    raw_bands.append((start_y, y))
+    if in_band and (h - start_y) >= min_line_height:
+        raw_bands.append((start_y, h))
         
-    return lines
+    # 2. Refinement pass: for any tall band, check for multiple peaks separated by valleys
+    final_lines = []
+    win = max(3, int(h * 0.02))
+    kernel = np.ones(win) / float(win)
+    smoothed = np.convolve(proj, kernel, mode='same')
+    
+    for (by1, by2) in raw_bands:
+        band_h = by2 - by1
+        band_smoothed = smoothed[by1:by2]
+        band_max = np.max(band_smoothed)
+        
+        min_dist = max(7, int(band_h * 0.25))
+        peaks = []
+        for y_rel in range(1, band_h - 1):
+            val = band_smoothed[y_rel]
+            if val > (band_max * 0.15) and val >= band_smoothed[y_rel - 1] and val >= band_smoothed[y_rel + 1]:
+                if not peaks or (y_rel - peaks[-1]) >= min_dist:
+                    peaks.append(y_rel)
+                elif val > band_smoothed[peaks[-1]]:
+                    peaks[-1] = y_rel
+                    
+        valid_valleys = []
+        for i in range(len(peaks) - 1):
+            p1, p2 = peaks[i], peaks[i + 1]
+            seg = band_smoothed[p1:p2 + 1]
+            v_rel = p1 + int(np.argmin(seg))
+            v_val = band_smoothed[v_rel]
+            p1_val = band_smoothed[p1]
+            p2_val = band_smoothed[p2]
+            if v_val < 0.75 * min(p1_val, p2_val):
+                valid_valleys.append(by1 + v_rel)
+                
+        if not valid_valleys:
+            final_lines.append((by1, by2))
+        else:
+            cur_start = by1
+            for vy in valid_valleys:
+                if (vy - cur_start) >= min_line_height:
+                    final_lines.append((cur_start, vy))
+                    cur_start = vy
+            if (by2 - cur_start) >= min_line_height:
+                final_lines.append((cur_start, by2))
+                
+    return final_lines if final_lines else [(0, h)]
 
 def segment_words_in_line(line_binary: np.ndarray,
-                          min_word_width: int = 16,
-                          space_gap: int = 15) -> List[Tuple[int, int]]:
+                          line_h: int = None,
+                          min_word_width: int = None,
+                          space_gap: int = None) -> List[Tuple[int, int]]:
     """
-    Segments a single text line strip into word boxes using vertical projection.
+    Segments a single text line strip into word boxes using vertical projection
+    with adaptive gap thresholding based on line height and intelligent fragment merging.
     
-    Args:
-        line_binary: 2D array of line strip (H, W).
-        min_word_width: Minimum width in pixels for a valid word.
-        space_gap: Consecutive blank vertical columns required to split two words.
-        
     Returns:
         List of (x_left, x_right) tuples.
     """
     h, w = line_binary.shape
-    proj = np.sum(line_binary, axis=0)
-    smoothed = moving_average(proj, window_size=3)
+    if line_h is None:
+        line_h = h
+        
+    vproj = np.sum(line_binary, axis=0)
+    col_thresh = max(0.0, h * 0.02)
+    is_blank = (vproj <= col_thresh)
     
-    word_boxes = []
+    # Adaptive word spacing gap and character width thresholds
+    effective_space_gap = space_gap if space_gap is not None else max(3, int(round(line_h * 0.12)))
+    effective_min_word = min_word_width if min_word_width is not None else max(12, int(round(line_h * 0.40)))
+    
+    segments = []
     in_word = False
     start_x = 0
     blank_counter = 0
     
     for x in range(w):
-        if smoothed[x] > 0:
+        if not is_blank[x]:
             if not in_word:
                 in_word = True
                 start_x = x
@@ -139,25 +209,43 @@ def segment_words_in_line(line_binary: np.ndarray,
         else:
             if in_word:
                 blank_counter += 1
-                if blank_counter >= space_gap:
+                if blank_counter >= effective_space_gap:
                     end_x = x - blank_counter + 1
-                    if (end_x - start_x) >= min_word_width:
-                        word_boxes.append((start_x, end_x))
+                    segments.append((start_x, end_x))
                     in_word = False
                     blank_counter = 0
                     
     if in_word:
         end_x = w - blank_counter
-        if (end_x - start_x) >= min_word_width:
-            word_boxes.append((start_x, end_x))
+        segments.append((start_x, end_x))
+        
+    # Merge tiny sub-character fragments (< effective_min_word) into adjacent words
+    merged_words = []
+    for (sx, ex) in segments:
+        if not merged_words:
+            merged_words.append([sx, ex])
+        else:
+            prev_sx, prev_ex = merged_words[-1]
+            if (ex - sx) < effective_min_word or (sx - prev_ex) < effective_space_gap:
+                merged_words[-1][1] = ex
+            else:
+                merged_words.append([sx, ex])
+                
+    result_boxes = [(int(b[0]), int(b[1])) for b in merged_words if (b[1] - b[0]) >= 6]
+    
+    # Fallback: if no word segments found but line contains foreground strokes
+    if not result_boxes and np.sum(line_binary) > 10:
+        active_cols = np.where(vproj > 0)[0]
+        if len(active_cols) > 0:
+            result_boxes.append((int(active_cols[0]), int(active_cols[-1]) + 1))
             
-    return word_boxes
+    return result_boxes
 
 class PageSegmenter:
     """
     High-level segmenter converting a full-page document into structured lines and words.
     """
-    def __init__(self, min_line_height: int = 16, min_word_width: int = 16, space_gap: int = 15):
+    def __init__(self, min_line_height: int = 10, min_word_width: int = 12, space_gap: int = 15):
         self.min_line_height = min_line_height
         self.min_word_width = min_word_width
         self.space_gap = space_gap
@@ -172,7 +260,9 @@ class PageSegmenter:
             - 'bbox': (x, y, w, h)
             - 'words': List of Word dicts with 'word_idx', 'bbox', 'crop' (PIL Image)
         """
-        binary = binarize_image(pil_image)
+        raw_binary = binarize_image(pil_image)
+        binary = filter_horizontal_rules(raw_binary)
+        
         line_bounds = segment_lines(binary, min_line_height=self.min_line_height)
         
         result_lines = []
@@ -180,21 +270,22 @@ class PageSegmenter:
             line_binary = binary[y1:y2, :]
             line_h = y2 - y1
             
-            # Dynamic space gap: between-word spacing is proportional to line height
-            adaptive_space_gap = max(4, min(self.space_gap, int(round(line_h * 0.25))))
-            adaptive_min_word = max(6, min(self.min_word_width, int(round(line_h * 0.4))))
+            # Dynamic adaptive space gap based on line height
+            adaptive_gap = max(3, min(self.space_gap, int(round(line_h * 0.12))))
+            adaptive_word_w = max(10, min(self.min_word_width, int(round(line_h * 0.40))))
             
             word_bounds = segment_words_in_line(
                 line_binary,
-                min_word_width=adaptive_min_word,
-                space_gap=adaptive_space_gap
+                line_h=line_h,
+                min_word_width=adaptive_word_w,
+                space_gap=adaptive_gap
             )
             
             line_words = []
             for word_idx, (x1, x2) in enumerate(word_bounds):
-                # Add slight padding around word crop for robust OCR
-                pad_x = 2
-                pad_y = 2
+                pad_x = max(2, int((x2 - x1) * 0.05))
+                pad_y = max(2, int(line_h * 0.08))
+                
                 crop_x1 = max(0, x1 - pad_x)
                 crop_y1 = max(0, y1 - pad_y)
                 crop_x2 = min(pil_image.width, x2 + pad_x)
@@ -209,9 +300,11 @@ class PageSegmenter:
                 })
                 
             if line_words:
+                min_w_x1 = min(w['bbox'][0] for w in line_words)
+                max_w_x2 = max(w['bbox'][0] + w['bbox'][2] for w in line_words)
                 result_lines.append({
                     'line_idx': line_idx,
-                    'bbox': [0, int(y1), int(pil_image.width), int(y2 - y1)],
+                    'bbox': [int(min_w_x1), int(y1), int(max_w_x2 - min_w_x1), int(y2 - y1)],
                     'words': line_words
                 })
                 

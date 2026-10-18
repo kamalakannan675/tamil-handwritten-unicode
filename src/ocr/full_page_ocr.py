@@ -80,7 +80,14 @@ class TamilFullPageOCR:
             arr = np.clip((arr - p_low) / (p_high - p_low) * 255.0, 0, 255)
         gray = Image.fromarray(arr.astype(np.uint8))
         
-        new_w = max(16, min(self.max_width, int(round(orig_w * self.target_height / max(1, orig_h)))))
+        # Add background-aware whitespace margin (matches dataset training distribution)
+        pad_y = max(2, int(orig_h * 0.08))
+        pad_x = max(2, int(orig_h * 0.08))
+        from PIL import ImageOps
+        gray = ImageOps.expand(gray, border=(pad_x, pad_y, pad_x, pad_y), fill=255)
+        pad_w, pad_h = gray.size
+        
+        new_w = max(16, min(self.max_width, int(round(pad_w * self.target_height / max(1, pad_h)))))
         # Pad width to nearest multiple of 4
         if new_w % 4 != 0:
             new_w = ((new_w // 4) + 1) * 4
