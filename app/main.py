@@ -20,6 +20,14 @@ from flask import Flask, render_template, request, jsonify, send_file
 from werkzeug.utils import secure_filename
 from PIL import Image
 
+import torch
+# Bound thread allocations for resource-constrained Render free-tier container
+torch.set_num_threads(1)
+try:
+    torch.set_num_interop_threads(1)
+except Exception:
+    pass
+
 # Ensure project root is on sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from app.inference import get_inference_engine
@@ -62,6 +70,7 @@ def health():
             'checkpoint_size_bytes': ckpt_size,
             'vocab_exists': vocab_exists,
             'load_error': _ocr_load_error,
+            'num_classes': NUM_CLASSES,
             'timestamp': datetime.now().isoformat()
         }), 200
     except Exception as e:
@@ -180,6 +189,30 @@ def get_full_page_ocr_engine():
             _full_page_ocr_engine = None
     return _full_page_ocr_engine
 
+@app.route('/api/ocr/test_sample', methods=['GET'])
+def test_sample():
+    """Diagnostic route to test Full-Page OCR latency and functionality on Render."""
+    try:
+        import time
+        engine = get_full_page_ocr_engine()
+        if engine is None:
+            return jsonify({'success': False, 'error': f'Engine not loaded: {_ocr_load_error}'}), 200
+            
+        t0 = time.time()
+        test_im = Image.new('RGB', (200, 64), color=(255, 255, 255))
+        res = engine.process_document(test_im)
+        res['elapsed_sec'] = time.time() - t0
+        res['success'] = True
+        return jsonify(res), 200
+    except BaseException as e:
+        import traceback
+        app.logger.error(f"test_sample error: {e}", exc_info=True)
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'traceback': traceback.format_exc()
+        }), 200
+
 @app.route('/api/ocr/document', methods=['POST'])
 def ocr_document():
     """
@@ -190,7 +223,7 @@ def ocr_document():
     try:
         engine = get_full_page_ocr_engine()
         if engine is None:
-            return jsonify({'success': False, 'error': f'Full-Page OCR engine could not be initialized: {_ocr_load_error}'}), 500
+            return jsonify({'success': False, 'error': f'Full-Page OCR engine could not be initialized: {_ocr_load_error}'}), 200
 
         image_bytes = None
         if 'image' in request.files:
@@ -215,13 +248,20 @@ def ocr_document():
             return jsonify({'success': False, 'error': 'Empty image payload received'}), 400
 
         pil_img = Image.open(io.BytesIO(image_bytes))
+        pil_img.load()
         result = engine.process_document(pil_img)
         result['success'] = True
         return jsonify(result), 200
 
-    except Exception as e:
-        app.logger.error(f"Full-page OCR error: {e}", exc_info=True)
-        return jsonify({'success': False, 'error': f'Document OCR processing error: {str(e)}'}), 500
+    except BaseException as e:
+        import traceback
+        tb = traceback.format_exc()
+        app.logger.error(f"Full-page OCR error: {e}\n{tb}")
+        return jsonify({
+            'success': False,
+            'error': f'Document OCR processing error: {str(e)}',
+            'traceback': tb
+        }), 200
 
 @app.route('/api/export/txt', methods=['POST'])
 def export_txt():
