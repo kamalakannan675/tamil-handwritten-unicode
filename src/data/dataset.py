@@ -139,22 +139,46 @@ class TamilWordDataset(Dataset):
 
     def _load_pil_image(self, img_rel_path: str) -> Image.Image:
         """Loads image from disk or from nested zip archive."""
-        # Check extracted directory on disk first (fastest for Kaggle)
+        # 1. Check extracted directory on disk
         if self.extracted_dir:
-            full_path = os.path.join(self.extracted_dir, img_rel_path)
-            if not os.path.exists(full_path):
-                # Sometimes extracted as train/1.jpg or just 1.jpg
-                full_path = os.path.join(self.extracted_dir, os.path.basename(img_rel_path))
-            if os.path.exists(full_path):
-                return Image.open(full_path).convert('L')
-                
-        # Fallback to reading directly from nested zip
+            basename = os.path.basename(img_rel_path)
+            # Try direct paths:
+            candidates = [
+                os.path.join(self.extracted_dir, img_rel_path),
+                os.path.join(self.extracted_dir, self.split, basename),
+                os.path.join(self.extracted_dir, basename),
+            ]
+            for cand in candidates:
+                if os.path.exists(cand):
+                    return Image.open(cand).convert('L')
+                    
+            # Check if there is an unextracted nested zip in extracted_dir (e.g. train.zip)
+            split_zip_candidate = os.path.join(self.extracted_dir, f"{self.split}.zip")
+            if os.path.exists(split_zip_candidate):
+                if self._nested_zip is None:
+                    self._nested_zip = zipfile.ZipFile(split_zip_candidate, 'r')
+                try:
+                    with self._nested_zip.open(img_rel_path) as f:
+                        return Image.open(f).convert('L')
+                except KeyError:
+                    with self._nested_zip.open(basename) as f:
+                        return Image.open(f).convert('L')
+
+        # 2. Fallback to reading directly from nested zip via main zip_path
         if self.zip_path:
             nested_z = self._get_zip_handles()
-            with nested_z.open(img_rel_path) as f:
-                return Image.open(f).convert('L')
+            basename = os.path.basename(img_rel_path)
+            try:
+                with nested_z.open(img_rel_path) as f:
+                    return Image.open(f).convert('L')
+            except KeyError:
+                with nested_z.open(basename) as f:
+                    return Image.open(f).convert('L')
                 
-        raise FileNotFoundError(f"Image {img_rel_path} not found in disk or zip storage.")
+        raise FileNotFoundError(
+            f"Image '{img_rel_path}' not found in {self.extracted_dir} or zip archives. "
+            f"Please verify that {self.split}.zip or the {self.split}/ folder exists."
+        )
 
     def __getitem__(self, idx: int) -> Dict[str, Union[torch.Tensor, str, int]]:
         img_rel_path, vocab_id, word_text = self.records[idx]
