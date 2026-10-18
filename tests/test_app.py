@@ -19,9 +19,8 @@ class TestFlaskApp(unittest.TestCase):
         """Verify home page loads successfully with 200 OK."""
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Tamil Handwritten OCR', response.data)
-        self.assertIn(b'Upload Image', response.data)
-        self.assertIn(b'Draw Character', response.data)
+        self.assertIn(b'Tamil Handwritten Document OCR', response.data)
+        self.assertIn(b'Upload Handwritten Tamil Document', response.data)
 
     def test_health_route(self):
         """Verify health check endpoint returns valid JSON."""

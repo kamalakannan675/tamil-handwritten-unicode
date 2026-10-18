@@ -59,4 +59,7 @@ outputs/*.zip
 
 # Tamil Word Dataset & CRNN Checkpoints (Keep immutable zip and heavy binaries out of git)
 datasets/
-checkpoints/
+checkpoints/*
+!checkpoints/crnn/
+checkpoints/crnn/*
+!checkpoints/crnn/best_model.pt
