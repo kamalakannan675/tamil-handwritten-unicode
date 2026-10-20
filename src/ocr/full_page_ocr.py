@@ -4,7 +4,8 @@ full_page_ocr.py - End-to-End Tamil Handwritten Full-Page OCR Engine.
 Orchestrates:
 1. Document loading (from file path, byte stream, or PIL Image).
 2. Zero-dependency Page & Word Segmentation (PageSegmenter).
-3. Preprocessing word crops to aspect-ratio scaled grayscale tensors (H=64, W proportional).
+3. Preprocessing word crops to aspect-ratio scaled grayscale tensors (H=64, W proportional),
+   with adaptive background illumination normalization matching the IIIT-INDIC-HW training distribution.
 4. CRNN + CTC batch inference.
 5. Tamil Grapheme-Aware Unicode reconstruction:
    - Preserves Tamil base characters and combining marks (pulli, vowel signs).
@@ -18,7 +19,7 @@ import os
 import unicodedata
 from typing import List, Dict, Any, Union
 import numpy as np
-from PIL import Image, ImageOps
+from PIL import Image
 import torch
 
 from src.data.vocab import TamilCTCCharacterVocabulary, TAMIL_COMBINING_MARKS
@@ -71,28 +72,23 @@ class TamilFullPageOCR:
     def preprocess_word_crop(self, pil_crop: Image.Image) -> torch.Tensor:
         """
         Converts a PIL word crop into normalized (1, 1, 64, W) tensor where W is a multiple of 4.
-        Ensures input matches the IIIT-INDIC-HW dataset training distribution:
-        - White paper background (~235-255) maps to 0.0 after inversion.
-        - Dark handwritten strokes (~0-40) map to 1.0 after inversion.
+        Aligns input with the IIIT-INDIC-HW dataset training distribution:
+        - Grayscale conversion
+        - Adaptive background normalization (maps paper background to ~255 and ink to ~0)
+        - Aspect-ratio preserving bilinear resize to fixed height H=64
+        - Width clamped to [16, max_width] and padded to multiple of 4
+        - Inverted and normalized to [0.0, 1.0] (ink stroke = 1.0, background = 0.0)
         """
         gray = pil_crop.convert('L')
         orig_w, orig_h = gray.size
         
         arr = np.array(gray, dtype=np.float32)
-        # Background-relative contrast normalization for camera photos
-        p_low = np.percentile(arr, 3)
-        p_high = np.percentile(arr, 97)
+        p_low, p_high = np.percentile(arr, (5, 95))
         if (p_high - p_low) > 15:
             arr = np.clip((arr - p_low) / (p_high - p_low) * 255.0, 0, 255)
         gray = Image.fromarray(arr.astype(np.uint8))
         
-        # Add slight margin to preserve edges and combining marks
-        pad_y = max(2, int(round(orig_h * 0.10)))
-        pad_x = max(2, int(round(orig_h * 0.10)))
-        gray = ImageOps.expand(gray, border=(pad_x, pad_y, pad_x, pad_y), fill=255)
-        pad_w, pad_h = gray.size
-        
-        new_w = max(16, min(self.max_width, int(round(pad_w * self.target_height / max(1, pad_h)))))
+        new_w = max(16, min(self.max_width, int(round(orig_w * self.target_height / max(1, orig_h)))))
         # Pad width to nearest multiple of 4 (CNN downsamples W by 4)
         if new_w % 4 != 0:
             new_w = ((new_w // 4) + 1) * 4

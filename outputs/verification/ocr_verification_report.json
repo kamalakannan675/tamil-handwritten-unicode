@@ -1,0 +1,239 @@
+{
+  "user_note_verification": {
+    "image_size": [
+      260,
+      178
+    ],
+    "total_lines": 5,
+    "total_words": 12,
+    "assembled_full_text": "படொ-மா\n௭பப ௭பு ௮ட\nஎயு உடடய\nஎ பப ப் படப்\nத பட்",
+    "crops": [
+      {
+        "line_idx": 0,
+        "word_idx": 0,
+        "bbox": [
+          0,
+          2,
+          246,
+          40
+        ],
+        "file": "user_L0_W0.png",
+        "prediction": "படொ-மா"
+      },
+      {
+        "line_idx": 1,
+        "word_idx": 0,
+        "bbox": [
+          3,
+          38,
+          95,
+          28
+        ],
+        "file": "user_L1_W0.png",
+        "prediction": "௭பப"
+      },
+      {
+        "line_idx": 1,
+        "word_idx": 1,
+        "bbox": [
+          105,
+          38,
+          72,
+          28
+        ],
+        "file": "user_L1_W1.png",
+        "prediction": "௭பு"
+      },
+      {
+        "line_idx": 1,
+        "word_idx": 2,
+        "bbox": [
+          183,
+          38,
+          52,
+          28
+        ],
+        "file": "user_L1_W2.png",
+        "prediction": "௮ட"
+      },
+      {
+        "line_idx": 2,
+        "word_idx": 0,
+        "bbox": [
+          3,
+          70,
+          85,
+          36
+        ],
+        "file": "user_L2_W0.png",
+        "prediction": "எயு"
+      },
+      {
+        "line_idx": 2,
+        "word_idx": 1,
+        "bbox": [
+          90,
+          70,
+          160,
+          36
+        ],
+        "file": "user_L2_W1.png",
+        "prediction": "உடடய"
+      },
+      {
+        "line_idx": 3,
+        "word_idx": 0,
+        "bbox": [
+          0,
+          114,
+          79,
+          25
+        ],
+        "file": "user_L3_W0.png",
+        "prediction": "எ"
+      },
+      {
+        "line_idx": 3,
+        "word_idx": 1,
+        "bbox": [
+          88,
+          114,
+          49,
+          25
+        ],
+        "file": "user_L3_W1.png",
+        "prediction": "பப"
+      },
+      {
+        "line_idx": 3,
+        "word_idx": 2,
+        "bbox": [
+          137,
+          114,
+          63,
+          25
+        ],
+        "file": "user_L3_W2.png",
+        "prediction": "ப்"
+      },
+      {
+        "line_idx": 3,
+        "word_idx": 3,
+        "bbox": [
+          204,
+          114,
+          49,
+          25
+        ],
+        "file": "user_L3_W3.png",
+        "prediction": "படப்"
+      },
+      {
+        "line_idx": 4,
+        "word_idx": 0,
+        "bbox": [
+          67,
+          145,
+          20,
+          21
+        ],
+        "file": "user_L4_W0.png",
+        "prediction": "த"
+      },
+      {
+        "line_idx": 4,
+        "word_idx": 1,
+        "bbox": [
+          87,
+          145,
+          108,
+          21
+        ],
+        "file": "user_L4_W1.png",
+        "prediction": "பட்"
+      }
+    ]
+  },
+  "validation_representative_samples": [
+    {
+      "sample_idx": 0,
+      "type": "incorrect",
+      "file": "val_incorrect_0_val_1.jpg",
+      "ground_truth": "ஆச்சரியமாய்ச்",
+      "prediction": "அச்சரியமாய்க்",
+      "exact_match": false
+    },
+    {
+      "sample_idx": 1,
+      "type": "incorrect",
+      "file": "val_incorrect_1_val_2.jpg",
+      "ground_truth": "கூட்டுகிறார்",
+      "prediction": "ஒழ்கிறர்ச்ே",
+      "exact_match": false
+    },
+    {
+      "sample_idx": 2,
+      "type": "correct",
+      "file": "val_correct_2_val_3.jpg",
+      "ground_truth": "இஞ்சினியரிங்",
+      "prediction": "இஞ்சினியரிங்",
+      "exact_match": true
+    },
+    {
+      "sample_idx": 3,
+      "type": "incorrect",
+      "file": "val_incorrect_3_val_4.jpg",
+      "ground_truth": "யூனியன்",
+      "prediction": "ஆனியன்",
+      "exact_match": false
+    },
+    {
+      "sample_idx": 4,
+      "type": "incorrect",
+      "file": "val_incorrect_4_val_5.jpg",
+      "ground_truth": "வரப்போக",
+      "prediction": "ஒர்ழ்ேனே",
+      "exact_match": false
+    },
+    {
+      "sample_idx": 5,
+      "type": "incorrect",
+      "file": "val_incorrect_5_val_6.jpg",
+      "ground_truth": "தேடலுக்கு",
+      "prediction": "தேடலுக்குே",
+      "exact_match": false
+    },
+    {
+      "sample_idx": 6,
+      "type": "correct",
+      "file": "val_correct_6_val_7.jpg",
+      "ground_truth": "காய்ந்த",
+      "prediction": "காய்ந்த",
+      "exact_match": true
+    },
+    {
+      "sample_idx": 7,
+      "type": "correct",
+      "file": "val_correct_7_val_8.jpg",
+      "ground_truth": "நுழைகிறார்கள்",
+      "prediction": "நுழைகிறார்கள்",
+      "exact_match": true
+    },
+    {
+      "sample_idx": 9,
+      "type": "correct",
+      "file": "val_correct_9_val_10.jpg",
+      "ground_truth": "அறிந்ததுமில்லை",
+      "prediction": "அறிந்ததுமில்லை",
+      "exact_match": true
+    },
+    {
+      "sample_idx": 10,
+      "type": "correct",
+      "file": "val_correct_10_val_11.jpg",
+      "ground_truth": "குண்டை",
+      "prediction": "குண்டை",
+      "exact_match": true
+    }
+  ]
+}
