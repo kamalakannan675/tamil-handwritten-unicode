@@ -110,6 +110,17 @@ class TamilFullPageOCR:
         raw_word = decoded[0] if decoded else ""
         return unicodedata.normalize('NFC', raw_word.strip())
 
+    def assess_image_quality(self, input_source: Union[str, Image.Image]) -> Dict[str, Any]:
+        """
+        Lightweight pre-flight image quality assessment.
+        Estimates detected text line heights without running expensive neural inference.
+        """
+        if isinstance(input_source, str):
+            page_img = Image.open(input_source).convert('RGB')
+        else:
+            page_img = input_source.convert('RGB')
+        return self.segmenter.assess_image_quality(page_img)
+
     @staticmethod
     def assemble_line_words(words_list: List[str]) -> str:
         """
@@ -204,12 +215,16 @@ class TamilFullPageOCR:
             
         assembled_full_text = "\n".join(full_text_lines)
         
+        # Attach lightweight pre-flight quality assessment
+        preflight_assessment = self.segmenter.assess_image_quality(page_img)
+
         result = {
             'full_text': assembled_full_text,
             'total_lines': len(structured_lines),
             'total_words': total_words_count,
             'lines': structured_lines,
-            'image_size': [page_img.width, page_img.height]
+            'image_size': [page_img.width, page_img.height],
+            'preflight': preflight_assessment
         }
         
         return result

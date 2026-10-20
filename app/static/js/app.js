@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const uploadSpinner = document.getElementById('upload-spinner');
     const errorAlert = document.getElementById('error-alert');
     const errorMessage = document.getElementById('error-message');
+    const preflightAlert = document.getElementById('preflight-alert');
+    const preflightTitle = document.getElementById('preflight-title');
+    const preflightMessage = document.getElementById('preflight-message');
 
     // DOM Elements - Output
     const emptyState = document.getElementById('empty-state');
@@ -86,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleFileSelection(file) {
         hideError();
+        hidePreflight();
         const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp'];
         if (!validTypes.includes(file.type)) {
             showError('Please select a valid image file (PNG, JPG, JPEG, BMP).');
@@ -107,6 +111,57 @@ document.addEventListener('DOMContentLoaded', () => {
             recognizeDocBtn.disabled = false;
         };
         reader.readAsDataURL(file);
+
+        // Run non-blocking pre-flight image quality check
+        runPreflightCheck(file);
+    }
+
+    async function runPreflightCheck(file) {
+        try {
+            const formData = new FormData();
+            formData.append('image', file);
+            const response = await fetch('/api/ocr/preflight', {
+                method: 'POST',
+                body: formData
+            });
+            if (!response.ok) return;
+            const data = await response.json();
+            if (!data.success) return;
+
+            if (data.quality_status === 'severe_low_res') {
+                showPreflight(
+                    'Very small handwriting detected',
+                    data.warning || 'Some text lines are very small, so Tamil characters or vowel marks may be misrecognized. For better results, take a closer, well-lit photograph. You can still continue with this image.'
+                );
+            } else if (data.quality_status === 'caution_low_res') {
+                showPreflight(
+                    'Low-resolution handwriting detected',
+                    data.warning || 'Some text lines are small, so Tamil characters or vowel marks may be misrecognized. For better results, take a closer, well-lit photograph. You can still continue with this image.'
+                );
+            } else if (data.quality_status === 'no_text_detected') {
+                showPreflight(
+                    'No clear text lines detected',
+                    data.warning || 'No clear text lines detected. Please ensure the document is clear and well-lit. You can still continue with this image.'
+                );
+            } else {
+                hidePreflight();
+            }
+        } catch (e) {
+            // Advisory pre-flight check should never block normal OCR execution
+            console.debug('Pre-flight check skipped:', e);
+        }
+    }
+
+    function showPreflight(title, msg) {
+        if (!preflightAlert) return;
+        preflightTitle.textContent = title;
+        preflightMessage.textContent = msg;
+        preflightAlert.classList.remove('hidden');
+    }
+
+    function hidePreflight() {
+        if (!preflightAlert) return;
+        preflightAlert.classList.add('hidden');
     }
 
     function resetInput() {
@@ -117,6 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dropzonePrompt.classList.remove('hidden');
         recognizeDocBtn.disabled = true;
         hideError();
+        hidePreflight();
     }
 
     // Recognize Text Execution

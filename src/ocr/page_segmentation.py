@@ -319,3 +319,90 @@ class PageSegmenter:
                 })
                 
         return result_lines
+
+    def assess_image_quality(self, pil_image: Image.Image) -> Dict[str, Any]:
+        """
+        Lightweight pre-flight image quality and line-height assessment.
+        Estimates the median height of detected text lines using the existing
+        line-segmentation pipeline without running expensive word segmentation
+        or CRNN neural network inference.
+
+        Returns:
+            Dict containing:
+            - 'line_count': int
+            - 'line_heights': List[int]
+            - 'median_line_height': float
+            - 'quality_status': 'good' | 'caution_low_res' | 'severe_low_res' | 'no_text_detected'
+            - 'warning': Optional[str]
+            - 'can_proceed': bool (Always True; never rejects images)
+        """
+        raw_binary = binarize_image(pil_image)
+        binary = filter_horizontal_rules(raw_binary)
+        
+        # Check if the image contains negligible foreground pixels (e.g. blank page or solid background)
+        total_foreground = int(np.sum(binary))
+        if total_foreground < 25:
+            return {
+                'line_count': 0,
+                'line_heights': [],
+                'median_line_height': 0.0,
+                'quality_status': 'no_text_detected',
+                'warning': (
+                    "No clear text lines detected. Please ensure the document is clearly visible, "
+                    "oriented right-side up, and well-lit. You can still continue with this image."
+                ),
+                'can_proceed': True
+            }
+
+        # Use a slightly lower line-height threshold to capture very small text lines (down to 8px)
+        line_bounds = segment_lines(binary, min_line_height=max(8, self.min_line_height // 2))
+        
+        # Filter out potential spurious full-image boundary fallback if foreground is sparse
+        valid_lines = []
+        for (y1, y2) in line_bounds:
+            line_fg = np.sum(binary[y1:y2, :])
+            if line_fg >= 15: # At least minimal stroke activity
+                valid_lines.append((y1, y2))
+                
+        if not valid_lines:
+            return {
+                'line_count': 0,
+                'line_heights': [],
+                'median_line_height': 0.0,
+                'quality_status': 'no_text_detected',
+                'warning': (
+                    "No clear text lines detected. Please ensure the document is clearly visible, "
+                    "oriented right-side up, and well-lit. You can still continue with this image."
+                ),
+                'can_proceed': True
+            }
+
+        line_heights = [int(y2 - y1) for (y1, y2) in valid_lines]
+        median_h = float(np.median(line_heights))
+        
+        if median_h < 20.0:
+            status = 'severe_low_res'
+            warning = (
+                f"Severe low-resolution handwriting detected (estimated median line height: {int(round(median_h))} px). "
+                "Text strokes are extremely small, which may cause Tamil characters or vowel marks to be misrecognized. "
+                "For better results, take a closer, well-lit photograph and keep the text in focus. You can still continue with this image."
+            )
+        elif 20.0 <= median_h < 30.0:
+            status = 'caution_low_res'
+            warning = (
+                f"Low-resolution handwriting detected (estimated median line height: {int(round(median_h))} px). "
+                "Some text lines are very small, so Tamil characters or vowel marks may be misrecognized. "
+                "For better results, take a closer, well-lit photograph and keep the text in focus. You can still continue with this image."
+            )
+        else:
+            status = 'good'
+            warning = None
+
+        return {
+            'line_count': len(valid_lines),
+            'line_heights': line_heights,
+            'median_line_height': round(median_h, 1),
+            'quality_status': status,
+            'warning': warning,
+            'can_proceed': True
+        }

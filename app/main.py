@@ -213,6 +213,57 @@ def test_sample():
             'traceback': traceback.format_exc()
         }), 200
 
+@app.route('/api/ocr/preflight', methods=['POST'])
+def ocr_preflight():
+    """
+    Lightweight Image Quality Pre-Flight Endpoint.
+    Estimates median line height and checks for low-resolution handwriting
+    without running full CRNN neural inference.
+    """
+    try:
+        engine = get_full_page_ocr_engine()
+        if engine is not None:
+            segmenter = engine.segmenter
+        else:
+            from src.ocr.page_segmentation import PageSegmenter
+            segmenter = PageSegmenter()
+
+        image_bytes = None
+        if 'image' in request.files:
+            file = request.files['image']
+            if file.filename == '':
+                return jsonify({'success': False, 'error': 'No document image selected'}), 400
+            if not allowed_file(file.filename):
+                return jsonify({'success': False, 'error': 'Unsupported file format'}), 400
+            image_bytes = file.read()
+        elif request.is_json:
+            data = request.get_json()
+            if not data or 'image' not in data:
+                return jsonify({'success': False, 'error': 'Missing image in request'}), 400
+            b64_data = data['image']
+            if ',' in b64_data:
+                b64_data = b64_data.split(',', 1)[1]
+            image_bytes = base64.b64decode(b64_data)
+        else:
+            return jsonify({'success': False, 'error': 'Request must be multipart or json'}), 400
+
+        if not image_bytes:
+            return jsonify({'success': False, 'error': 'Empty image payload received'}), 400
+
+        pil_img = Image.open(io.BytesIO(image_bytes))
+        pil_img.load()
+        assessment = segmenter.assess_image_quality(pil_img)
+        assessment['success'] = True
+        return jsonify(assessment), 200
+
+    except BaseException as e:
+        app.logger.error(f"Preflight check error: {e}", exc_info=True)
+        return jsonify({
+            'success': False,
+            'error': f'Preflight analysis error: {str(e)}',
+            'can_proceed': True
+        }), 200
+
 @app.route('/api/ocr/document', methods=['POST'])
 def ocr_document():
     """
