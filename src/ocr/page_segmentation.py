@@ -172,6 +172,53 @@ def segment_lines(binary: np.ndarray,
                 
     return final_lines if final_lines else [(0, h)]
 
+def compute_bounded_line_crop_y(line_bounds: List[Tuple[int, int]],
+                                line_idx: int,
+                                img_height: int) -> Tuple[int, int]:
+    """
+    Computes vertically bounded crop coordinates (crop_y1, crop_y2) for line at line_idx.
+    
+    Guarantees:
+    1. Zero overlap with adjacent line crops (crop_y2[i] <= crop_y1[i+1]).
+    2. Preserves Tamil ascenders, pulli dots, and descenders up to available inter-line gap.
+    3. First line (top margin) and last line (bottom margin) are safely bounded within [0, img_height].
+    4. Degenerate, zero-gap, or inverted line bounds never cause negative or zero-height crops.
+    """
+    if not line_bounds or line_idx < 0 or line_idx >= len(line_bounds):
+        return 0, max(1, img_height)
+        
+    y1, y2 = line_bounds[line_idx]
+    y1 = max(0, min(img_height, y1))
+    y2 = max(y1, min(img_height, y2))
+    line_h = max(1, y2 - y1)
+    
+    desired_pad_y = max(2, int(round(line_h * 0.18)))
+    
+    # Distance to preceding line (or top of image)
+    if line_idx > 0:
+        prev_y2 = max(0, min(img_height, line_bounds[line_idx - 1][1]))
+        gap_above = max(0, y1 - prev_y2)
+        pad_top = min(desired_pad_y, gap_above // 2)
+    else:
+        gap_above = y1
+        pad_top = min(desired_pad_y, gap_above)
+        
+    # Distance to succeeding line (or bottom of image)
+    if line_idx < len(line_bounds) - 1:
+        next_y1 = max(0, min(img_height, line_bounds[line_idx + 1][0]))
+        gap_below = max(0, next_y1 - y2)
+        pad_bot = min(desired_pad_y, gap_below // 2)
+    else:
+        gap_below = max(0, img_height - y2)
+        pad_bot = min(desired_pad_y, gap_below)
+        
+    crop_y1 = max(0, y1 - pad_top)
+    crop_y2 = min(img_height, y2 + pad_bot)
+    if crop_y2 <= crop_y1:
+        crop_y2 = min(img_height, crop_y1 + 1)
+        
+    return crop_y1, crop_y2
+
 def segment_words_in_line(line_binary: np.ndarray,
                           line_h: int = None,
                           min_word_width: int = None,
@@ -289,17 +336,15 @@ class PageSegmenter:
                 space_gap=adaptive_gap
             )
             
-            # Generous vertical margin padding (preserves ascenders: pulli dots, vowel marks, and descenders)
-            pad_y = max(4, int(round(line_h * 0.20)))
+            # Bounded vertical crop coordinates avoiding adjacent line stroke intrusion
+            crop_y1, crop_y2 = compute_bounded_line_crop_y(line_bounds, line_idx, pil_image.height)
             
             line_words = []
             for word_idx, (x1, x2) in enumerate(word_bounds):
                 pad_x = max(3, int(round(line_h * 0.10)))
                 
                 crop_x1 = max(0, x1 - pad_x)
-                crop_y1 = max(0, y1 - pad_y)
                 crop_x2 = min(pil_image.width, x2 + pad_x)
-                crop_y2 = min(pil_image.height, y2 + pad_y)
                 
                 word_crop = pil_image.crop((crop_x1, crop_y1, crop_x2, crop_y2))
                 
