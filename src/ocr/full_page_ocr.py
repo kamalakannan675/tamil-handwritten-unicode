@@ -22,7 +22,7 @@ import numpy as np
 from PIL import Image
 import torch
 
-from src.data.vocab import TamilCTCCharacterVocabulary, TAMIL_COMBINING_MARKS
+from src.data.vocab import TamilCTCCharacterVocabulary, TAMIL_COMBINING_MARKS, repair_geminate_virama
 from src.models.crnn import TamilCRNN
 from src.inference.ctc_decoder import ctc_greedy_decode
 from src.ocr.page_segmentation import PageSegmenter
@@ -108,7 +108,8 @@ class TamilFullPageOCR:
             logits = self.model(tensor) # (T, 1, num_classes)
             decoded = ctc_greedy_decode(logits, self.vocab, blank_idx=0)
         raw_word = decoded[0] if decoded else ""
-        return unicodedata.normalize('NFC', raw_word.strip())
+        repaired_word = repair_geminate_virama(raw_word.strip())
+        return unicodedata.normalize('NFC', repaired_word)
 
     def assess_image_quality(self, input_source: Union[str, Image.Image]) -> Dict[str, Any]:
         """
@@ -135,7 +136,7 @@ class TamilFullPageOCR:
             
         assembled_parts = []
         for word in words_list:
-            clean_word = word.strip()
+            clean_word = repair_geminate_virama(word.strip())
             if not clean_word:
                 continue
                 

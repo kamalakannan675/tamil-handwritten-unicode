@@ -36,6 +36,69 @@ TAMIL_COMBINING_MARKS = {
     '\u0bd7',  # Length mark ௗ
 }
 
+# Tamil Orthography Constants for Post-Processing Validation
+TAMIL_VIRAMA = '\u0bcd'  # Pulli ்
+
+# Tamil consonants: U+0B95 to U+0BB9 (all base consonants in Unicode Tamil block)
+TAMIL_CONSONANTS = {chr(c) for c in range(0x0b95, 0x0bb9 + 1)}
+
+# Tamil vowel signs (combining vowel marks)
+TAMIL_VOWEL_SIGNS = {
+    '\u0bbe',  # Vowel sign AA ா
+    '\u0bbf',  # Vowel sign I ி
+    '\u0bc0',  # Vowel sign II ீ
+    '\u0bc1',  # Vowel sign U ு
+    '\u0bc2',  # Vowel sign UU ூ
+    '\u0bc6',  # Vowel sign E ெ
+    '\u0bc7',  # Vowel sign EE ே
+    '\u0bc8',  # Vowel sign AI ை
+    '\u0bca',  # Vowel sign O ொ
+    '\u0bcb',  # Vowel sign OO ோ
+    '\u0bcc',  # Vowel sign AU ௌ
+    '\u0bd7',  # Length mark ௗ
+}
+
+def repair_geminate_virama(text: str) -> str:
+    """
+    Repairs misplaced virama sequences where CTC decoder emits:
+    [VOWEL_SIGN] + [VIRAMA] + [CONSONANT C] + [VOWEL_SIGN]
+    reconstructing the intended geminate:
+    [CONSONANT C] + [VIRAMA] + [CONSONANT C] + [VOWEL_SIGN]
+
+    In standard Tamil orthography, a virama (\u0bcd) immediately following
+    a vowel sign is strictly illegal Unicode. In handwriting with geminates
+    (e.g., 'க்கு'), CTC decoders often detect the upper pulli mark before
+    the base consonant, omitting the first consonant stroke.
+
+    Example:
+        'திரு்குறள்' -> 'திருக்குறள்'
+    """
+    if not text or TAMIL_VIRAMA not in text:
+        return text
+
+    chars = list(text)
+    n = len(chars)
+    repaired = []
+    i = 0
+
+    while i < n:
+        if (repaired and repaired[-1] in TAMIL_VOWEL_SIGNS and
+            chars[i] == TAMIL_VIRAMA and
+            i + 2 < n and
+            chars[i + 1] in TAMIL_CONSONANTS and
+            chars[i + 2] in TAMIL_VOWEL_SIGNS):
+
+            cons = chars[i + 1]
+            v_sign = chars[i + 2]
+            repaired.extend([cons, TAMIL_VIRAMA, cons, v_sign])
+            i += 3
+        else:
+            repaired.append(chars[i])
+            i += 1
+
+    return unicodedata.normalize('NFC', "".join(repaired))
+
+
 class TamilCTCCharacterVocabulary:
     def __init__(self, vocab_file: str = None):
         self.blank_token = CTC_BLANK_TOKEN
