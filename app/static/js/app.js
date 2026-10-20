@@ -1,59 +1,65 @@
-// app.js - Full-Page Tamil Handwritten Document OCR Frontend
+// app.js - Lightweight Frontend Controller for Tamil Handwriting OCR
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Elements
+    // DOM Elements - Input
     const dropzone = document.getElementById('dropzone');
     const fileInput = document.getElementById('file-input');
     const browseBtn = document.getElementById('browse-btn');
     const dropzonePrompt = document.getElementById('dropzone-prompt');
     const previewContainer = document.getElementById('preview-container');
     const imagePreview = document.getElementById('image-preview');
+    const replaceImgBtn = document.getElementById('replace-img-btn');
     const removeImgBtn = document.getElementById('remove-img-btn');
     const recognizeDocBtn = document.getElementById('recognize-doc-btn');
     const uploadSpinner = document.getElementById('upload-spinner');
+    const errorAlert = document.getElementById('error-alert');
+    const errorMessage = document.getElementById('error-message');
 
-    // Results & editor
+    // DOM Elements - Output
     const emptyState = document.getElementById('empty-state');
     const resultDisplay = document.getElementById('result-display');
-    const tamilEditor = document.getElementById('tamil-editor');
+    const statsContainer = document.getElementById('stats-container');
     const statLines = document.getElementById('stat-lines');
     const statWords = document.getElementById('stat-words');
-    const linesBreakdownList = document.getElementById('lines-breakdown-list');
+    const tamilEditor = document.getElementById('tamil-editor');
 
-    // Exports
+    // Action Buttons
     const copyBtn = document.getElementById('copy-btn');
     const copyLabel = document.getElementById('copy-label');
     const exportTxtBtn = document.getElementById('export-txt-btn');
     const exportDocxBtn = document.getElementById('export-docx-btn');
     const exportPdfBtn = document.getElementById('export-pdf-btn');
 
-    // Error alert
-    const errorAlert = document.getElementById('error-alert');
-    const errorMessage = document.getElementById('error-message');
-
     let selectedFile = null;
 
-    // Browse button handler
+    // Browse & Replace triggers
     browseBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         fileInput.click();
     });
 
+    if (replaceImgBtn) {
+        replaceImgBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            fileInput.click();
+        });
+    }
+
     dropzone.addEventListener('click', () => {
         if (!selectedFile) fileInput.click();
     });
 
-    // Drag & drop handlers
-    ['dragenter', 'dragover'].forEach(eventName => {
-        dropzone.addEventListener(eventName, (e) => {
+    // Drag and Drop
+    ['dragenter', 'dragover'].forEach(name => {
+        dropzone.addEventListener(name, (e) => {
             e.preventDefault();
             e.stopPropagation();
             dropzone.classList.add('drag-over');
         });
     });
 
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropzone.addEventListener(eventName, (e) => {
+    ['dragleave', 'drop'].forEach(name => {
+        dropzone.addEventListener(name, (e) => {
             e.preventDefault();
             e.stopPropagation();
             dropzone.classList.remove('drag-over');
@@ -62,20 +68,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     dropzone.addEventListener('drop', (e) => {
         const files = e.dataTransfer.files;
-        if (files.length > 0) {
+        if (files && files.length > 0) {
             handleFileSelection(files[0]);
         }
     });
 
     fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length > 0) {
+        if (e.target.files && e.target.files.length > 0) {
             handleFileSelection(e.target.files[0]);
         }
     });
 
     removeImgBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        resetFileInput();
+        resetInput();
     });
 
     function handleFileSelection(file) {
@@ -88,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const maxBytes = 10 * 1024 * 1024;
         if (file.size > maxBytes) {
-            showError('Selected image exceeds the 10 MB maximum file size.');
+            showError('Selected image exceeds the 10 MB maximum limit.');
             return;
         }
 
@@ -103,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.readAsDataURL(file);
     }
 
-    function resetFileInput() {
+    function resetInput() {
         selectedFile = null;
         fileInput.value = '';
         imagePreview.src = '';
@@ -113,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         hideError();
     }
 
-    // Recognize Document Handler
+    // Recognize Text Execution
     recognizeDocBtn.addEventListener('click', async () => {
         if (!selectedFile) return;
 
@@ -144,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             displayResults(data);
         } catch (err) {
-            showError(err.message || 'An error occurred during OCR inference.');
+            showError(err.message || 'An error occurred during recognition.');
         } finally {
             setLoading(false);
         }
@@ -153,36 +159,21 @@ document.addEventListener('DOMContentLoaded', () => {
     function displayResults(data) {
         emptyState.classList.add('hidden');
         resultDisplay.classList.remove('hidden');
+        statsContainer.classList.remove('hidden');
 
         statLines.textContent = data.total_lines || 0;
         statWords.textContent = data.total_words || 0;
         tamilEditor.value = data.full_text || '';
-
-        // Line-by-line breakdown
-        linesBreakdownList.innerHTML = '';
-        if (data.lines && data.lines.length > 0) {
-            data.lines.forEach((line) => {
-                const item = document.createElement('div');
-                item.className = 'history-item';
-                item.style.padding = '0.5rem';
-                item.style.borderBottom = '1px solid #e2e8f0';
-                item.innerHTML = `
-                    <div style="font-size:0.8rem;color:#64748b;font-weight:600;">Line ${line.line_idx + 1} (${line.words.length} words):</div>
-                    <div style="font-family:'Noto Sans Tamil',sans-serif;font-size:1rem;color:#0f172a;margin-top:2px;">${line.line_text}</div>
-                `;
-                linesBreakdownList.appendChild(item);
-            });
-        }
     }
 
     function setLoading(isLoading) {
         recognizeDocBtn.disabled = isLoading;
         if (isLoading) {
             uploadSpinner.classList.remove('hidden');
-            recognizeDocBtn.querySelector('.btn-label').textContent = 'Processing OCR...';
+            recognizeDocBtn.querySelector('.btn-text').textContent = 'Recognizing Text...';
         } else {
             uploadSpinner.classList.add('hidden');
-            recognizeDocBtn.querySelector('.btn-label').textContent = 'Extract & Recognize Tamil Text';
+            recognizeDocBtn.querySelector('.btn-text').textContent = 'Recognize Text';
         }
     }
 
@@ -195,60 +186,71 @@ document.addEventListener('DOMContentLoaded', () => {
         errorAlert.classList.add('hidden');
     }
 
-    // Copy to clipboard
-    copyBtn.addEventListener('click', () => {
+    // Copy to Clipboard with Visual Feedback
+    copyBtn.addEventListener('click', async () => {
         const text = tamilEditor.value;
         if (!text) return;
-        navigator.clipboard.writeText(text).then(() => {
+
+        try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(text);
+            } else {
+                tamilEditor.select();
+                document.execCommand('copy');
+            }
             copyLabel.textContent = 'Copied!';
-            setTimeout(() => { copyLabel.textContent = 'Copy Unicode Text'; }, 2000);
-        }).catch(() => {
-            tamilEditor.select();
-            document.execCommand('copy');
-            copyLabel.textContent = 'Copied!';
-            setTimeout(() => { copyLabel.textContent = 'Copy Unicode Text'; }, 2000);
-        });
+            setTimeout(() => {
+                copyLabel.textContent = 'Copy Text';
+            }, 2000);
+        } catch (err) {
+            showError('Unable to copy text to clipboard.');
+        }
     });
 
-    // Exports
-    async function triggerExport(endpoint, filename, mimetype) {
+    // File Exports (TXT, DOCX, PDF)
+    async function triggerExport(url, defaultFilename) {
         const text = tamilEditor.value;
         if (!text) {
-            showError('No text available to export.');
+            showError('No recognized text available for export.');
             return;
         }
 
         try {
-            const resp = await fetch(endpoint, {
+            const resp = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text: text })
             });
 
-            if (!resp.ok) throw new Error('Export request failed.');
+            if (!resp.ok) {
+                const errJson = await resp.json().catch(() => ({}));
+                throw new Error(errJson.error || `Export failed (HTTP ${resp.status})`);
+            }
+
             const blob = await resp.blob();
-            const url = window.URL.createObjectURL(blob);
+            const downloadUrl = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
+            a.style.display = 'none';
+            a.href = downloadUrl;
+            a.download = defaultFilename;
             document.body.appendChild(a);
             a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-        } catch (err) {
-            showError('Export failed: ' + err.message);
+            window.URL.revokeObjectURL(downloadUrl);
+            a.remove();
+        } catch (e) {
+            showError(e.message || 'File export failed.');
         }
     }
 
     exportTxtBtn.addEventListener('click', () => {
-        triggerExport('/api/export/txt', 'tamil_document_text.txt', 'text/plain');
+        triggerExport('/api/export/txt', 'tamil_handwritten_ocr.txt');
     });
 
     exportDocxBtn.addEventListener('click', () => {
-        triggerExport('/api/export/docx', 'tamil_document_text.docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+        triggerExport('/api/export/docx', 'tamil_handwritten_ocr.docx');
     });
 
     exportPdfBtn.addEventListener('click', () => {
-        triggerExport('/api/export/pdf', 'tamil_document_text.pdf', 'application/pdf');
+        triggerExport('/api/export/pdf', 'tamil_handwritten_ocr.pdf');
     });
 });

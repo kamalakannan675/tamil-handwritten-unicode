@@ -63,3 +63,5 @@ checkpoints/*
 !checkpoints/crnn/
 checkpoints/crnn/*
 !checkpoints/crnn/best_model.pt
+
+scratch/

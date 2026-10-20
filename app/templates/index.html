@@ -3,149 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tamil Handwritten Document OCR - Full-Page Unicode Recognition</title>
+    <title>Tamil Handwriting OCR - Convert Handwritten Tamil to Editable Text</title>
     <link rel="stylesheet" href="/static/css/style.css">
-    <!-- Google Font for Tamil (Noto Sans Tamil) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="app-container">
-        <!-- Header -->
+    <div class="app-layout">
+        <!-- Compact Header -->
         <header class="app-header">
-            <div class="header-badges">
-                <span class="badge academic-badge">Deep Learning CRNN + CTC</span>
-                <span class="badge dataset-badge">IIIT-INDIC-HW Benchmark</span>
-                <span class="badge tech-badge">Full-Page &bull; Word Sequence OCR</span>
-            </div>
-            <h1 class="main-title">Tamil Handwritten Document OCR</h1>
-            <p class="sub-title">Upload Handwritten Tamil Document / Notes &rarr; Formatted Editable Unicode Text</p>
+            <h1 class="header-title">Tamil Handwriting OCR</h1>
+            <p class="header-subtitle">Convert handwritten Tamil into editable text.</p>
         </header>
 
-        <!-- System Workflow Bar -->
-        <nav class="workflow-bar" aria-label="System Pipeline Workflow">
-            <div class="workflow-step active"><span class="step-num">1</span> Upload Document</div>
-            <div class="workflow-arrow">&rarr;</div>
-            <div class="workflow-step"><span class="step-num">2</span> Otsu Binarization</div>
-            <div class="workflow-arrow">&rarr;</div>
-            <div class="workflow-step"><span class="step-num">3</span> Line & Word Segmentation</div>
-            <div class="workflow-arrow">&rarr;</div>
-            <div class="workflow-step"><span class="step-num">4</span> CRNN Sequence Recognition</div>
-            <div class="workflow-arrow">&rarr;</div>
-            <div class="workflow-step"><span class="step-num">5</span> CTC Unicode Assembly</div>
-            <div class="workflow-arrow">&rarr;</div>
-            <div class="workflow-step"><span class="step-num">6</span> Export (TXT / DOCX / PDF)</div>
-        </nav>
+        <!-- Main OCR Workspace -->
+        <main class="ocr-workspace">
+            <!-- Left Panel: Image Upload -->
+            <section class="panel upload-panel" aria-label="Upload Section">
+                <div class="panel-header">
+                    <h2 class="panel-title">Upload Image</h2>
+                    <span class="panel-hint">Max 10 MB</span>
+                </div>
 
-        <!-- Main Workspace -->
-        <main class="workspace-grid">
-            <!-- Left Column: Document Upload Section -->
-            <section class="card input-card" aria-label="Document Input Section">
-                <h2 class="section-title">Upload Handwritten Tamil Document</h2>
-
-                <div class="dropzone" id="dropzone" tabindex="0">
+                <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Drop handwritten Tamil image here or click to browse">
                     <input type="file" id="file-input" accept=".png,.jpg,.jpeg,.bmp" hidden>
-                    <div class="dropzone-prompt" id="dropzone-prompt">
-                        <svg class="upload-cloud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/></svg>
-                        <p class="drop-text"><strong>Drag & Drop</strong> scanned document, photo, or handwritten page</p>
-                        <p class="format-text">Supported: PNG, JPG, JPEG, BMP (Max 10 MB)</p>
-                        <button type="button" class="btn btn-secondary" id="browse-btn">Choose Document Image</button>
+                    
+                    <div class="dropzone-body" id="dropzone-prompt">
+                        <svg class="drop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                        <p class="drop-primary"><strong>Drop handwritten image here</strong> or click to browse</p>
+                        <p class="drop-meta">Supports PNG, JPG, JPEG, BMP (up to 10 MB)</p>
+                        <button type="button" class="btn btn-secondary btn-sm" id="browse-btn">Browse Files</button>
                     </div>
-                    <div class="preview-container hidden" id="preview-container">
+
+                    <div class="preview-box hidden" id="preview-container">
                         <img id="image-preview" alt="Handwritten Document Preview">
-                        <button type="button" class="btn-icon-clear" id="remove-img-btn" title="Remove image">&times;</button>
+                        <div class="preview-actions">
+                            <button type="button" class="btn btn-secondary btn-xs" id="replace-img-btn">Replace</button>
+                            <button type="button" class="btn btn-ghost btn-xs" id="remove-img-btn">Remove</button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="action-bar">
-                    <button type="button" class="btn btn-primary btn-block" id="recognize-doc-btn" disabled>
-                        <span class="btn-spinner hidden" id="upload-spinner"></span>
-                        <span class="btn-label">Extract & Recognize Tamil Text</span>
+                <div class="upload-actions">
+                    <button type="button" class="btn btn-primary btn-block btn-lg" id="recognize-doc-btn" disabled>
+                        <span class="spinner hidden" id="upload-spinner" aria-hidden="true"></span>
+                        <span class="btn-text">Recognize Text</span>
                     </button>
                 </div>
 
-                <!-- Error Notice Area -->
-                <div class="alert-box alert-error hidden" id="error-alert" role="alert">
-                    <span class="alert-icon">⚠️</span>
-                    <span class="alert-message" id="error-message">An error occurred.</span>
+                <div class="alert alert-error hidden" id="error-alert" role="alert">
+                    <span class="alert-icon" aria-hidden="true">!</span>
+                    <span class="alert-text" id="error-message"></span>
                 </div>
             </section>
 
-            <!-- Right Column: Extracted Document Unicode Output -->
-            <section class="card result-card" aria-label="Recognition Results">
-                <h2 class="section-title">Recognized Tamil Text & Document Analysis</h2>
-
-                <!-- Placeholder when no prediction made yet -->
-                <div class="empty-state" id="empty-state">
-                    <div class="empty-state-icon">📄</div>
-                    <p class="empty-state-title">Ready for Document Processing</p>
-                    <p class="empty-state-desc">Upload a photograph or scanned image containing handwritten Tamil sentences or paragraphs to extract editable Unicode text.</p>
+            <!-- Right Panel: Recognition Output -->
+            <section class="panel results-panel" aria-label="Recognition Results">
+                <div class="panel-header">
+                    <h2 class="panel-title">Recognized Text</h2>
+                    <div class="stats-pills hidden" id="stats-container">
+                        <span class="stat-pill"><strong id="stat-lines">0</strong> lines</span>
+                        <span class="stat-pill"><strong id="stat-words">0</strong> words</span>
+                    </div>
                 </div>
 
-                <!-- Active Result Display -->
-                <div class="result-display hidden" id="result-display">
-                    <!-- Statistics Badge Bar -->
-                    <div class="meta-row meta-row-top" style="margin-bottom: 1rem;">
-                        <div>
-                            <span class="meta-label">Detected Lines:</span>
-                            <span class="badge" id="stat-lines">0</span>
-                        </div>
-                        <div>
-                            <span class="meta-label">Detected Words:</span>
-                            <span class="badge badge-conf" id="stat-words">0</span>
-                        </div>
-                        <div>
-                            <span class="meta-label">Status:</span>
-                            <span class="badge" style="background:#22c55e;color:#fff;">OCR Complete</span>
-                        </div>
-                    </div>
+                <!-- Empty State -->
+                <div class="empty-state" id="empty-state">
+                    <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                    <p class="empty-heading">No document processed yet</p>
+                    <p class="empty-sub">Upload an image of handwritten Tamil text and click "Recognize Text" to view and edit the Unicode output.</p>
+                </div>
 
-                    <!-- Editable Tamil Unicode Output -->
-                    <div class="editable-section">
-                        <div class="editable-header">
-                            <label for="tamil-editor" class="subsection-title">Extracted Tamil Unicode Text</label>
-                            <span class="edit-hint">Editable &bull; Ready to copy or export</span>
-                        </div>
-                        <textarea id="tamil-editor" class="tamil-textarea" rows="10" spellcheck="false" placeholder="Extracted Tamil text will appear here..."></textarea>
-                        
-                        <div class="button-grid">
-                            <button type="button" class="btn btn-primary" id="copy-btn">
-                                <span id="copy-icon">📋</span>
-                                <span id="copy-label">Copy Unicode Text</span>
-                            </button>
-                            <button type="button" class="btn btn-secondary" id="export-txt-btn">
-                                📄 Export TXT
-                            </button>
-                            <button type="button" class="btn btn-secondary" id="export-docx-btn">
-                                📝 Export DOCX
-                            </button>
-                            <button type="button" class="btn btn-secondary" id="export-pdf-btn">
-                                📑 Export PDF
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Document Hierarchy Breakdown -->
-                    <div class="top3-container" id="lines-breakdown-container" style="margin-top: 1.5rem;">
-                        <h3 class="subsection-title">Line-by-Line Breakdown</h3>
-                        <div class="history-list" id="lines-breakdown-list" style="max-height: 200px; overflow-y: auto;">
-                            <!-- Populated via JavaScript -->
-                        </div>
+                <!-- Output Area -->
+                <div class="output-wrapper hidden" id="result-display">
+                    <textarea id="tamil-editor" class="tamil-text-editor" rows="12" spellcheck="false" placeholder="Extracted Tamil text will appear here..."></textarea>
+                    
+                    <div class="output-actions">
+                        <button type="button" class="btn btn-primary" id="copy-btn">
+                            <span id="copy-label">Copy Text</span>
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="export-txt-btn">Download TXT</button>
+                        <button type="button" class="btn btn-secondary" id="export-docx-btn">Export DOCX</button>
+                        <button type="button" class="btn btn-secondary" id="export-pdf-btn">Export PDF</button>
                     </div>
                 </div>
             </section>
         </main>
-
-        <!-- Academic Footer -->
-        <footer class="app-footer">
-            <p><strong>Tamil Handwritten Document OCR & Unicode Conversion System</strong></p>
-            <p>CRNN (CNN + BiLSTM + CTC) Sequence Architecture &bull; Benchmark: IIIT-INDIC-HW Tamil Dataset</p>
-            <p class="disclaimer">91.97% Exact Word Accuracy &bull; 1.13% Character Error Rate (CER) on official test benchmark.</p>
-        </footer>
     </div>
 
-    <!-- Script inclusion -->
     <script src="/static/js/app.js"></script>
 </body>
 </html>

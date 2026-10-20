@@ -8,7 +8,8 @@ Pipeline:
 1. Otsu Adaptive Binarization (Foreground text = 1, Background = 0).
 2. Notebook ruling line filtering (removes thin horizontal notebook lines).
 3. Valley-based Horizontal Projection Profile Line Segmentation with shoulder detection.
-4. Adaptive Vertical Projection Profile Word Segmentation with dynamic gap thresholding.
+4. Adaptive Vertical Projection Profile Word Segmentation with calibrated gap thresholding
+   to preserve Tamil grapheme clusters and prevent intra-word splitting.
 5. Hierarchical Document Tree: Page -> Lines -> Words (with bounding boxes and padded crops).
 """
 
@@ -72,7 +73,6 @@ def filter_horizontal_rules(binary: np.ndarray, min_run_ratio: float = 0.35) -> 
     
     for y in range(1, h - 1):
         row = binary[y, :]
-        # Check if row is exceptionally thin (neighbors above and below are mostly blank)
         if np.sum(row) >= min_run:
             above = binary[y - 1, :]
             below = binary[y + 1, :]
@@ -91,7 +91,7 @@ def moving_average(arr: np.ndarray, window_size: int = 5) -> np.ndarray:
     return np.convolve(arr, kernel, mode='same')
 
 def segment_lines(binary: np.ndarray,
-                  min_line_height: int = 10,
+                  min_line_height: int = 12,
                   blank_ratio: float = 0.005) -> List[Tuple[int, int]]:
     """
     Hybrid line segmentation:
@@ -108,7 +108,7 @@ def segment_lines(binary: np.ndarray,
     if max_val < 2.0:
         return [(0, h)]
         
-    blank_thresh = max(1.0, max_val * 0.04)
+    blank_thresh = max(1.0, max_val * 0.03)
     
     # 1. Coarse bands separated by whitespace
     raw_bands = []
@@ -138,11 +138,11 @@ def segment_lines(binary: np.ndarray,
         band_smoothed = smoothed[by1:by2]
         band_max = np.max(band_smoothed)
         
-        min_dist = max(7, int(band_h * 0.25))
+        min_dist = max(8, int(band_h * 0.30))
         peaks = []
         for y_rel in range(1, band_h - 1):
             val = band_smoothed[y_rel]
-            if val > (band_max * 0.15) and val >= band_smoothed[y_rel - 1] and val >= band_smoothed[y_rel + 1]:
+            if val > (band_max * 0.18) and val >= band_smoothed[y_rel - 1] and val >= band_smoothed[y_rel + 1]:
                 if not peaks or (y_rel - peaks[-1]) >= min_dist:
                     peaks.append(y_rel)
                 elif val > band_smoothed[peaks[-1]]:
@@ -156,7 +156,7 @@ def segment_lines(binary: np.ndarray,
             v_val = band_smoothed[v_rel]
             p1_val = band_smoothed[p1]
             p2_val = band_smoothed[p2]
-            if v_val < 0.75 * min(p1_val, p2_val):
+            if v_val < 0.65 * min(p1_val, p2_val):
                 valid_valleys.append(by1 + v_rel)
                 
         if not valid_valleys:
@@ -178,7 +178,10 @@ def segment_words_in_line(line_binary: np.ndarray,
                           space_gap: int = None) -> List[Tuple[int, int]]:
     """
     Segments a single text line strip into word boxes using vertical projection
-    with adaptive gap thresholding based on line height and intelligent fragment merging.
+    with calibrated gap thresholding based on line height and intelligent fragment merging.
+    
+    Ensures Tamil intra-word pen lifts and combining marks (pulli, vowel signs)
+    are NEVER split from their base words.
     
     Returns:
         List of (x_left, x_right) tuples.
@@ -188,12 +191,14 @@ def segment_words_in_line(line_binary: np.ndarray,
         line_h = h
         
     vproj = np.sum(line_binary, axis=0)
-    col_thresh = max(0.0, h * 0.02)
+    col_thresh = max(0.0, h * 0.03)
     is_blank = (vproj <= col_thresh)
     
-    # Adaptive word spacing gap and character width thresholds
-    effective_space_gap = space_gap if space_gap is not None else max(3, int(round(line_h * 0.12)))
-    effective_min_word = min_word_width if min_word_width is not None else max(12, int(round(line_h * 0.40)))
+    # Calibrated word spacing thresholds:
+    # Intra-word gaps between Tamil glyphs and combining marks are typically 1-6px.
+    # True inter-word spaces are typically >= 0.30 - 0.50 of line height.
+    effective_space_gap = space_gap if space_gap is not None else max(6, int(round(line_h * 0.32)))
+    effective_min_word = min_word_width if min_word_width is not None else max(16, int(round(line_h * 0.60)))
     
     segments = []
     in_word = False
@@ -220,18 +225,21 @@ def segment_words_in_line(line_binary: np.ndarray,
         segments.append((start_x, end_x))
         
     # Merge tiny sub-character fragments (< effective_min_word) into adjacent words
+    # to guarantee combining vowel marks / pulli dots are never isolated.
     merged_words = []
     for (sx, ex) in segments:
         if not merged_words:
             merged_words.append([sx, ex])
         else:
             prev_sx, prev_ex = merged_words[-1]
-            if (ex - sx) < effective_min_word or (sx - prev_ex) < effective_space_gap:
+            gap_to_prev = sx - prev_ex
+            # Merge if segment is narrower than min_word or gap is smaller than word separator threshold
+            if (ex - sx) < effective_min_word or gap_to_prev < effective_space_gap:
                 merged_words[-1][1] = ex
             else:
                 merged_words.append([sx, ex])
                 
-    result_boxes = [(int(b[0]), int(b[1])) for b in merged_words if (b[1] - b[0]) >= 6]
+    result_boxes = [(int(b[0]), int(b[1])) for b in merged_words if (b[1] - b[0]) >= 8]
     
     # Fallback: if no word segments found but line contains foreground strokes
     if not result_boxes and np.sum(line_binary) > 10:
@@ -245,7 +253,7 @@ class PageSegmenter:
     """
     High-level segmenter converting a full-page document into structured lines and words.
     """
-    def __init__(self, min_line_height: int = 10, min_word_width: int = 12, space_gap: int = 15):
+    def __init__(self, min_line_height: int = 12, min_word_width: int = 16, space_gap: int = 16):
         self.min_line_height = min_line_height
         self.min_word_width = min_word_width
         self.space_gap = space_gap
@@ -270,9 +278,9 @@ class PageSegmenter:
             line_binary = binary[y1:y2, :]
             line_h = y2 - y1
             
-            # Dynamic adaptive space gap based on line height
-            adaptive_gap = max(3, min(self.space_gap, int(round(line_h * 0.12))))
-            adaptive_word_w = max(10, min(self.min_word_width, int(round(line_h * 0.40))))
+            # Dynamic adaptive space gap and minimum word width based on line height
+            adaptive_gap = max(6, int(round(line_h * 0.32)))
+            adaptive_word_w = max(14, int(round(line_h * 0.60)))
             
             word_bounds = segment_words_in_line(
                 line_binary,
@@ -281,10 +289,12 @@ class PageSegmenter:
                 space_gap=adaptive_gap
             )
             
+            # Generous vertical margin padding (preserves ascenders: pulli dots, vowel marks, and descenders)
+            pad_y = max(4, int(round(line_h * 0.20)))
+            
             line_words = []
             for word_idx, (x1, x2) in enumerate(word_bounds):
-                pad_x = max(2, int((x2 - x1) * 0.05))
-                pad_y = max(2, int(line_h * 0.08))
+                pad_x = max(3, int(round(line_h * 0.10)))
                 
                 crop_x1 = max(0, x1 - pad_x)
                 crop_y1 = max(0, y1 - pad_y)

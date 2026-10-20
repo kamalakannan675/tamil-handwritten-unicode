@@ -7,15 +7,34 @@ to integer indices with CTC <blank> token reserved at index 0.
 Provides:
 - Token-to-ID and ID-to-Token bidirectional encoding/decoding.
 - Greedy CTC decoding with repeated character collapsing and blank removal.
+- Consistent Unicode NFC normalization preserving Tamil vowel signs and pulli marks.
 - Standardized character dictionary serialization to JSON.
 """
 
 import os
 import json
+import unicodedata
 from typing import List, Dict
 
 CTC_BLANK_TOKEN = "<blank>"
 CTC_BLANK_ID = 0
+
+# Tamil Combining Marks (cannot stand alone at the beginning of a word)
+TAMIL_COMBINING_MARKS = {
+    '\u0bcd',  # Pulli (Virama) ்
+    '\u0bbe',  # Vowel sign AA ா
+    '\u0bbf',  # Vowel sign I ி
+    '\u0bc0',  # Vowel sign II ீ
+    '\u0bc1',  # Vowel sign U ு
+    '\u0bc2',  # Vowel sign UU ூ
+    '\u0bc6',  # Vowel sign E ெ
+    '\u0bc7',  # Vowel sign EE ே
+    '\u0bc8',  # Vowel sign AI ை
+    '\u0bca',  # Vowel sign O ொ
+    '\u0bcb',  # Vowel sign OO ோ
+    '\u0bcc',  # Vowel sign AU ௌ
+    '\u0bd7',  # Length mark ௗ
+}
 
 class TamilCTCCharacterVocabulary:
     def __init__(self, vocab_file: str = None):
@@ -47,17 +66,31 @@ class TamilCTCCharacterVocabulary:
 
     def encode(self, text: str) -> List[int]:
         """Encodes string to list of character integer IDs."""
-        return [self.char2idx[c] for c in text if c in self.char2idx]
+        norm_text = unicodedata.normalize('NFC', text)
+        # Note: if normalized decomposes differently than vocab keys, try fallback
+        encoded = []
+        for c in norm_text:
+            if c in self.char2idx:
+                encoded.append(self.char2idx[c])
+            else:
+                # Try NFD decomposed fallback
+                decomposed = unicodedata.normalize('NFD', c)
+                for dc in decomposed:
+                    if dc in self.char2idx:
+                        encoded.append(self.char2idx[dc])
+        return encoded
 
     def decode(self, indices: List[int]) -> str:
-        """Decodes raw index sequence without CTC collapsing."""
-        return "".join([self.idx2char.get(i, "") for i in indices if i != self.blank_id])
+        """Decodes raw index sequence without CTC collapsing, returned as canonical NFC string."""
+        raw_str = "".join([self.idx2char.get(i, "") for i in indices if i != self.blank_id])
+        return unicodedata.normalize('NFC', raw_str)
 
     def ctc_decode(self, indices: List[int]) -> str:
         """
         Greedy CTC decoding:
         1. Collapse consecutive identical indices.
         2. Filter out CTC blank tokens.
+        3. Normalize to canonical Unicode NFC.
         """
         collapsed = []
         prev = None
@@ -68,7 +101,8 @@ class TamilCTCCharacterVocabulary:
         
         # Remove blank tokens and convert to characters
         chars = [self.idx2char.get(i, "") for i in collapsed if i != self.blank_id]
-        return "".join(chars)
+        raw_str = "".join(chars)
+        return unicodedata.normalize('NFC', raw_str)
 
     def save(self, json_path: str):
         data = {

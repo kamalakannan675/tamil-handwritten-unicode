@@ -6,18 +6,22 @@ Orchestrates:
 2. Zero-dependency Page & Word Segmentation (PageSegmenter).
 3. Preprocessing word crops to aspect-ratio scaled grayscale tensors (H=64, W proportional).
 4. CRNN + CTC batch inference.
-5. Natural reading-order Unicode reconstruction (words -> lines -> full text).
-6. Bounding box coordinates for Generative UI / visual overlay.
+5. Tamil Grapheme-Aware Unicode reconstruction:
+   - Preserves Tamil base characters and combining marks (pulli, vowel signs).
+   - Prevents artificial intra-word spaces.
+   - Enforces Unicode NFC normalization.
+6. Clean line and paragraph assembly preserving natural reading order.
+7. Optional developer diagnostics (`debug=True`).
 """
 
 import os
+import unicodedata
 from typing import List, Dict, Any, Union
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageOps
 import torch
-import torch.nn.functional as F
 
-from src.data.vocab import TamilCTCCharacterVocabulary
+from src.data.vocab import TamilCTCCharacterVocabulary, TAMIL_COMBINING_MARKS
 from src.models.crnn import TamilCRNN
 from src.inference.ctc_decoder import ctc_greedy_decode
 from src.ocr.page_segmentation import PageSegmenter
@@ -67,28 +71,29 @@ class TamilFullPageOCR:
     def preprocess_word_crop(self, pil_crop: Image.Image) -> torch.Tensor:
         """
         Converts a PIL word crop into normalized (1, 1, 64, W) tensor where W is a multiple of 4.
-        Applies adaptive contrast stretching so low-contrast mobile camera photos match
-        the training distribution (white background ~240-255, dark ink ~0-30).
+        Ensures input matches the IIIT-INDIC-HW dataset training distribution:
+        - White paper background (~235-255) maps to 0.0 after inversion.
+        - Dark handwritten strokes (~0-40) map to 1.0 after inversion.
         """
         gray = pil_crop.convert('L')
         orig_w, orig_h = gray.size
         
-        # Adaptive contrast normalization for real-world photos & lighting variations
         arr = np.array(gray, dtype=np.float32)
-        p_low, p_high = np.percentile(arr, (2, 98))
-        if (p_high - p_low) > 10:
+        # Background-relative contrast normalization for camera photos
+        p_low = np.percentile(arr, 3)
+        p_high = np.percentile(arr, 97)
+        if (p_high - p_low) > 15:
             arr = np.clip((arr - p_low) / (p_high - p_low) * 255.0, 0, 255)
         gray = Image.fromarray(arr.astype(np.uint8))
         
-        # Add background-aware whitespace margin (matches dataset training distribution)
-        pad_y = max(2, int(orig_h * 0.08))
-        pad_x = max(2, int(orig_h * 0.08))
-        from PIL import ImageOps
+        # Add slight margin to preserve edges and combining marks
+        pad_y = max(2, int(round(orig_h * 0.10)))
+        pad_x = max(2, int(round(orig_h * 0.10)))
         gray = ImageOps.expand(gray, border=(pad_x, pad_y, pad_x, pad_y), fill=255)
         pad_w, pad_h = gray.size
         
         new_w = max(16, min(self.max_width, int(round(pad_w * self.target_height / max(1, pad_h)))))
-        # Pad width to nearest multiple of 4
+        # Pad width to nearest multiple of 4 (CNN downsamples W by 4)
         if new_w % 4 != 0:
             new_w = ((new_w // 4) + 1) * 4
             
@@ -100,27 +105,60 @@ class TamilFullPageOCR:
     def recognize_word_crop(self, pil_crop: Image.Image) -> str:
         """
         Performs CRNN forward pass and CTC decoding for a single word crop.
+        Returns canonical Unicode NFC string.
         """
         tensor = self.preprocess_word_crop(pil_crop).to(self.device)
         with torch.no_grad():
             logits = self.model(tensor) # (T, 1, num_classes)
             decoded = ctc_greedy_decode(logits, self.vocab, blank_idx=0)
-        return decoded[0] if decoded else ""
+        raw_word = decoded[0] if decoded else ""
+        return unicodedata.normalize('NFC', raw_word.strip())
 
-    def process_document(self, input_source: Union[str, Image.Image]) -> Dict[str, Any]:
+    @staticmethod
+    def assemble_line_words(words_list: List[str]) -> str:
+        """
+        Intelligently reconstructs a text line from recognized word tokens:
+        1. Preserves true word boundaries with a single space.
+        2. Merges orphaned combining marks (pulli ், vowel signs ா, ி, ீ, etc.)
+           into the preceding word without inserting spaces.
+        3. Normalizes final line to canonical Unicode NFC.
+        """
+        if not words_list:
+            return ""
+            
+        assembled_parts = []
+        for word in words_list:
+            clean_word = word.strip()
+            if not clean_word:
+                continue
+                
+            # Check if this word token starts with a combining mark
+            # In Tamil, combining marks cannot stand alone; attach to preceding token
+            first_char = clean_word[0]
+            if assembled_parts and first_char in TAMIL_COMBINING_MARKS:
+                assembled_parts[-1] = assembled_parts[-1] + clean_word
+            else:
+                assembled_parts.append(clean_word)
+                
+        line_str = " ".join(assembled_parts)
+        return unicodedata.normalize('NFC', line_str)
+
+    def process_document(self, input_source: Union[str, Image.Image], debug: bool = False) -> Dict[str, Any]:
         """
         Performs full-page layout analysis, line/word segmentation, recognition,
         and natural reading-order Unicode assembly.
         
         Args:
             input_source: File path string or PIL.Image instance.
+            debug: If True, include raw tokens and per-word diagnostic details.
             
         Returns:
             Dict containing:
-            - 'full_text': Formatted multiline Tamil text
+            - 'full_text': Formatted multiline Tamil Unicode text
             - 'total_lines': Number of segmented lines
             - 'total_words': Number of segmented words
             - 'lines': Detailed structured hierarchy with bounding boxes
+            - 'image_size': [width, height]
         """
         if isinstance(input_source, str):
             page_img = Image.open(input_source).convert('RGB')
@@ -137,23 +175,30 @@ class TamilFullPageOCR:
         # 2. Sequential Word Recognition
         for line in segmented_lines:
             line_words = []
-            line_text_tokens = []
+            line_raw_tokens = []
             
             for word_item in line['words']:
                 crop = word_item['crop']
                 recognized_word = self.recognize_word_crop(crop)
                 
-                line_words.append({
+                word_info = {
                     'word_idx': word_item['word_idx'],
                     'bbox': word_item['bbox'],
                     'text': recognized_word
-                })
-                line_text_tokens.append(recognized_word)
+                }
+                if debug:
+                    word_info['crop_size'] = list(crop.size)
+                    
+                line_words.append(word_info)
+                if recognized_word:
+                    line_raw_tokens.append(recognized_word)
                 total_words_count += 1
                 
-            line_str = " ".join(line_text_tokens)
-            full_text_lines.append(line_str)
-            
+            # Assemble line with combining-mark safety and NFC normalization
+            line_str = self.assemble_line_words(line_raw_tokens)
+            if line_str:
+                full_text_lines.append(line_str)
+                
             structured_lines.append({
                 'line_idx': line['line_idx'],
                 'bbox': line['bbox'],
@@ -163,10 +208,12 @@ class TamilFullPageOCR:
             
         assembled_full_text = "\n".join(full_text_lines)
         
-        return {
+        result = {
             'full_text': assembled_full_text,
             'total_lines': len(structured_lines),
             'total_words': total_words_count,
             'lines': structured_lines,
             'image_size': [page_img.width, page_img.height]
         }
+        
+        return result
