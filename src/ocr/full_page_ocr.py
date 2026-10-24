@@ -27,6 +27,83 @@ from src.models.crnn import TamilCRNN
 from src.inference.ctc_decoder import ctc_greedy_decode
 from src.ocr.page_segmentation import PageSegmenter
 
+# Tamil Unicode Codepoint Sets for Non-Destructive Advisory Validation
+TAMIL_INDEPENDENT_VOWELS = set(range(0x0B85, 0x0B95))  # அ to ஔ
+TAMIL_CONSONANTS = set(range(0x0B95, 0x0BA0)) | set(range(0x0BA3, 0x0BA5)) | set(range(0x0BA8, 0x0BAF)) | set(range(0x0BB0, 0x0BBA))
+TAMIL_VOWEL_SIGNS = set(range(0x0BBE, 0x0BCD)) | {0x0BD7}  # ா to ௌ, plus length mark ௗ
+TAMIL_VIRAMA = 0x0BCD  # ்
+
+def validate_tamil_unicode_sequence(text: str) -> List[Dict[str, Any]]:
+    """
+    Validates Tamil Unicode text and returns a list of structural/orthographic anomalies
+    WITHOUT modifying or deleting characters (non-destructive advisory validator).
+    
+    Checks:
+    1. LEADING_COMBINING_MARK: Combining mark or virama appearing without a preceding base character.
+    2. INVALID_VOWEL_COMBINATION: Independent vowel (அ-ஔ) followed by combining mark or virama (e.g. 'உி').
+    3. CONSECUTIVE_VIRAMA: Multiple consecutive virama marks (e.g. 'க்்').
+    4. MULTIPLE_VOWEL_SIGNS: Multiple consecutive dependent vowel signs on a base character.
+    """
+    if not text:
+        return []
+        
+    text_nfc = unicodedata.normalize('NFC', text)
+    anomalies = []
+    
+    # Check 1: Leading combining mark at token starts
+    tokens = text_nfc.split()
+    token_offset = 0
+    for token in tokens:
+        idx = text_nfc.find(token, token_offset)
+        if idx >= 0:
+            token_offset = idx + len(token)
+            if ord(token[0]) in (TAMIL_VOWEL_SIGNS | {TAMIL_VIRAMA}):
+                anomalies.append({
+                    'type': 'LEADING_COMBINING_MARK',
+                    'pos': idx,
+                    'sequence': token[0],
+                    'codepoints': f"U+{ord(token[0]):04X}",
+                    'description': f"Token begins with an orphaned combining mark '{token[0]}' without a base character"
+                })
+                
+    # Check 2: Independent vowel immediately followed by combining mark or virama
+    for i in range(len(text_nfc) - 1):
+        c1, c2 = ord(text_nfc[i]), ord(text_nfc[i + 1])
+        if c1 in TAMIL_INDEPENDENT_VOWELS and (c2 in TAMIL_VOWEL_SIGNS or c2 == TAMIL_VIRAMA):
+            anomalies.append({
+                'type': 'INVALID_VOWEL_COMBINATION',
+                'pos': i,
+                'sequence': text_nfc[i:i + 2],
+                'codepoints': f"U+{c1:04X} + U+{c2:04X}",
+                'description': f"Independent vowel '{chr(c1)}' is illegally followed by combining mark '{chr(c2)}'"
+            })
+            
+    # Check 3: Consecutive viramas
+    for i in range(len(text_nfc) - 1):
+        c1, c2 = ord(text_nfc[i]), ord(text_nfc[i + 1])
+        if c1 == TAMIL_VIRAMA and c2 == TAMIL_VIRAMA:
+            anomalies.append({
+                'type': 'CONSECUTIVE_VIRAMA',
+                'pos': i,
+                'sequence': text_nfc[i:i + 2],
+                'codepoints': f"U+{c1:04X} + U+{c2:04X}",
+                'description': 'Consecutive virama (pulli) marks detected'
+            })
+            
+    # Check 4: Multiple consecutive vowel signs
+    for i in range(len(text_nfc) - 1):
+        c1, c2 = ord(text_nfc[i]), ord(text_nfc[i + 1])
+        if c1 in TAMIL_VOWEL_SIGNS and c2 in TAMIL_VOWEL_SIGNS:
+            anomalies.append({
+                'type': 'MULTIPLE_VOWEL_SIGNS',
+                'pos': i,
+                'sequence': text_nfc[i:i + 2],
+                'codepoints': f"U+{c1:04X} + U+{c2:04X}",
+                'description': f"Consecutive dependent vowel signs '{chr(c1)}{chr(c2)}' detected"
+            })
+            
+    return anomalies
+
 class TamilFullPageOCR:
     def __init__(self,
                  checkpoint_path: str = "checkpoints/crnn/best_model.pt",
@@ -210,11 +287,13 @@ class TamilFullPageOCR:
             if line_str:
                 full_text_lines.append(line_str)
                 
+            line_anomalies = validate_tamil_unicode_sequence(line_str)
             structured_lines.append({
                 'line_idx': line['line_idx'],
                 'bbox': line['bbox'],
                 'line_text': line_str,
-                'words': line_words
+                'words': line_words,
+                'anomalies': line_anomalies
             })
             
         assembled_full_text = "\n".join(full_text_lines)
@@ -222,13 +301,23 @@ class TamilFullPageOCR:
         # Attach lightweight pre-flight quality assessment
         preflight_assessment = self.segmenter.assess_image_quality(page_img)
 
+        # Aggregate document-level anomalies
+        doc_anomalies = []
+        for s_line in structured_lines:
+            for anom in s_line['anomalies']:
+                doc_anomalies.append({
+                    'line_idx': s_line['line_idx'],
+                    **anom
+                })
+        
         result = {
             'full_text': assembled_full_text,
             'total_lines': len(structured_lines),
             'total_words': total_words_count,
             'lines': structured_lines,
             'image_size': [page_img.width, page_img.height],
-            'preflight': preflight_assessment
+            'preflight': preflight_assessment,
+            'anomalies': doc_anomalies
         }
         
         return result

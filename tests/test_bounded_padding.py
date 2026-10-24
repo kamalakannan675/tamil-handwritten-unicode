@@ -22,6 +22,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.ocr.page_segmentation import (
     compute_bounded_line_crop_y,
+    detect_interline_rule_rows,
     PageSegmenter,
     binarize_image,
     filter_horizontal_rules,
@@ -167,6 +168,49 @@ class TestBoundedInterLinePadding(unittest.TestCase):
                 max_cur_y2, min_next_y1,
                 f"Word crops between Line {i} and Line {i+1} overlap vertically: {max_cur_y2} > {min_next_y1}"
             )
+
+    def test_08_ruling_aware_padding_clamping(self):
+        """8. Ruling lines in inter-line gaps clamp crop boundaries strictly before the rule row."""
+        img_h = 300
+        lines = [(40, 80), (120, 160)]
+        # Rule line at y=31 (above line 0) and at y=100 (in gap between line 0 and 1)
+        rule_rows = {31, 100}
+        
+        # Line 0 default would be y1=40 - 7 = 33, y2=80 + 7 = 87
+        # With rule at y=100, gap below is clamped if pad reached it, but 87 < 100
+        # Now test with rule at y=35 (inside top pad region 33..40):
+        rule_rows_tight = {35, 85}
+        c0_tight = compute_bounded_line_crop_y(lines, 0, img_h, rule_rows=rule_rows_tight)
+        # Top must clamp immediately below y=35 -> y=36
+        self.assertEqual(c0_tight[0], 36, f'Expected crop_y1 to be clamped to 36, got {c0_tight[0]}')
+        # Bottom must clamp immediately above y=85 -> y=84
+        self.assertEqual(c0_tight[1], 84, f'Expected crop_y2 to be clamped to 84, got {c0_tight[1]}')
+        
+    def test_09_detect_interline_rule_rows_ignores_text_strokes(self):
+        """9. Ruling line detector ignores horizontal strokes that lie inside text lines."""
+        # 100x100 synthetic binary image with text line at y=30..60
+        bin_img = np.zeros((100, 100), dtype=np.uint8)
+        # Draw a heavy horizontal text stroke inside line band at y=45
+        bin_img[45, 10:90] = 1 # 80px run (80% ratio)
+        # Draw a real notebook ruling line outside text band at y=80
+        bin_img[80, 5:95] = 1 # 90px run
+        
+        lines = [(30, 60)]
+        detected_rules = detect_interline_rule_rows(bin_img, lines, min_run_ratio=0.30)
+        
+        self.assertIn(80, detected_rules, 'Rule at y=80 outside text band must be detected')
+        self.assertNotIn(45, detected_rules, 'Text stroke at y=45 inside text band must NEVER be detected as a rule')
+        
+    def test_10_unruled_document_padding_parity(self):
+        """10. Plain unruled documents (rule_rows=None or empty) yield identical crops to baseline."""
+        img_h = 400
+        lines = [(20, 60), (90, 140), (180, 240)]
+        for idx in range(len(lines)):
+            c_base = compute_bounded_line_crop_y(lines, idx, img_h)
+            c_none = compute_bounded_line_crop_y(lines, idx, img_h, rule_rows=None)
+            c_empty = compute_bounded_line_crop_y(lines, idx, img_h, rule_rows=set())
+            self.assertEqual(c_base, c_none)
+            self.assertEqual(c_base, c_empty)
 
 if __name__ == '__main__':
     unittest.main()

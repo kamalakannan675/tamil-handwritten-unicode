@@ -83,6 +83,30 @@ def filter_horizontal_rules(binary: np.ndarray, min_run_ratio: float = 0.35) -> 
                 
     return filtered
 
+def detect_interline_rule_rows(binary: np.ndarray,
+                               line_bounds: List[Tuple[int, int]],
+                               min_run_ratio: float = 0.30) -> set:
+    """
+    Identifies y-coordinates of horizontal notebook ruling lines strictly
+    located in the inter-line gaps (OUTSIDE detected text line bands).
+    This guarantees that genuine horizontal strokes within text words
+    (such as in 'எழுத்தெல்லாம்') are never misidentified as ruling lines.
+    """
+    h, w = binary.shape
+    text_rows = set()
+    for y1, y2 in line_bounds:
+        text_rows.update(range(y1, y2 + 1))
+        
+    rule_threshold = int(w * min_run_ratio)
+    row_sums = np.sum(binary, axis=1)
+    
+    interline_rule_rows = set()
+    for y in range(h):
+        if y not in text_rows and row_sums[y] >= rule_threshold:
+            interline_rule_rows.add(y)
+            
+    return interline_rule_rows
+
 def moving_average(arr: np.ndarray, window_size: int = 5) -> np.ndarray:
     """Smooths 1D projection profile array."""
     if len(arr) < window_size:
@@ -174,7 +198,8 @@ def segment_lines(binary: np.ndarray,
 
 def compute_bounded_line_crop_y(line_bounds: List[Tuple[int, int]],
                                 line_idx: int,
-                                img_height: int) -> Tuple[int, int]:
+                                img_height: int,
+                                rule_rows: set = None) -> Tuple[int, int]:
     """
     Computes vertically bounded crop coordinates (crop_y1, crop_y2) for line at line_idx.
     
@@ -214,6 +239,21 @@ def compute_bounded_line_crop_y(line_bounds: List[Tuple[int, int]],
         
     crop_y1 = max(0, y1 - pad_top)
     crop_y2 = min(img_height, y2 + pad_bot)
+    
+    # Ruling-line awareness: clamp padding if a rule row exists in the gap
+    if rule_rows:
+        # Check gap above (crop_y1 to y1)
+        for y in range(y1 - 1, crop_y1 - 1, -1):
+            if y in rule_rows:
+                crop_y1 = y + 1  # Clamp immediately below the ruling row
+                break
+                
+        # Check gap below (y2 to crop_y2)
+        for y in range(y2 + 1, crop_y2 + 1):
+            if y in rule_rows:
+                crop_y2 = y - 1  # Clamp immediately above the ruling row
+                break
+                
     if crop_y2 <= crop_y1:
         crop_y2 = min(img_height, crop_y1 + 1)
         
@@ -319,6 +359,7 @@ class PageSegmenter:
         binary = filter_horizontal_rules(raw_binary)
         
         line_bounds = segment_lines(binary, min_line_height=self.min_line_height)
+        rule_rows = detect_interline_rule_rows(raw_binary, line_bounds)
         
         result_lines = []
         for line_idx, (y1, y2) in enumerate(line_bounds):
@@ -337,7 +378,7 @@ class PageSegmenter:
             )
             
             # Bounded vertical crop coordinates avoiding adjacent line stroke intrusion
-            crop_y1, crop_y2 = compute_bounded_line_crop_y(line_bounds, line_idx, pil_image.height)
+            crop_y1, crop_y2 = compute_bounded_line_crop_y(line_bounds, line_idx, pil_image.height, rule_rows=rule_rows)
             
             line_words = []
             for word_idx, (x1, x2) in enumerate(word_bounds):
