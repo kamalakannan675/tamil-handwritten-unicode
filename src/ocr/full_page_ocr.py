@@ -83,7 +83,10 @@ class TamilFullPageOCR:
         orig_w, orig_h = gray.size
         
         arr = np.array(gray, dtype=np.float32)
-        p_low, p_high = np.percentile(arr, (5, 95))
+        # Candidate D: ink-density-gated adaptive percentile stretching.
+        ink_density = float(np.mean(arr < 128.0))
+        p_lo_pct, p_hi_pct = (2, 98) if ink_density < 0.05 else (5, 95)
+        p_low, p_high = np.percentile(arr, (p_lo_pct, p_hi_pct))
         if (p_high - p_low) > 15:
             arr = np.clip((arr - p_low) / (p_high - p_low) * 255.0, 0, 255)
         gray = Image.fromarray(arr.astype(np.uint8))
