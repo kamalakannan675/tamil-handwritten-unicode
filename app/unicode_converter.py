@@ -27,7 +27,74 @@ from model.unicode_mapping import (
 # Concurrency locks and cached font properties for PDF export
 _pdf_export_lock = threading.Lock()
 _tamil_font_prop = None
-_font_lock = threading.Lock()
+_font_lock = threading.RLock()
+_tamil_glyph_to_unicode = {}
+_tamil_font_path = None
+_unicode_patch_applied = False
+
+def _ensure_tamil_unicode_patch(font_path: Optional[str]) -> None:
+    """
+    Builds a faithful OpenType glyph-to-Unicode mapping for the bundled Tamil font
+    and ensures Matplotlib's PDF backend produces a precise ToUnicode CMap without
+    syllable duplication or missing characters.
+    """
+    global _unicode_patch_applied, _tamil_glyph_to_unicode, _tamil_font_path
+    if _unicode_patch_applied or not font_path or not os.path.exists(font_path):
+        return
+
+    with _font_lock:
+        if _unicode_patch_applied:
+            return
+        try:
+            from fontTools.ttLib import TTFont
+            tt = TTFont(font_path)
+            cmap = tt.getBestCmap()
+            names = tt.getGlyphOrder()
+            rev_cmap = {g: chr(cp) for cp, g in cmap.items()}
+            glyph_to_unicode = dict(rev_cmap)
+
+            # Explicitly map complex Tamil ligatures
+            glyph_to_unicode['shritamil'] = 'ஸ்ரீ'
+
+            # Inspect GSUB substitutions and ligatures
+            if 'GSUB' in tt and hasattr(tt['GSUB'], 'table'):
+                gsub = tt['GSUB'].table
+                for _ in range(2):
+                    for lookup in getattr(gsub.LookupList, 'Lookup', []):
+                        for subtable in getattr(lookup, 'SubTable', []):
+                            if hasattr(subtable, 'mapping'):
+                                for inp, out in subtable.mapping.items():
+                                    if inp in glyph_to_unicode and out not in glyph_to_unicode:
+                                        glyph_to_unicode[out] = glyph_to_unicode[inp]
+                            elif hasattr(subtable, 'ligatures'):
+                                for first_g, lig_list in subtable.ligatures.items():
+                                    for lig in lig_list:
+                                        comps = [first_g] + getattr(lig, 'Component', [])
+                                        u = ''.join(glyph_to_unicode.get(c, '') for c in comps)
+                                        if u and lig.LigGlyph not in glyph_to_unicode:
+                                            glyph_to_unicode[lig.LigGlyph] = u
+
+            _tamil_glyph_to_unicode = {idx: glyph_to_unicode[name] for idx, name in enumerate(names) if name in glyph_to_unicode}
+            _tamil_font_path = os.path.abspath(font_path)
+
+            import matplotlib.backends._backend_pdf_ps as bpps
+            orig_subset_to_unicode = bpps.CharacterTracker.subset_to_unicode
+
+            def smart_subset_to_unicode(self, fontname, subset, subset_charcode):
+                fn_str = str(fontname)
+                if 'NotoSansTamil' in fn_str or (_tamil_font_path and _tamil_font_path in fn_str):
+                    for fp, subsets in self.used.items():
+                        if 'NotoSansTamil' in str(fp) or (_tamil_font_path and _tamil_font_path in str(fp)):
+                            if subset < len(subsets) and subset_charcode in subsets[subset]:
+                                g_idx = subsets[subset][subset_charcode]
+                                if g_idx in _tamil_glyph_to_unicode:
+                                    return _tamil_glyph_to_unicode[g_idx]
+                return orig_subset_to_unicode(self, fontname, subset, subset_charcode)
+
+            bpps.CharacterTracker.subset_to_unicode = smart_subset_to_unicode
+            _unicode_patch_applied = True
+        except Exception:
+            pass
 
 def _get_tamil_font_properties() -> fm.FontProperties:
     """Thread-safe lazy initializer for Tamil Unicode font properties."""
@@ -54,6 +121,7 @@ def _get_tamil_font_properties() -> fm.FontProperties:
                 try:
                     fm.fontManager.addfont(p)
                     _tamil_font_prop = fm.FontProperties(fname=p)
+                    _ensure_tamil_unicode_patch(p)
                     break
                 except Exception:
                     continue
@@ -163,6 +231,24 @@ def export_to_docx(text: str, title: str = "Tamil Handwritten OCR Output") -> io
     buf.seek(0)
     return buf
 
+def reorder_tamil_visual_to_logical(text: str) -> str:
+    """
+    Converts visual-order Tamil glyph sequences (produced by coordinate-based
+    PDF text extractors for pre-base and two-part vowel signs) into standard
+    logical Unicode order.
+    """
+    import re
+    # 1. Two-part vowels:
+    # ெ (0x0BC6) + Consonant + ா (0x0BBE) -> Consonant + ொ (0x0BCA)
+    text = re.sub('([ெ])([க-ஹ])([ா])', lambda m: m.group(2) + 'ொ', text)
+    # ே (0x0BC7) + Consonant + ா (0x0BBE) -> Consonant + ோ (0x0BCB)
+    text = re.sub('([ே])([க-ஹ])([ா])', lambda m: m.group(2) + 'ோ', text)
+    # ெ (0x0BC6) + Consonant + ௗ (0x0BD7) -> Consonant + ௌ (0x0BCC)
+    text = re.sub('([ெ])([க-ஹ])([ௗ])', lambda m: m.group(2) + 'ௌ', text)
+    # 2. Single pre-base vowels:
+    text = re.sub('([ெேை])([க-ஹ])', lambda m: m.group(2) + m.group(1), text)
+    return text
+
 def export_to_pdf(text: str, title: str = "Tamil Handwritten OCR Output") -> io.BytesIO:
     """
     Exports Tamil Unicode text to a clean, professionally-formatted PDF buffer.
@@ -182,6 +268,8 @@ def export_to_pdf(text: str, title: str = "Tamil Handwritten OCR Output") -> io.
     from matplotlib.backends.backend_pdf import PdfPages, FigureCanvasPdf
 
     tamil_prop = _get_tamil_font_properties()
+    _ensure_tamil_unicode_patch(tamil_prop.get_file())
+    matplotlib.rcParams['pdf.fonttype'] = 42
 
     with _pdf_export_lock:
         # 1. Page Geometry & Typography Metrics
@@ -266,11 +354,9 @@ def export_to_pdf(text: str, title: str = "Tamil Handwritten OCR Output") -> io.
 
                 # Document Header (First page only)
                 if p_idx == 0:
-                    is_tamil_title = any('\u0b80' <= c <= '\u0bff' for c in title)
-                    title_font = {'fontproperties': tamil_prop} if is_tamil_title else {'family': 'sans-serif'}
                     ax.text(page_width_in / 2.0, y_cursor, title,
                             ha='center', va='top', fontsize=title_fontsize, fontweight='bold',
-                            color='#0f172a', **title_font)
+                            color='#0f172a', fontproperties=tamil_prop)
                     y_cursor -= (title_fontsize * 1.3 / 72.0)
 
                     ax.text(page_width_in / 2.0, y_cursor,

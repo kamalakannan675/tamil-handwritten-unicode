@@ -15,7 +15,7 @@ import concurrent.futures
 import pdfplumber
 import matplotlib._pylab_helpers
 
-from app.unicode_converter import export_to_pdf, _pdf_export_lock
+from app.unicode_converter import export_to_pdf, _pdf_export_lock, reorder_tamil_visual_to_logical
 from app.main import app
 
 class TestExportConcurrency(unittest.TestCase):
@@ -51,7 +51,7 @@ class TestExportConcurrency(unittest.TestCase):
             self.assertTrue(pdf_bytes.startswith(b'%PDF'), f"Invalid PDF header for {keyword}")
             with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:
                 self.assertEqual(len(pdf.pages), 1)
-                text = pdf.pages[0].extract_text()
+                text = reorder_tamil_visual_to_logical(pdf.pages[0].extract_text())
                 # Must contain its own keyword
                 self.assertIn(keyword, text, f"Expected '{keyword}' in PDF text")
                 # Must NOT contain other thread keywords
