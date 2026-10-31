@@ -11,9 +11,9 @@ threads = 2
 timeout = 120
 keepalive = 5
 
-# Worker recycling to prevent glibc heap fragmentation and memory accumulation
-max_requests = 20
-max_requests_jitter = 5
+# Memory management is handled deterministically via malloc_trim(0) in app/main.py.
+# Worker recycling is disabled (0) so single-worker environments do not experience downtime during worker respawn.
+max_requests = 0
 
 # Ensure stdout/stderr logs are immediately flushed to Render's live console
 accesslog = "-"

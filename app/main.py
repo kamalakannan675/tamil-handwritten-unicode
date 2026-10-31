@@ -20,6 +20,19 @@ import time
 import uuid
 import threading
 import gc
+try:
+    import ctypes
+    _libc = ctypes.CDLL('libc.so.6')
+    def release_system_memory():
+        gc.collect()
+        try:
+            _libc.malloc_trim(0)
+        except Exception:
+            pass
+except Exception:
+    def release_system_memory():
+        gc.collect()
+
 
 # Concurrency lock for OCR inference to protect memory on constrained instances
 _ocr_processing_lock = threading.Lock()
@@ -290,7 +303,7 @@ def ocr_preflight():
             'can_proceed': True
         }), 200
     finally:
-        gc.collect()
+        release_system_memory()
 
 @app.route('/api/ocr/document', methods=['POST'])
 def ocr_document():
@@ -361,7 +374,7 @@ def ocr_document():
             'traceback': tb
         }), 200
     finally:
-        gc.collect()
+        release_system_memory()
 
 @app.route('/api/export/txt', methods=['POST'])
 def export_txt():
