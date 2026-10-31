@@ -448,8 +448,48 @@ class TamilFullPageOCR:
             
         assembled_full_text = "\n".join(full_text_lines)
         
-        # Attach lightweight pre-flight quality assessment
-        preflight_assessment = self.segmenter.assess_image_quality(page_img)
+        # Attach lightweight quality assessment computed directly from segmented lines
+        # (avoids redundant full-page re-binarization and re-segmentation on large images)
+        if structured_lines:
+            line_heights = [int(sl['bbox'][3]) for sl in structured_lines]
+            median_h = float(np.median(line_heights))
+            if median_h < 20.0:
+                q_status = 'severe_low_res'
+                q_warning = (
+                    f"Severe low-resolution handwriting detected (estimated median line height: {int(round(median_h))} px). "
+                    "Text strokes are extremely small, which may cause Tamil characters or vowel marks to be misrecognized. "
+                    "For better results, take a closer, well-lit photograph and keep the text in focus. You can still continue with this image."
+                )
+            elif 20.0 <= median_h < 30.0:
+                q_status = 'caution_low_res'
+                q_warning = (
+                    f"Low-resolution handwriting detected (estimated median line height: {int(round(median_h))} px). "
+                    "Some text lines are very small, so Tamil characters or vowel marks may be misrecognized. "
+                    "For better results, take a closer, well-lit photograph and keep the text in focus. You can still continue with this image."
+                )
+            else:
+                q_status = 'good'
+                q_warning = None
+            preflight_assessment = {
+                'line_count': len(structured_lines),
+                'line_heights': line_heights,
+                'median_line_height': median_h,
+                'quality_status': q_status,
+                'warning': q_warning,
+                'can_proceed': True
+            }
+        else:
+            preflight_assessment = {
+                'line_count': 0,
+                'line_heights': [],
+                'median_line_height': 0.0,
+                'quality_status': 'no_text_detected',
+                'warning': (
+                    "No clear text lines detected. Please ensure the document is clearly visible, "
+                    "oriented right-side up, and well-lit. You can still continue with this image."
+                ),
+                'can_proceed': True
+            }
 
         # Aggregate document-level anomalies
         doc_anomalies = []
