@@ -11,6 +11,10 @@ threads = 2
 timeout = 120
 keepalive = 5
 
+# Worker recycling to prevent glibc heap fragmentation and memory accumulation
+max_requests = 20
+max_requests_jitter = 5
+
 # Ensure stdout/stderr logs are immediately flushed to Render's live console
 accesslog = "-"
 errorlog = "-"

@@ -233,6 +233,7 @@ def filter_boundary_artifacts(
         if is_massive_border_blob or is_low_contrast_shadow:
             cleaned[comp_mask] = 0
 
+    del labeled
     return cleaned
 
 def moving_average(arr: np.ndarray, window_size: int = 5) -> np.ndarray:
@@ -497,9 +498,11 @@ class PageSegmenter:
         if self.filter_boundaries:
             gray_np = np.array(pil_image.convert('L'), dtype=np.uint8)
             binary = filter_boundary_artifacts(binary, gray=gray_np)
+            del gray_np
 
         line_bounds = segment_lines(binary, min_line_height=self.min_line_height)
         rule_rows = detect_interline_rule_rows(raw_binary, line_bounds)
+        del raw_binary
 
         result_lines = []
         for line_idx, (y1, y2) in enumerate(line_bounds):
@@ -527,7 +530,7 @@ class PageSegmenter:
                 crop_x1 = max(0, x1 - pad_x)
                 crop_x2 = min(pil_image.width, x2 + pad_x)
 
-                word_crop = pil_image.crop((crop_x1, crop_y1, crop_x2, crop_y2))
+                word_crop = pil_image.crop((crop_x1, crop_y1, crop_x2, crop_y2)).copy()
 
                 line_words.append({
                     'word_idx': word_idx,
