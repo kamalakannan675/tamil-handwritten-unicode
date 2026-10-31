@@ -16,6 +16,12 @@ import io
 import re
 import base64
 from datetime import datetime
+import time
+import uuid
+import threading
+
+# Concurrency lock for OCR inference to protect memory on constrained instances
+_ocr_processing_lock = threading.Lock()
 from flask import Flask, render_template, request, jsonify, send_file
 from werkzeug.utils import secure_filename
 from PIL import Image
@@ -220,7 +226,12 @@ def ocr_preflight():
     Estimates median line height and checks for low-resolution handwriting
     without running full CRNN neural inference.
     """
+    req_id = uuid.uuid4().hex[:8]
+    t0 = time.time()
+    stage = 'init'
+    app.logger.info(f"[{req_id}] Start /api/ocr/preflight POST")
     try:
+        stage = 'engine_lookup'
         engine = get_full_page_ocr_engine()
         if engine is not None:
             segmenter = engine.segmenter
@@ -228,6 +239,7 @@ def ocr_preflight():
             from src.ocr.page_segmentation import PageSegmenter
             segmenter = PageSegmenter()
 
+        stage = 'request_parsing'
         image_bytes = None
         if 'image' in request.files:
             file = request.files['image']
@@ -250,14 +262,27 @@ def ocr_preflight():
         if not image_bytes:
             return jsonify({'success': False, 'error': 'Empty image payload received'}), 400
 
+        stage = 'image_decode'
         pil_img = Image.open(io.BytesIO(image_bytes))
         pil_img.load()
-        assessment = segmenter.assess_image_quality(pil_img)
+        img_format = pil_img.format or 'UNKNOWN'
+        img_size = pil_img.size
+        app.logger.info(f"[{req_id}] Image decoded: format={img_format}, size={img_size}, bytes={len(image_bytes)}")
+
+        stage = 'quality_assessment'
+        t_assess = time.time()
+        with _ocr_processing_lock:
+            assessment = segmenter.assess_image_quality(pil_img)
+        dt_assess = time.time() - t_assess
         assessment['success'] = True
+
+        dt_total = time.time() - t0
+        app.logger.info(f"[{req_id}] Preflight completed: duration={dt_total:.2f}s (assess={dt_assess:.2f}s), lines={assessment.get('line_count')}, status={assessment.get('quality_status')}")
         return jsonify(assessment), 200
 
     except BaseException as e:
-        app.logger.error(f"Preflight check error: {e}", exc_info=True)
+        dt_total = time.time() - t0
+        app.logger.error(f"[{req_id}] Preflight error at stage '{stage}' in {dt_total:.2f}s: {type(e).__name__}: {e}", exc_info=True)
         return jsonify({
             'success': False,
             'error': f'Preflight analysis error: {str(e)}',
@@ -269,13 +294,19 @@ def ocr_document():
     """
     Full-Page Handwritten Tamil Document OCR Endpoint.
     Accepts: Multipart image file upload or base64 JSON payload.
-    Returns: Complete formatted Tamil Unicode text, line & word bounding boxes, and statistics.
+    Returns: Complete formatted Tamil Unicode text, line and word bounding boxes, and statistics.
     """
+    req_id = uuid.uuid4().hex[:8]
+    t0 = time.time()
+    stage = 'init'
+    app.logger.info(f"[{req_id}] Start /api/ocr/document POST")
     try:
+        stage = 'engine_lookup'
         engine = get_full_page_ocr_engine()
         if engine is None:
             return jsonify({'success': False, 'error': f'Full-Page OCR engine could not be initialized: {_ocr_load_error}'}), 200
 
+        stage = 'request_parsing'
         image_bytes = None
         if 'image' in request.files:
             file = request.files['image']
@@ -298,16 +329,29 @@ def ocr_document():
         if not image_bytes:
             return jsonify({'success': False, 'error': 'Empty image payload received'}), 400
 
+        stage = 'image_decode'
         pil_img = Image.open(io.BytesIO(image_bytes))
         pil_img.load()
-        result = engine.process_document(pil_img)
+        img_format = pil_img.format or 'UNKNOWN'
+        img_size = pil_img.size
+        app.logger.info(f"[{req_id}] Image decoded: format={img_format}, size={img_size}, bytes={len(image_bytes)}")
+
+        stage = 'ocr_processing'
+        t_ocr = time.time()
+        with _ocr_processing_lock:
+            result = engine.process_document(pil_img)
+        dt_ocr = time.time() - t_ocr
         result['success'] = True
+
+        dt_total = time.time() - t0
+        app.logger.info(f"[{req_id}] Document OCR completed: duration={dt_total:.2f}s (inference={dt_ocr:.2f}s), lines={result.get('total_lines')}, words={result.get('total_words')}")
         return jsonify(result), 200
 
     except BaseException as e:
         import traceback
         tb = traceback.format_exc()
-        app.logger.error(f"Full-page OCR error: {e}\n{tb}")
+        dt_total = time.time() - t0
+        app.logger.error(f"[{req_id}] Document OCR error at stage '{stage}' in {dt_total:.2f}s: {type(e).__name__}: {e}\n{tb}")
         return jsonify({
             'success': False,
             'error': f'Document OCR processing error: {str(e)}',

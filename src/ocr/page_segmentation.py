@@ -179,9 +179,20 @@ def filter_boundary_artifacts(
     if num_features == 0:
         return binary.copy()
 
+    # Fast boundary candidate filtering: only inspect components that touch outer image borders.
+    # Components absent from the 1px perimeter can never touch an outer boundary.
+    border_labels = set(np.unique(labeled[0, :])) | \
+                    set(np.unique(labeled[h - 1, :])) | \
+                    set(np.unique(labeled[:, 0])) | \
+                    set(np.unique(labeled[:, w - 1]))
+    border_labels.discard(0)
+
+    if not border_labels:
+        return binary.copy()
+
     cleaned = binary.copy()
 
-    for comp_idx in range(1, num_features + 1):
+    for comp_idx in border_labels:
         comp_mask = (labeled == comp_idx)
         area = int(np.sum(comp_mask))
         if area < min_artifact_area:
