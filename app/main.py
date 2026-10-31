@@ -19,6 +19,7 @@ from datetime import datetime
 import time
 import uuid
 import threading
+import gc
 
 # Concurrency lock for OCR inference to protect memory on constrained instances
 _ocr_processing_lock = threading.Lock()
@@ -288,6 +289,8 @@ def ocr_preflight():
             'error': f'Preflight analysis error: {str(e)}',
             'can_proceed': True
         }), 200
+    finally:
+        gc.collect()
 
 @app.route('/api/ocr/document', methods=['POST'])
 def ocr_document():
@@ -357,6 +360,8 @@ def ocr_document():
             'error': f'Document OCR processing error: {str(e)}',
             'traceback': tb
         }), 200
+    finally:
+        gc.collect()
 
 @app.route('/api/export/txt', methods=['POST'])
 def export_txt():
