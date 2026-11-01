@@ -155,7 +155,10 @@ class TamilFullPageOCR:
         # Load Model Checkpoint if available
         self.model = None
         if os.path.exists(checkpoint_path):
-            ckpt = torch.load(checkpoint_path, map_location=self.device)
+            try:
+                ckpt = torch.load(checkpoint_path, map_location=self.device, weights_only=False)
+            except TypeError:
+                ckpt = torch.load(checkpoint_path, map_location=self.device)
             hidden_size = ckpt.get('hidden_size', 256)
             self.model = TamilCRNN(num_classes=self.num_classes, in_channels=1, hidden_size=hidden_size).to(self.device)
             self.model.load_state_dict(ckpt['model_state_dict'])

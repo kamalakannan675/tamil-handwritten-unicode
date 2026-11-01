@@ -63,5 +63,6 @@ checkpoints/*
 !checkpoints/crnn/
 checkpoints/crnn/*
 !checkpoints/crnn/best_model.pt
+!checkpoints/crnn/tamil_ctc_char_vocab.json
 
 scratch/

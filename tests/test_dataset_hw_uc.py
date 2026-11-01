@@ -3,6 +3,7 @@ test_dataset_hw_uc.py - Unit tests for IIITIndicHWUCDataset and Document Partiti
 """
 
 import os
+import glob
 import unittest
 import tempfile
 import numpy as np
@@ -16,9 +17,30 @@ from src.data.dataset import pad_collate_fn
 class TestIIITIndicHWUCDataset(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.vocab_path = os.path.abspath('checkpoints/crnn/tamil_ctc_char_vocab.json')
+        # Locate vocab file across local, repo root, and reports
+        vocab_candidates = [
+            'checkpoints/crnn/tamil_ctc_char_vocab.json',
+            'reports/tamil_ctc_char_vocab.json',
+            os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'reports', 'tamil_ctc_char_vocab.json'),
+            os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'checkpoints', 'crnn', 'tamil_ctc_char_vocab.json'),
+        ]
+        cls.vocab_path = None
+        for cand in vocab_candidates:
+            if os.path.exists(cand):
+                cls.vocab_path = os.path.abspath(cand)
+                break
+        if cls.vocab_path is None:
+            cls.vocab_path = os.path.abspath('reports/tamil_ctc_char_vocab.json')
+
         cls.vocab = TamilCTCCharacterVocabulary(vocab_file=cls.vocab_path)
-        cls.real_dataset_root = os.path.abspath('datasets/iiit_indic_hw_uc/tamil')
+
+        # Locate dataset root across local and Kaggle mounts
+        hw_uc_matches = glob.glob('/kaggle/input/**/train_gt.txt', recursive=True)
+        if hw_uc_matches:
+            fdir = os.path.dirname(hw_uc_matches[0])
+            cls.real_dataset_root = os.path.dirname(fdir) if os.path.basename(fdir) == 'file' else fdir
+        else:
+            cls.real_dataset_root = os.path.abspath('datasets/iiit_indic_hw_uc/tamil')
 
     def test_vocab_initialization(self):
         """Verify vocabulary loads 73 tokens (72 characters + blank)."""
@@ -40,14 +62,11 @@ class TestIIITIndicHWUCDataset(unittest.TestCase):
             Image.new('RGB', (150, 90), color=(100, 100, 100)).save(img3_path)
 
             # Create synthetic GT file
-            # img1: clean Tamil word
-            # img2: Tamil word with leading and trailing English quotes/period
-            # img3: Word with English letters (OOV)
             gt_file = os.path.join(tmpdir, "custom_gt.txt")
             with open(gt_file, 'w', encoding='utf-8') as f:
-                f.write(f"img1.jpg\tஅவர்களின்\n")
-                f.write(f"img2.jpg\t\"நிலை.\"\n")
-                f.write(f"img3.jpg\tTamilText\n")
+                f.write("img1.jpg\tஅவர்களின்\n")
+                f.write("img2.jpg\t\"நிலை.\"\n")
+                f.write("img3.jpg\tTamilText\n")
 
             ds = IIITIndicHWUCDataset(
                 root_dir=tmpdir,
@@ -116,12 +135,23 @@ class TestIIITIndicHWUCDataset(unittest.TestCase):
 
     def test_document_split_isolation(self):
         """Verify that the generated 85/15 document split has zero document ID and zero image overlap."""
-        train_split_p = os.path.join(self.real_dataset_root, 'file', 'train_doc_split_85_15.txt')
-        val_split_p = os.path.join(self.real_dataset_root, 'file', 'val_doc_split_85_15.txt')
+        candidates_train = [
+            os.path.join(self.real_dataset_root, 'file', 'train_doc_split_85_15.txt'),
+            '/kaggle/working/data/file/train_doc_split_85_15.txt',
+            '/kaggle/working/splits/train_doc_split_85_15.txt'
+        ]
+        candidates_val = [
+            os.path.join(self.real_dataset_root, 'file', 'val_doc_split_85_15.txt'),
+            '/kaggle/working/data/file/val_doc_split_85_15.txt',
+            '/kaggle/working/splits/val_doc_split_85_15.txt'
+        ]
+
+        train_split_p = next((p for p in candidates_train if os.path.exists(p)), None)
+        val_split_p = next((p for p in candidates_val if os.path.exists(p)), None)
         test_gt_p = os.path.join(self.real_dataset_root, 'file', 'test_gt.txt')
 
-        if not (os.path.exists(train_split_p) and os.path.exists(val_split_p)):
-            self.skipTest("Document split files not generated yet.")
+        if not (train_split_p and val_split_p and os.path.exists(test_gt_p)):
+            self.skipTest("Document split files or test_gt.txt not available for verification.")
 
         def load_entries(path):
             with open(path, 'r', encoding='utf-8') as f:

@@ -282,7 +282,10 @@ def main():
     
     if args.resume and os.path.exists(latest_ckpt_path):
         print(f"Resuming training from checkpoint: {latest_ckpt_path}")
-        checkpoint = torch.load(latest_ckpt_path, map_location=device)
+        try:
+            checkpoint = torch.load(latest_ckpt_path, map_location=device, weights_only=False)
+        except TypeError:
+            checkpoint = torch.load(latest_ckpt_path, map_location=device)
         model.load_state_dict(checkpoint['model_state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         if 'scaler_state_dict' in checkpoint and use_amp:

@@ -68,7 +68,10 @@ def evaluate_checkpoint(checkpoint_path: str,
     if not os.path.exists(checkpoint_path):
         raise FileNotFoundError(f"Checkpoint not found: {checkpoint_path}")
         
-    ckpt = torch.load(checkpoint_path, map_location=device)
+    try:
+        ckpt = torch.load(checkpoint_path, map_location=device, weights_only=False)
+    except TypeError:
+        ckpt = torch.load(checkpoint_path, map_location=device)
     hidden_size = ckpt.get('hidden_size', 256)
     
     model = TamilCRNN(num_classes=num_classes, in_channels=1, hidden_size=hidden_size).to(device)
