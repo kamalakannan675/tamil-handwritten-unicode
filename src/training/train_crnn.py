@@ -49,6 +49,7 @@ def evaluate_validation(model: nn.Module,
                         criterion: nn.Module,
                         vocab: TamilCTCCharacterVocabulary,
                         device: torch.device,
+                        use_amp: bool = True,
                         max_batches: Optional[int] = None) -> Dict[str, float]:
     """
     Evaluates validation partition for Loss, CER, WER, and Exact Match.
@@ -57,6 +58,7 @@ def evaluate_validation(model: nn.Module,
     total_val_loss = 0.0
     all_predictions = []
     all_targets = []
+    total_val_batches = len(val_loader)
     
     with torch.no_grad():
         for b_idx, batch in enumerate(val_loader):
@@ -69,11 +71,17 @@ def evaluate_validation(model: nn.Module,
             input_lengths = batch['input_lengths'].to(device)
             texts = batch['texts']
             
-            # Forward pass: shape (T, B, num_classes)
-            logits = model(images)
-            log_probs = logits.log_softmax(2)
+            # Forward pass with AMP acceleration: shape (T, B, num_classes)
+            if use_amp and device.type == 'cuda':
+                with torch.amp.autocast('cuda'):
+                    logits = model(images)
+                    log_probs = logits.log_softmax(2)
+                    loss = criterion(log_probs, targets, input_lengths, target_lengths)
+            else:
+                logits = model(images)
+                log_probs = logits.log_softmax(2)
+                loss = criterion(log_probs, targets, input_lengths, target_lengths)
             
-            loss = criterion(log_probs, targets, input_lengths, target_lengths)
             if torch.isfinite(loss):
                 total_val_loss += loss.item()
                 
@@ -81,6 +89,9 @@ def evaluate_validation(model: nn.Module,
             decoded = ctc_greedy_decode(logits, vocab, blank_idx=0)
             all_predictions.extend(decoded)
             all_targets.extend(texts)
+            
+            if (b_idx + 1) % 50 == 0 or (b_idx + 1) == total_val_batches:
+                print(f"  Validating [{b_idx + 1}/{total_val_batches}] ...", flush=True)
             
     batches_evaluated = b_idx + 1 if 'b_idx' in locals() else 1
     avg_val_loss = total_val_loss / max(1, batches_evaluated)
@@ -147,7 +158,7 @@ def train_one_epoch(model: nn.Module,
         
         if (batch_idx + 1) % log_interval == 0 or (batch_idx + 1) == total_batches:
             avg_batch_loss = running_loss / (batch_idx + 1)
-            print(f"  Step [{batch_idx + 1}/{total_batches}] - Loss: {avg_batch_loss:.4f}")
+            print(f"  Step [{batch_idx + 1}/{total_batches}] - Loss: {avg_batch_loss:.4f}", flush=True)
             
     return running_loss / max(1, total_batches)
 
@@ -322,7 +333,8 @@ def main():
             val_loader=val_loader,
             criterion=criterion,
             vocab=vocab,
-            device=device
+            device=device,
+            use_amp=use_amp
         )
         
         epoch_duration = time.time() - epoch_start
