@@ -35,6 +35,7 @@ if hasattr(sys.stdout, 'reconfigure'):
 
 from src.data.vocab import TamilCTCCharacterVocabulary
 from src.data.dataset import TamilWordDataset, pad_collate_fn
+from src.data.dataset_hw_uc import IIITIndicHWUCDataset
 from src.models.crnn import TamilCRNN
 from src.inference.ctc_decoder import (
     ctc_greedy_decode,
@@ -170,6 +171,14 @@ def main():
     parser.add_argument("--max_train_samples", type=int, default=None, help="Limit train samples (for smoke test)")
     parser.add_argument("--max_val_samples", type=int, default=None, help="Limit val samples (for smoke test)")
     parser.add_argument("--no_amp", action="store_true", help="Disable PyTorch AMP mixed precision")
+    parser.add_argument("--dataset_type", type=str, default="legacy", choices=["legacy", "hw_uc"],
+                        help="Dataset type: 'legacy' or 'hw_uc'")
+    parser.add_argument("--hw_uc_root", type=str, default=None,
+                        help="Path to IIIT-Indic-HW-UC root directory")
+    parser.add_argument("--train_gt", type=str, default=None,
+                        help="Explicit path to train ground truth file")
+    parser.add_argument("--val_gt", type=str, default=None,
+                        help="Explicit path to val ground truth file")
     
     args = parser.parse_args()
     os.makedirs(args.checkpoint_dir, exist_ok=True)
@@ -201,20 +210,38 @@ def main():
     
     # 3. Datasets and DataLoaders
     print("Initializing datasets...")
-    train_dataset = TamilWordDataset(
-        split='train',
-        zip_path=args.zip_path if not args.extracted_dir else None,
-        extracted_dir=args.extracted_dir,
-        vocab=vocab,
-        max_samples=args.max_train_samples
-    )
-    val_dataset = TamilWordDataset(
-        split='val',
-        zip_path=args.zip_path if not args.extracted_dir else None,
-        extracted_dir=args.extracted_dir,
-        vocab=vocab,
-        max_samples=args.max_val_samples
-    )
+    if args.dataset_type == "hw_uc" or args.hw_uc_root:
+        hw_uc_root = args.hw_uc_root or (args.extracted_dir if args.extracted_dir and os.path.isdir(args.extracted_dir) else "datasets/iiit_indic_hw_uc/tamil")
+        print(f"Using IIIT-Indic-HW-UC dataset from: {hw_uc_root}")
+        train_dataset = IIITIndicHWUCDataset(
+            root_dir=hw_uc_root,
+            split="train",
+            gt_path=args.train_gt,
+            vocab=vocab,
+            max_samples=args.max_train_samples
+        )
+        val_dataset = IIITIndicHWUCDataset(
+            root_dir=hw_uc_root,
+            split="val",
+            gt_path=args.val_gt,
+            vocab=vocab,
+            max_samples=args.max_val_samples
+        )
+    else:
+        train_dataset = TamilWordDataset(
+            split='train',
+            zip_path=args.zip_path if not args.extracted_dir else None,
+            extracted_dir=args.extracted_dir,
+            vocab=vocab,
+            max_samples=args.max_train_samples
+        )
+        val_dataset = TamilWordDataset(
+            split='val',
+            zip_path=args.zip_path if not args.extracted_dir else None,
+            extracted_dir=args.extracted_dir,
+            vocab=vocab,
+            max_samples=args.max_val_samples
+        )
     print(f"Dataset loaded: Train = {len(train_dataset):,} samples, Val = {len(val_dataset):,} samples")
     
     # On Windows, num_workers > 0 can sometimes cause issues with zipfile handles; set to 0 if Windows and no extracted_dir
