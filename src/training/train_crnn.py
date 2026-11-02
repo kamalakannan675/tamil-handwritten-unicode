@@ -44,6 +44,16 @@ from src.inference.ctc_decoder import (
     compute_exact_accuracy
 )
 
+class CRNNDataParallel(nn.DataParallel):
+    """
+    DataParallel wrapper tailored for CRNN / CTC models where outputs are (T, B, C).
+    Standard DataParallel gathers along dim 0 (concatenating along time dimension T),
+    which corrupts the sequence. This class overrides gather() to concatenate along
+    dim 1 (the batch dimension B), correctly reconstructing (T, B_total, C).
+    """
+    def gather(self, outputs, output_device):
+        return torch.cat([o.to(output_device) for o in outputs], dim=1)
+
 def evaluate_validation(model: nn.Module,
                         val_loader: DataLoader,
                         criterion: nn.Module,
@@ -190,6 +200,8 @@ def main():
                         help="Explicit path to train ground truth file")
     parser.add_argument("--val_gt", type=str, default=None,
                         help="Explicit path to val ground truth file")
+    parser.add_argument("--no_cache", action="store_true",
+                        help="Disable RAM caching of preprocessed images")
     
     args = parser.parse_args()
     os.makedirs(args.checkpoint_dir, exist_ok=True)
@@ -221,6 +233,12 @@ def main():
     
     # 3. Datasets and DataLoaders
     print("Initializing datasets...")
+    cache_ram = not args.no_cache
+    if cache_ram:
+        print("RAM Image Cache: ENABLED (in-memory fast caching for zero-I/O subsequent epochs)")
+    else:
+        print("RAM Image Cache: DISABLED")
+        
     if args.dataset_type == "hw_uc" or args.hw_uc_root:
         hw_uc_root = args.hw_uc_root or (args.extracted_dir if args.extracted_dir and os.path.isdir(args.extracted_dir) else "datasets/iiit_indic_hw_uc/tamil")
         print(f"Using IIIT-Indic-HW-UC dataset from: {hw_uc_root}")
@@ -229,6 +247,7 @@ def main():
             split="train",
             gt_path=args.train_gt,
             vocab=vocab,
+            cache_in_memory=cache_ram,
             max_samples=args.max_train_samples
         )
         val_dataset = IIITIndicHWUCDataset(
@@ -236,6 +255,7 @@ def main():
             split="val",
             gt_path=args.val_gt,
             vocab=vocab,
+            cache_in_memory=cache_ram,
             max_samples=args.max_val_samples
         )
     else:
@@ -263,7 +283,8 @@ def main():
         shuffle=True,
         collate_fn=pad_collate_fn,
         num_workers=workers,
-        pin_memory=(device.type == 'cuda')
+        pin_memory=(device.type == 'cuda'),
+        persistent_workers=(workers > 0)
     )
     val_loader = DataLoader(
         val_dataset,
@@ -271,13 +292,14 @@ def main():
         shuffle=False,
         collate_fn=pad_collate_fn,
         num_workers=workers,
-        pin_memory=(device.type == 'cuda')
+        pin_memory=(device.type == 'cuda'),
+        persistent_workers=(workers > 0)
     )
     
     # 4. Model, Criterion, Optimizer, Scheduler, Scaler
-    model = TamilCRNN(num_classes=num_classes, in_channels=1, hidden_size=args.hidden_size).to(device)
+    raw_model = TamilCRNN(num_classes=num_classes, in_channels=1, hidden_size=args.hidden_size).to(device)
     criterion = nn.CTCLoss(blank=0, zero_infinity=True)
-    optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate, weight_decay=1e-5)
+    optimizer = torch.optim.Adam(raw_model.parameters(), lr=args.learning_rate, weight_decay=1e-5)
     scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=2)
     use_amp = (not args.no_amp) and (device.type == 'cuda')
     scaler = torch.amp.GradScaler('cuda', enabled=use_amp)
@@ -297,7 +319,13 @@ def main():
             checkpoint = torch.load(latest_ckpt_path, map_location=device, weights_only=False)
         except TypeError:
             checkpoint = torch.load(latest_ckpt_path, map_location=device)
-        model.load_state_dict(checkpoint['model_state_dict'])
+        
+        # Strip potential 'module.' prefix from previous multi-GPU checkpoints
+        state_dict = checkpoint['model_state_dict']
+        if any(k.startswith('module.') for k in state_dict.keys()):
+            state_dict = {k[7:] if k.startswith('module.') else k: v for k, v in state_dict.items()}
+        raw_model.load_state_dict(state_dict)
+        
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         if 'scaler_state_dict' in checkpoint and use_amp:
             scaler.load_state_dict(checkpoint['scaler_state_dict'])
@@ -307,6 +335,14 @@ def main():
         best_val_cer = checkpoint.get('best_val_cer', float('inf'))
         metrics_history = checkpoint.get('metrics_history', [])
         print(f"Resumed at epoch {start_epoch}. Best Val CER so far: {best_val_cer:.4f}")
+
+    # 6. Multi-GPU DataParallel Setup (T4 x2 Support)
+    num_gpus = torch.cuda.device_count() if torch.cuda.is_available() else 0
+    if num_gpus > 1:
+        print(f"Enabling Dual-GPU DataParallel across {num_gpus} GPUs: {[torch.cuda.get_device_name(i) for i in range(num_gpus)]}")
+        model = CRNNDataParallel(raw_model)
+    else:
+        model = raw_model
         
     print(f"\n--- Starting Training ({args.num_epochs} Epochs) ---")
     start_time = time.time()
@@ -362,9 +398,10 @@ def main():
         metrics_history.append(record)
         
         # Save latest checkpoint
+        model_to_save = model.module if isinstance(model, nn.DataParallel) else model
         latest_ckpt = {
             'epoch': epoch,
-            'model_state_dict': model.state_dict(),
+            'model_state_dict': model_to_save.state_dict(),
             'optimizer_state_dict': optimizer.state_dict(),
             'scaler_state_dict': scaler.state_dict() if use_amp else None,
             'scheduler_state_dict': scheduler.state_dict(),
@@ -383,7 +420,7 @@ def main():
             print(f"  -> Best model updated! Val CER decreased by {improvement:.4f} to {best_val_cer:.4f}")
             torch.save({
                 'epoch': epoch,
-                'model_state_dict': model.state_dict(),
+                'model_state_dict': model_to_save.state_dict(),
                 'val_metrics': val_metrics,
                 'num_classes': num_classes,
                 'hidden_size': args.hidden_size,

@@ -36,6 +36,7 @@ class IIITIndicHWUCDataset(Dataset):
                  max_width: int = 512,
                  filter_oov: bool = True,
                  clean_punctuation: bool = True,
+                 cache_in_memory: bool = False,
                  max_samples: Optional[int] = None):
         """
         Args:
@@ -48,6 +49,7 @@ class IIITIndicHWUCDataset(Dataset):
             max_width: Maximum image width after aspect-ratio scaling (default: 512).
             filter_oov: If True, skips samples containing characters not in vocab.
             clean_punctuation: If True, strips leading/trailing non-Tamil punctuation marks before vocab validation.
+            cache_in_memory: If True, caches preprocessed uint8 image arrays in RAM for ultra-fast subsequent epochs.
             max_samples: Optional limit on samples for quick testing or debugging.
         """
         self.root_dir = os.path.abspath(root_dir)
@@ -56,6 +58,8 @@ class IIITIndicHWUCDataset(Dataset):
         self.max_width = max_width
         self.filter_oov = filter_oov
         self.clean_punctuation = clean_punctuation
+        self.cache_in_memory = cache_in_memory
+        self._cache: Dict[int, Tuple[np.ndarray, int]] = {}
         self.max_samples = max_samples
 
         # 1. Load Vocabulary
@@ -183,19 +187,25 @@ class IIITIndicHWUCDataset(Dataset):
     def __getitem__(self, idx: int) -> Dict[str, Union[torch.Tensor, str, int]]:
         rel_img_path, text, target_indices = self.records[idx]
 
-        # 1. Load image and convert to Grayscale
-        full_path = self._resolve_full_path(rel_img_path)
-        with Image.open(full_path) as im:
-            gray = im.convert('L')
+        if self.cache_in_memory and idx in self._cache:
+            img_uint8, new_w = self._cache[idx]
+        else:
+            # 1. Load image and convert to Grayscale
+            full_path = self._resolve_full_path(rel_img_path)
+            with Image.open(full_path) as im:
+                gray = im.convert('L')
 
-        orig_w, orig_h = gray.size
+            orig_w, orig_h = gray.size
 
-        # 2. Aspect-ratio preserving width scaling to target_height (default: 64)
-        new_w = max(16, min(self.max_width, int(round(orig_w * self.target_height / max(1, orig_h)))))
-        resized = gray.resize((new_w, self.target_height), Image.Resampling.BILINEAR)
+            # 2. Aspect-ratio preserving width scaling to target_height (default: 64)
+            new_w = max(16, min(self.max_width, int(round(orig_w * self.target_height / max(1, orig_h)))))
+            resized = gray.resize((new_w, self.target_height), Image.Resampling.BILINEAR)
+            img_uint8 = np.array(resized, dtype=np.uint8)
+            if self.cache_in_memory:
+                self._cache[idx] = (img_uint8, new_w)
 
         # 3. Invert and normalize to [0.0, 1.0] (handwritten stroke = 1.0, background = 0.0)
-        img_np = (255.0 - np.array(resized, dtype=np.float32)) / 255.0
+        img_np = (255.0 - img_uint8.astype(np.float32)) / 255.0
         tensor_img = torch.from_numpy(img_np).unsqueeze(0)  # (1, 64, W)
 
         return {
