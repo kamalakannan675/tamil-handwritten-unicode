@@ -1,0 +1,2724 @@
+{
+  "train": {
+    "split_name": "train",
+    "gt_path": "datasets/iiit_indic_hw_uc/tamil/file/train_doc_split_85_15.txt",
+    "counts": {
+      "manifest_total": 144517,
+      "missing_images": 0,
+      "corrupt_images": 0,
+      "empty_labels": 334,
+      "oov_labels": 1248,
+      "ctc_invalid": 4,
+      "valid_retained": 142931
+    },
+    "duplicate_paths_in_retained": 0,
+    "ctc_invalid_records": [
+      {
+        "status": "ctc_invalid",
+        "line_idx": 51080,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1882/image/259481_12.jpg",
+        "original_transcription": "குஉற்றதோழியானா",
+        "cleaned_transcription": "குஉற்றதோழியானா",
+        "tokens": [
+          15,
+          41,
+          7,
+          29,
+          49,
+          29,
+          22,
+          47,
+          32,
+          39,
+          27,
+          38,
+          24,
+          38
+        ],
+        "L": 14,
+        "R": 0,
+        "min_t_required": 14,
+        "orig_w": 1,
+        "orig_h": 419,
+        "scaled_w": 16,
+        "T": 4,
+        "deficit": 10,
+        "reason": "Physical frame deficit: T=4 < L=14"
+      },
+      {
+        "status": "ctc_invalid",
+        "line_idx": 66166,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1874/image/256787_9.jpg",
+        "original_transcription": "அப்பாவுச்ரமடித்ல்நம்பிக்கை",
+        "cleaned_transcription": "அப்பாவுச்ரமடித்ல்நம்பிக்கை",
+        "tokens": [
+          3,
+          25,
+          49,
+          25,
+          38,
+          33,
+          41,
+          17,
+          49,
+          28,
+          26,
+          20,
+          39,
+          22,
+          49,
+          30,
+          49,
+          23,
+          26,
+          49,
+          25,
+          39,
+          15,
+          49,
+          15,
+          45
+        ],
+        "L": 26,
+        "R": 0,
+        "min_t_required": 26,
+        "orig_w": 5,
+        "orig_h": 271,
+        "scaled_w": 16,
+        "T": 4,
+        "deficit": 22,
+        "reason": "Physical frame deficit: T=4 < L=26"
+      },
+      {
+        "status": "ctc_invalid",
+        "line_idx": 111031,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1959/image/268658_6.jpg",
+        "original_transcription": "தலனாகியமத்தேயுபதிவுசெய்த",
+        "cleaned_transcription": "தலனாகியமத்தேயுபதிவுசெய்த",
+        "tokens": [
+          22,
+          30,
+          24,
+          38,
+          15,
+          39,
+          27,
+          26,
+          22,
+          49,
+          22,
+          44,
+          27,
+          41,
+          25,
+          22,
+          39,
+          33,
+          41,
+          17,
+          43,
+          27,
+          49,
+          22
+        ],
+        "L": 24,
+        "R": 0,
+        "min_t_required": 24,
+        "orig_w": 65,
+        "orig_h": 113,
+        "scaled_w": 37,
+        "T": 9,
+        "deficit": 15,
+        "reason": "Physical frame deficit: T=9 < L=24"
+      },
+      {
+        "status": "ctc_invalid",
+        "line_idx": 111076,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1959/image/268661_12.jpg",
+        "original_transcription": "ஊழியத்துக்குப்போகமுடியா",
+        "cleaned_transcription": "ஊழியத்துக்குப்போகமுடியா",
+        "tokens": [
+          8,
+          32,
+          39,
+          27,
+          22,
+          49,
+          22,
+          41,
+          15,
+          49,
+          15,
+          41,
+          25,
+          49,
+          25,
+          47,
+          15,
+          26,
+          41,
+          20,
+          39,
+          27,
+          38
+        ],
+        "L": 23,
+        "R": 0,
+        "min_t_required": 23,
+        "orig_w": 9,
+        "orig_h": 32,
+        "scaled_w": 18,
+        "T": 4,
+        "deficit": 19,
+        "reason": "Physical frame deficit: T=4 < L=23"
+      }
+    ],
+    "missing_images_sample": [],
+    "corrupt_images_sample": [],
+    "oov_sample": [
+      {
+        "status": "oov_label",
+        "line_idx": 73,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_4.jpg",
+        "cleaned_text": "2",
+        "oov": [
+          "2"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 86,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_17.jpg",
+        "cleaned_text": "1",
+        "oov": [
+          "1"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 105,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_36.jpg",
+        "cleaned_text": "L",
+        "oov": [
+          "L"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 284,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_17.jpg",
+        "cleaned_text": "தேவைப்படும்.இ",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 317,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_8.jpg",
+        "cleaned_text": "பார்க்கிறார்.இங்கே",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 646,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258014_43.jpg",
+        "cleaned_text": "ஈ.பின்வரும்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 744,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258401_13.jpg",
+        "cleaned_text": "எழுப்புகிறது.சிப்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 828,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257897_17.jpg",
+        "cleaned_text": "ஈடுபடுங்கள்.ரே",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 875,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258784_34.jpg",
+        "cleaned_text": "ஒத்துழைக்கிறது.ஒ",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 1026,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259943_24.jpg",
+        "cleaned_text": "1",
+        "oov": [
+          "1"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 1088,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258793_8.jpg",
+        "cleaned_text": "நம்பினர்.ஜெர்மனியில்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 1166,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259105_35.jpg",
+        "cleaned_text": "1",
+        "oov": [
+          "1"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 1208,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258407_29.jpg",
+        "cleaned_text": "பரிசோதனை.சிறுகுட்டிக",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 1354,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257951_19.jpg",
+        "cleaned_text": "கிறது.வேதாகமத்தில்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 1438,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258219_29.jpg",
+        "cleaned_text": "1",
+        "oov": [
+          "1"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 1487,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259725_8.jpg",
+        "cleaned_text": "தெரிகிறது.இன்னு",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 1579,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259722_23.jpg",
+        "cleaned_text": "த.முதல்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 1675,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257436_30.jpg",
+        "cleaned_text": "8",
+        "oov": [
+          "8"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 1692,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259594_17.jpg",
+        "cleaned_text": "+",
+        "oov": [
+          "+"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 1738,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259387_27.jpg",
+        "cleaned_text": "ர்.பு",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 1771,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257954_18.jpg",
+        "cleaned_text": "னது.அவரது",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 1840,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258096_5.jpg",
+        "cleaned_text": "=",
+        "oov": [
+          "="
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 1924,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257882_13.jpg",
+        "cleaned_text": "த.விகலாசம்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 2006,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257451_8.jpg",
+        "cleaned_text": "சுரேஷ்கோபி.தீர்ப்பு",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 2118,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258484_40.jpg",
+        "cleaned_text": "விபசாரமே.இம்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 2225,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258506_12.jpg",
+        "cleaned_text": "றினார்.அவர்கள்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 2243,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258506_30.jpg",
+        "cleaned_text": "தொடங்கப்பட்டுள்ளன.பத்திரி",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 2273,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258663_17.jpg",
+        "cleaned_text": "து.யுத்தத்தில்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 2308,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259272_10.jpg",
+        "cleaned_text": "நா.ஆனாலும்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 2325,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259272_27.jpg",
+        "cleaned_text": "ார்.உலக",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 2367,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258736_3.jpg",
+        "cleaned_text": "D",
+        "oov": [
+          "D"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 2886,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257452_9.jpg",
+        "cleaned_text": "நனவானது.சபையார்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 3198,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257707_25.jpg",
+        "cleaned_text": "கிறார்கள்.அநக",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 3216,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258325_14.jpg",
+        "cleaned_text": "அழைத்தார்கள்.பின்ன",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 3492,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258684_18.jpg",
+        "cleaned_text": "ஐ.இதுமுழு",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 4015,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257433_5.jpg",
+        "cleaned_text": "2",
+        "oov": [
+          "2"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 4129,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257898_10.jpg",
+        "cleaned_text": "யப்பட்டுள்ளர்.சிசெராவின்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 4250,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258420_25.jpg",
+        "cleaned_text": "இருக்கிறது.இ",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 4346,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258513_17.jpg",
+        "cleaned_text": "விடுகிறார்கள்.இத்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 4448,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259741_27.jpg",
+        "cleaned_text": "தவிர்க்கின்றனர்.இதன்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 4651,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258537_24.jpg",
+        "cleaned_text": "1",
+        "oov": [
+          "1"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 4667,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259673_8.jpg",
+        "cleaned_text": "கொஞ்சுகிறான்.மு",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 4712,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259216_9.jpg",
+        "cleaned_text": "கொள்வானே.கட",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 4759,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258418_8.jpg",
+        "cleaned_text": "செய்துவிமுடியாது.ஈவிரக்கம்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 4794,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259192_8.jpg",
+        "cleaned_text": "5",
+        "oov": [
+          "5"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 4844,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257437_11.jpg",
+        "cleaned_text": "6",
+        "oov": [
+          "6"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 4934,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257691_21.jpg",
+        "cleaned_text": "ரூ.சம்பளமே",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 4964,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257953_9.jpg",
+        "cleaned_text": "செய்வார்.அப்ப",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 5048,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257858_27.jpg",
+        "cleaned_text": "விட்டன.சில",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 5255,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259614_2.jpg",
+        "cleaned_text": "34",
+        "oov": [
+          "4",
+          "3"
+        ]
+      }
+    ],
+    "empty_sample": [
+      {
+        "status": "empty_label",
+        "line_idx": 101,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_32.jpg",
+        "raw_text": "·"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 334,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_25.jpg",
+        "raw_text": "·"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 543,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258719_26.jpg",
+        "raw_text": "·"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 1104,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258793_24.jpg",
+        "raw_text": "·"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 1247,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259095_21.jpg",
+        "raw_text": "·"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 1382,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257944_12.jpg",
+        "raw_text": "·"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 1932,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257882_21.jpg",
+        "raw_text": "*"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 2070,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257450_14.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 2742,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258228_13.jpg",
+        "raw_text": "&"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 2817,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258706_39.jpg",
+        "raw_text": "/"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 2844,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258198_12.jpg",
+        "raw_text": "·"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 3548,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258222_3.jpg",
+        "raw_text": "&"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 3966,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259753_27.jpg",
+        "raw_text": "·"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 4339,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258513_10.jpg",
+        "raw_text": "·"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 4854,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257437_21.jpg",
+        "raw_text": "’"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 12395,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1970/image/269346_16.jpg",
+        "raw_text": "!."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 12742,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1970/image/269393_19.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 12751,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1970/image/269393_28.jpg",
+        "raw_text": ".."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 13388,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1970/image/269345_13.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 13522,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1970/image/270628_19.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 15220,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1970/image/268810_4.jpg",
+        "raw_text": ".."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 15897,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1970/image/267386_10.jpg",
+        "raw_text": "?."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 17149,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1970/image/269418_8.jpg",
+        "raw_text": "·"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 17781,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1960/image/264311_25.jpg",
+        "raw_text": "·"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 18058,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1960/image/264372_23.jpg",
+        "raw_text": "&"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 18458,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1960/image/266903_12.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 19308,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/398/image/67869_3.jpg",
+        "raw_text": ".."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 19845,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/255669_6.jpg",
+        "raw_text": "·"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 19888,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/257503_12.jpg",
+        "raw_text": "|"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 20032,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/255671_29.jpg",
+        "raw_text": "::"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 20033,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/255671_30.jpg",
+        "raw_text": ".."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 20218,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/255737_25.jpg",
+        "raw_text": ".."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 20474,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/257934_34.jpg",
+        "raw_text": ".."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 20725,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/256630_16.jpg",
+        "raw_text": "|"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 20730,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/256630_21.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 20931,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/256913_40.jpg",
+        "raw_text": "·"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 20937,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/256913_46.jpg",
+        "raw_text": "”"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 20947,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/257356_9.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 21018,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/256608_23.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 21566,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/256355_29.jpg",
+        "raw_text": "·"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 21832,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/257938_24.jpg",
+        "raw_text": ".--"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 22681,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1857/image/255191_37.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 22983,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1857/image/256147_21.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 23175,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1857/image/254948_3.jpg",
+        "raw_text": "*"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 23708,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1857/image/254949_21.jpg",
+        "raw_text": ".."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 23849,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1857/image/255832_5.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 24168,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1857/image/256092_21.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 24382,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1857/image/254827_26.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 24969,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1857/image/254801_1.jpg",
+        "raw_text": "*"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 24977,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1857/image/254801_9.jpg",
+        "raw_text": "”"
+      }
+    ],
+    "valid_retained_sample": [
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_31.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258394_32.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_31.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_32.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_33.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_34.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_35.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_36.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_37.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259754_38.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_31.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_33.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_34.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_35.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_37.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_38.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_39.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259366_40.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_31.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_32.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_33.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_34.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_35.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_36.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_37.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259644_38.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_31.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_32.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_33.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_34.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_35.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_36.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_37.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_38.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_39.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_40.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_41.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_42.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_43.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_44.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258615_45.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259927_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_31.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_32.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_33.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_34.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_35.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_36.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_37.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_38.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_39.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_40.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_41.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_42.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_43.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_44.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258025_45.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_31.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_32.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_33.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_34.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_35.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_36.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_37.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_38.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_39.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_40.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_41.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258995_42.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_31.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_32.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_33.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_34.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_35.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_36.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_37.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259246_38.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258221_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258979_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257434_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_31.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_32.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_33.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257896_34.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_31.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_32.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_33.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_34.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258019_35.jpg"
+    ]
+  },
+  "val": {
+    "split_name": "val",
+    "gt_path": "datasets/iiit_indic_hw_uc/tamil/file/val_doc_split_85_15.txt",
+    "counts": {
+      "manifest_total": 25483,
+      "missing_images": 0,
+      "corrupt_images": 0,
+      "empty_labels": 57,
+      "oov_labels": 237,
+      "ctc_invalid": 0,
+      "valid_retained": 25189
+    },
+    "duplicate_paths_in_retained": 0,
+    "ctc_invalid_records": [],
+    "missing_images_sample": [],
+    "corrupt_images_sample": [],
+    "oov_sample": [
+      {
+        "status": "oov_label",
+        "line_idx": 10,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_11.jpg",
+        "cleaned_text": "காண்பிப்பார்.தம்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 90,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_30.jpg",
+        "cleaned_text": "கிறான்.பூர்வ",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 146,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_8.jpg",
+        "cleaned_text": "வேண்டும்.ந",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 196,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_20.jpg",
+        "cleaned_text": "ஜ.மனோரமா",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 530,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258498_9.jpg",
+        "cleaned_text": "ஜூன்.திருமங்கையாழ்வாரின்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 540,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258498_19.jpg",
+        "cleaned_text": "திகழ்கின்றன.நீனமானகை",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 724,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259798_16.jpg",
+        "cleaned_text": "இருக்கிறது.பூதராக",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 817,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258336_33.jpg",
+        "cleaned_text": "2",
+        "oov": [
+          "2"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 3195,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1960/image/264398_21.jpg",
+        "cleaned_text": "8",
+        "oov": [
+          "8"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 3295,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1960/image/266360_4.jpg",
+        "cleaned_text": "நேடுகிறேன.ஆனால்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 3319,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1960/image/264467_3.jpg",
+        "cleaned_text": "சியம்.பின்னையது",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 3322,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1960/image/264467_6.jpg",
+        "cleaned_text": "இலக்B",
+        "oov": [
+          "B"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 3367,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1960/image/267002_8.jpg",
+        "cleaned_text": "இல்லை.க",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 3374,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1960/image/267002_15.jpg",
+        "cleaned_text": "க்கின்றன.இந்த",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 3416,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1960/image/265709_23.jpg",
+        "cleaned_text": "பேசினார.இலர்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 3450,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1960/image/266133_27.jpg",
+        "cleaned_text": "கூறினான்.இப்போது",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 3465,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1960/image/264309_7.jpg",
+        "cleaned_text": "3",
+        "oov": [
+          "3"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 3468,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1960/image/264309_10.jpg",
+        "cleaned_text": "செய்யும்.சுபேன்டே",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 3529,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/398/image/68187_41.jpg",
+        "cleaned_text": "நாமத்தினி2",
+        "oov": [
+          "2"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 3548,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/398/image/61948_17.jpg",
+        "cleaned_text": "தேவைப்பட்டது.விழாவில்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 3702,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/255908_13.jpg",
+        "cleaned_text": "L",
+        "oov": [
+          "L"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 3704,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/255908_15.jpg",
+        "cleaned_text": "T",
+        "oov": [
+          "T"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 3750,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/257354_21.jpg",
+        "cleaned_text": "ன.பப்போது",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 3888,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/256954_20.jpg",
+        "cleaned_text": "4",
+        "oov": [
+          "4"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 3925,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/255424_28.jpg",
+        "cleaned_text": "3",
+        "oov": [
+          "3"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 4022,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/256956_9.jpg",
+        "cleaned_text": "மடங்g",
+        "oov": [
+          "g"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 4033,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/256956_20.jpg",
+        "cleaned_text": "3",
+        "oov": [
+          "3"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 4149,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/255911_31.jpg",
+        "cleaned_text": "ல.நடிகர்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 4167,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/257504_10.jpg",
+        "cleaned_text": "2",
+        "oov": [
+          "2"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 4176,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1865/image/257504_19.jpg",
+        "cleaned_text": "கூறினார்.இன்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 4293,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1857/image/256119_21.jpg",
+        "cleaned_text": "1",
+        "oov": [
+          "1"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 4430,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1857/image/256005_23.jpg",
+        "cleaned_text": "என்.ஜி",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 5307,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1898/image/257675_4.jpg",
+        "cleaned_text": "15",
+        "oov": [
+          "1",
+          "5"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 5310,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1898/image/257675_7.jpg",
+        "cleaned_text": "6",
+        "oov": [
+          "6"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 5397,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1898/image/257370_18.jpg",
+        "cleaned_text": "1",
+        "oov": [
+          "1"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 5401,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1898/image/257370_22.jpg",
+        "cleaned_text": "15",
+        "oov": [
+          "1",
+          "5"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 5404,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1898/image/257370_25.jpg",
+        "cleaned_text": "16",
+        "oov": [
+          "1",
+          "6"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 5409,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1898/image/257370_30.jpg",
+        "cleaned_text": "17",
+        "oov": [
+          "1",
+          "7"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 5415,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1898/image/257370_36.jpg",
+        "cleaned_text": "3,10,11,13,17",
+        "oov": [
+          "1",
+          "3",
+          ",",
+          "7",
+          "0"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 5417,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1898/image/257370_38.jpg",
+        "cleaned_text": "18,20,25,27",
+        "oov": [
+          "2",
+          "1",
+          ",",
+          "7",
+          "8",
+          "5",
+          "0"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 5825,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1886/image/259595_1.jpg",
+        "cleaned_text": "1",
+        "oov": [
+          "1"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 5855,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1886/image/259595_31.jpg",
+        "cleaned_text": "2",
+        "oov": [
+          "2"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 6110,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1864/image/256268_35.jpg",
+        "cleaned_text": "ஜி.எஸ்.இன்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 6123,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1864/image/256741_13.jpg",
+        "cleaned_text": "7",
+        "oov": [
+          "7"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 6250,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1864/image/256445_8.jpg",
+        "cleaned_text": "11",
+        "oov": [
+          "1"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 6297,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1864/image/256838_23.jpg",
+        "cleaned_text": "இருந்தது.அவர்கள்",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 6362,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1864/image/255662_20.jpg",
+        "cleaned_text": "2",
+        "oov": [
+          "2"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 6511,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1864/image/256195_12.jpg",
+        "cleaned_text": "கிறது.மு.கமது",
+        "oov": [
+          "."
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 6552,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1864/image/257622_30.jpg",
+        "cleaned_text": "1",
+        "oov": [
+          "1"
+        ]
+      },
+      {
+        "status": "oov_label",
+        "line_idx": 6553,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1864/image/256224_1.jpg",
+        "cleaned_text": "10",
+        "oov": [
+          "1",
+          "0"
+        ]
+      }
+    ],
+    "empty_sample": [
+      {
+        "status": "empty_label",
+        "line_idx": 61,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_1.jpg",
+        "raw_text": "&"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 647,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258476_17.jpg",
+        "raw_text": "/"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 678,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259623_25.jpg",
+        "raw_text": "·"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 787,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258336_3.jpg",
+        "raw_text": "&"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 844,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257851_8.jpg",
+        "raw_text": "&"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 5454,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1886/image/267766_11.jpg",
+        "raw_text": "?,"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 5867,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1886/image/262557_3.jpg",
+        "raw_text": ":)"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 6718,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1864/image/256035_44.jpg",
+        "raw_text": "&"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 6837,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1864/image/257191_10.jpg",
+        "raw_text": ".."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 6858,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1864/image/257191_31.jpg",
+        "raw_text": "&"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 7021,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1859/image/255248_22.jpg",
+        "raw_text": ".."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 7472,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1859/image/257862_7.jpg",
+        "raw_text": "·"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 8882,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1993/image/271220_32.jpg",
+        "raw_text": "*"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 9009,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1882/image/258657_27.jpg",
+        "raw_text": "”"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 9160,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1882/image/257247_21.jpg",
+        "raw_text": "”"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 9291,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1882/image/256929_8.jpg",
+        "raw_text": "...."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 9499,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1882/image/259139_3.jpg",
+        "raw_text": "/"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 9679,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/2057/image/275113_15.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 10064,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1911/image/261006_25.jpg",
+        "raw_text": "...."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 10361,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1764/image/248652_13.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 10410,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/2055/image/274787_27.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 10453,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/2055/image/274790_1.jpg",
+        "raw_text": "*"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 10563,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/2055/image/275118_12.jpg",
+        "raw_text": ".."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 11144,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1941/image/263687_41.jpg",
+        "raw_text": "·"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 11459,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1941/image/264556_44.jpg",
+        "raw_text": "·"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 11539,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1874/image/255882_21.jpg",
+        "raw_text": "”"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 12134,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1876/image/257970_10.jpg",
+        "raw_text": ".-"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 12193,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1876/image/256448_8.jpg",
+        "raw_text": "“"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 12195,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1876/image/256448_10.jpg",
+        "raw_text": ".."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 12310,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1876/image/256372_6.jpg",
+        "raw_text": ".."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 12797,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1873/image/258754_17.jpg",
+        "raw_text": "|"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 13154,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1873/image/258158_2.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 13426,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1873/image/258964_22.jpg",
+        "raw_text": "”"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 13693,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1965/image/270754_44.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 14390,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1965/image/269608_7.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 14496,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1856/image/261211_4.jpg",
+        "raw_text": "/"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 16687,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1953/image/262108_21.jpg",
+        "raw_text": "?,"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 17065,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1953/image/268164_26.jpg",
+        "raw_text": ".."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 17110,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1953/image/266533_36.jpg",
+        "raw_text": "*"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 18233,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1866/image/257820_9.jpg",
+        "raw_text": "*"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 18384,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1866/image/256273_10.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 18386,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1866/image/256273_12.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 18402,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1866/image/256273_28.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 19092,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1936/image/260542_9.jpg",
+        "raw_text": "!!"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 19408,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/2054/image/275566_24.jpg",
+        "raw_text": "??"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 19895,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1830/image/256152_15.jpg",
+        "raw_text": "”"
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 20261,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1831/image/256553_13.jpg",
+        "raw_text": "?."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 20583,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1879/image/257489_4.jpg",
+        "raw_text": "..."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 20683,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1879/image/258559_30.jpg",
+        "raw_text": "?."
+      },
+      {
+        "status": "empty_label",
+        "line_idx": 20765,
+        "rel_path": "1_New_Annoatation_Google/01_tamil_word_images/1879/image/259443_6.jpg",
+        "raw_text": ".."
+      }
+    ],
+    "valid_retained_sample": [
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_31.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_32.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_33.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_34.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257448_35.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259713_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_31.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_32.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_33.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_34.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_35.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_36.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_37.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_38.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_39.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_40.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_41.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_42.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_43.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258773_44.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_31.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_32.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_33.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259956_34.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_31.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_32.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_33.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_34.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_35.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_36.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_37.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259632_38.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_31.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_32.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_33.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259715_34.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258539_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258539_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258539_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258539_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258539_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258539_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258539_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258539_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258539_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258539_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258539_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258539_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258539_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258539_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258539_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258539_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258539_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258539_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258539_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258539_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259103_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_31.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_32.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_33.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_34.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_35.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_36.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_37.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_38.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259094_39.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259350_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_31.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_32.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_33.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_34.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_35.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_36.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257995_37.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_31.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_32.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_33.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_34.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_35.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_36.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/259491_37.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258128_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_28.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_29.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_30.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_31.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_32.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_33.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258570_34.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_13.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_14.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_15.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_16.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_17.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_18.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_19.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_20.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_21.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_22.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_23.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_24.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_25.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_26.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/258575_27.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257736_1.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257736_2.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257736_3.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257736_4.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257736_5.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257736_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257736_7.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257736_8.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257736_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257736_10.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257736_11.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257736_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1889/image/257736_13.jpg"
+    ]
+  }
+}

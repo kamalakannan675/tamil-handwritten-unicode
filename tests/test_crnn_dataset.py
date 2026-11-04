@@ -95,7 +95,7 @@ class TestTamilCRNNPipeline(unittest.TestCase):
         
         # Max width is 60 (multiple of 4)
         self.assertEqual(collated['images'].shape, (2, 1, 64, 60))
-        self.assertEqual(collated['input_lengths'].tolist(), [15, 15]) # 60 // 4 = 15
+        self.assertEqual(collated['input_lengths'].tolist(), [11, 15]) # 45 // 4 = 11, 60 // 4 = 15
         self.assertEqual(collated['target_lengths'].tolist(), [3, 4])
         self.assertEqual(collated['targets'].tolist(), [1, 2, 3, 4, 5, 6, 7])
         self.assertEqual(collated['texts'], ["அம்மா", "தமிழ்"])

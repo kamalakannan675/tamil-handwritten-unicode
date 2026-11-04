@@ -1,0 +1,62 @@
+{
+  "timestamp": "2026-11-04 21:47:40",
+  "files_reviewed": [
+    "experiments/u16_dual_dataset/train_dual_crnn.py",
+    "src/inference/ctc_decoder.py"
+  ],
+  "hashes_verified": {
+    "production_crnn": {
+      "path": "checkpoints/crnn/best_model.pt",
+      "sha256": "CB7147047C86CDB256A927B9DAC76B8DAD91AD12751B2F76A4366DD3877C8EEB",
+      "expected": "CB7147047C86CDB256A927B9DAC76B8DAD91AD12751B2F76A4366DD3877C8EEB",
+      "match": true
+    },
+    "replica_baseline_copy": {
+      "path": "experiments/u16_dual_dataset/checkpoints/production_crnn_baseline_copy.pt",
+      "sha256": "CB7147047C86CDB256A927B9DAC76B8DAD91AD12751B2F76A4366DD3877C8EEB",
+      "expected": "CB7147047C86CDB256A927B9DAC76B8DAD91AD12751B2F76A4366DD3877C8EEB",
+      "match": true
+    },
+    "production_vocab": {
+      "path": "checkpoints/crnn/tamil_ctc_char_vocab.json",
+      "sha256": "421A891154F3B30AC8AECCC8DBBCE3F9C6FAB752E02D2E43AE2C0ACCF650CEA7",
+      "expected": "421A891154F3B30AC8AECCC8DBBCE3F9C6FAB752E02D2E43AE2C0ACCF650CEA7",
+      "match": true
+    },
+    "u14_checkpoint": {
+      "path": "checkpoints/crnn/best_model_u14_indic_hw_uc.pt",
+      "sha256": "1A06AE1A7A40A1CA5EEAEAEDEE3C774388E0303CCB3979A32F4CFBB203497E43",
+      "expected": "1A06AE1A7A40A1CA5EEAEAEDEE3C774388E0303CCB3979A32F4CFBB203497E43",
+      "match": true
+    }
+  },
+  "u16c4_safeguards": {
+    "train_manifest_total": 144517,
+    "train_valid_retained": 142931,
+    "train_ctc_invalid": 4,
+    "val_manifest_total": 25483,
+    "val_valid_retained": 25189,
+    "val_ctc_invalid": 0,
+    "exclusions_list_length": 4,
+    "exclusions_verified": [
+      "1_New_Annoatation_Google/01_tamil_word_images/1882/image/259481_12.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1874/image/256787_9.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1959/image/268658_6.jpg",
+      "1_New_Annoatation_Google/01_tamil_word_images/1959/image/268661_12.jpg"
+    ],
+    "passed": true
+  },
+  "quarantine_verified": {
+    "test_gt_present_in_repo": false,
+    "test_quarantine_enforced": true,
+    "details": "test_gt.txt is strictly quarantined and excluded from all train and val splits."
+  },
+  "unrelated_project_isolated": true,
+  "ctc_decoder_diff": "diff --git a/src/inference/ctc_decoder.py b/src/inference/ctc_decoder.py\nindex 84892ff..4fb7dc5 100644\n--- a/src/inference/ctc_decoder.py\n+++ b/src/inference/ctc_decoder.py\n@@ -10,14 +10,15 @@ Implements:\n 5. compute_exact_accuracy: Exact sequence match accuracy.\n \"\"\"\n \n-from typing import List, Tuple\n+from typing import List, Tuple, Optional, Union\n import unicodedata\n import torch\n from src.data.vocab import TamilCTCCharacterVocabulary\n \n def ctc_greedy_decode(logits: torch.Tensor,\n                       vocab: TamilCTCCharacterVocabulary,\n-                      blank_idx: int = 0) -> List[str]:\n+                      blank_idx: int = 0,\n+                      input_lengths: Optional[Union[List[int], torch.Tensor]] = None) -> List[str]:\n     \"\"\"\n     Greedy best-path decoding for CTC output with Unicode NFC normalization.\n     \n@@ -25,21 +26,45 @@ def ctc_greedy_decode(logits: torch.Tensor,\n         logits: Tensor of shape (T, B, num_classes) or (B, T, num_classes)\n         vocab: Instance of TamilCTCCharacterVocabulary\n         blank_idx: Index of CTC blank token (default: 0)\n+        input_lengths: Optional valid horizontal sequence lengths per sample T_b (W // 4).\n+                       If provided, truncates predictions to ignore padded background frames.\n         \n     Returns:\n         List of decoded Unicode strings of length B.\n     \"\"\"\n-    if logits.dim() == 3 and logits.size(0) != logits.size(1):\n-        logits_b_first = logits.permute(1, 0, 2)\n-    elif logits.dim() == 2:\n+    if logits.dim() == 2:\n         logits_b_first = logits.unsqueeze(0)\n+    elif logits.dim() == 3:\n+        if input_lengths is not None:\n+            n_samples = len(input_lengths)\n+            if logits.size(1) == n_samples:\n+                logits_b_first = logits.permute(1, 0, 2)\n+            elif logits.size(0) == n_samples:\n+                logits_b_first = logits\n+            else:\n+                logits_b_first = logits.permute(1, 0, 2) if logits.size(0) != logits.size(1) else logits\n+        else:\n+            # Default CRNN output convention is (T, B, C)\n+            logits_b_first = logits.permute(1, 0, 2) if logits.size(0) != logits.size(1) else logits\n     else:\n         logits_b_first = logits\n \n     predictions = torch.argmax(logits_b_first, dim=-1).cpu().numpy() # (B, T)\n     \n+    # Convert input_lengths to list of ints if provided\n+    lengths_list = None\n+    if input_lengths is not None:\n+        if isinstance(input_lengths, torch.Tensor):\n+            lengths_list = input_lengths.cpu().tolist()\n+        else:\n+            lengths_list = list(input_lengths)\n+\n     decoded_texts: List[str] = []\n-    for seq in predictions:\n+    for b_idx, seq in enumerate(predictions):\n+        if lengths_list is not None and b_idx < len(lengths_list):\n+            valid_len = int(lengths_list[b_idx])\n+            seq = seq[:valid_len]\n+\n         collapsed_tokens: List[int] = []\n         prev_token = None\n         for token in seq:\n@@ -81,50 +106,63 @@ def levenshtein_distance(seq1: List, seq2: List) -> int:\n             \n     return dp[n][m]\n \n-def compute_cer(predictions: List[str], targets: List[str]) -> float:\n+def compute_cer(predictions: List[str], ground_truths: List[str]) -> float:\n     \"\"\"\n-    Compute Character Error Rate: sum(edit_distance(pred, target)) / sum(len(target)).\n-    Applies Unicode NFC normalization before calculating CER.\n+    Character Error Rate (CER) across a corpus:\n+    CER = sum(Levenshtein(pred, gt)) / sum(len(gt))\n+    Strict Unicode NFC normalization applied to prevent decomposed vowel discrepancies.\n     \"\"\"\n     total_distance = 0\n-    total_target_chars = 0\n-    for pred, target in zip(predictions, targets):\n-        p_norm = unicodedata.normalize('NFC', pred)\n-        t_norm = unicodedata.normalize('NFC', target)\n-        p_chars = list(p_norm)\n-        t_chars = list(t_norm)\n-        dist = levenshtein_distance(p_chars, t_chars)\n-        total_distance += dist\n-        total_target_chars += max(1, len(t_chars))\n+    total_length = 0\n+    \n+    for pred, gt in zip(predictions, ground_truths):\n+        norm_pred = unicodedata.normalize('NFC', pred)\n+        norm_gt = unicodedata.normalize('NFC', gt)\n         \n-    return total_distance / max(1, total_target_chars)\n+        pred_chars = list(norm_pred)\n+        gt_chars = list(norm_gt)\n+        \n+        total_distance += levenshtein_distance(pred_chars, gt_chars)\n+        total_length += len(gt_chars)\n+        \n+    if total_length == 0:\n+        return 0.0\n+    return total_distance / total_length\n \n-def compute_wer(predictions: List[str], targets: List[str]) -> float:\n+def compute_wer(predictions: List[str], ground_truths: List[str]) -> float:\n     \"\"\"\n-    Compute Word Error Rate: sum(edit_distance(pred_words, target_words)) / sum(len(target_words)).\n-    Applies Unicode NFC normalization before calculating WER.\n+    Word Error Rate (WER) across a corpus:\n+    WER = sum(Levenshtein(pred_words, gt_words)) / sum(len(gt_words))\n     \"\"\"\n     total_distance = 0\n-    total_target_words = 0\n-    for pred, target in zip(predictions, targets):\n-        p_norm = unicodedata.normalize('NFC', pred)\n-        t_norm = unicodedata.normalize('NFC', target)\n-        p_words = p_norm.split()\n-        t_words = t_norm.split()\n-        dist = levenshtein_distance(p_words, t_words)\n-        total_distance += dist\n-        total_target_words += max(1, len(t_words))\n+    total_length = 0\n+    \n+    for pred, gt in zip(predictions, ground_truths):\n+        norm_pred = unicodedata.normalize('NFC', pred)\n+        norm_gt = unicodedata.normalize('NFC', gt)\n+        \n+        pred_words = norm_pred.split()\n+        gt_words = norm_gt.split()\n+        \n+        total_distance += levenshtein_distance(pred_words, gt_words)\n+        total_length += len(gt_words)\n         \n-    return total_distance / max(1, total_target_words)\n+    if total_length == 0:\n+        return 0.0\n+    return total_distance / total_length\n \n-def compute_exact_accuracy(predictions: List[str], targets: List[str]) -> float:\n+def compute_exact_accuracy(predictions: List[str], ground_truths: List[str]) -> float:\n     \"\"\"\n-    Exact string match accuracy with Unicode NFC normalization.\n+    Exact Match Accuracy: percentage of predictions identical to ground truth under NFC normalization.\n     \"\"\"\n-    if not predictions:\n+    if not ground_truths:\n         return 0.0\n-    correct = sum(\n-        1 for p, t in zip(predictions, targets)\n-        if unicodedata.normalize('NFC', p.strip()) == unicodedata.normalize('NFC', t.strip())\n-    )\n-    return correct / len(predictions)\n+        \n+    correct = 0\n+    for pred, gt in zip(predictions, ground_truths):\n+        norm_pred = unicodedata.normalize('NFC', pred)\n+        norm_gt = unicodedata.normalize('NFC', gt)\n+        if norm_pred == norm_gt:\n+            correct += 1\n+            \n+    return correct / len(ground_truths)\n",
+  "train_dual_crnn_modifications": {
+    "init_scale": 2048.0,
+    "init_scale_reason": "Prevents FP16 overflow (max 65,504) during CTC loss backpropagation through 7 CNN layers and 2 BiLSTM layers on Tesla T4 GPUs.",
+    "fallback_decoder": "Wraps ctc_greedy_decode in try/except TypeError so it works identically whether input_lengths is accepted or not."
+  },
+  "verdict": "PASS"
+}

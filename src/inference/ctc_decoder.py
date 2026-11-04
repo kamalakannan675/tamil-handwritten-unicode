@@ -10,14 +10,15 @@ Implements:
 5. compute_exact_accuracy: Exact sequence match accuracy.
 """
 
-from typing import List, Tuple
+from typing import List, Tuple, Optional, Union
 import unicodedata
 import torch
 from src.data.vocab import TamilCTCCharacterVocabulary
 
 def ctc_greedy_decode(logits: torch.Tensor,
                       vocab: TamilCTCCharacterVocabulary,
-                      blank_idx: int = 0) -> List[str]:
+                      blank_idx: int = 0,
+                      input_lengths: Optional[Union[List[int], torch.Tensor]] = None) -> List[str]:
     """
     Greedy best-path decoding for CTC output with Unicode NFC normalization.
     
@@ -25,21 +26,45 @@ def ctc_greedy_decode(logits: torch.Tensor,
         logits: Tensor of shape (T, B, num_classes) or (B, T, num_classes)
         vocab: Instance of TamilCTCCharacterVocabulary
         blank_idx: Index of CTC blank token (default: 0)
+        input_lengths: Optional valid horizontal sequence lengths per sample T_b (W // 4).
+                       If provided, truncates predictions to ignore padded background frames.
         
     Returns:
         List of decoded Unicode strings of length B.
     """
-    if logits.dim() == 3 and logits.size(0) != logits.size(1):
-        logits_b_first = logits.permute(1, 0, 2)
-    elif logits.dim() == 2:
+    if logits.dim() == 2:
         logits_b_first = logits.unsqueeze(0)
+    elif logits.dim() == 3:
+        if input_lengths is not None:
+            n_samples = len(input_lengths)
+            if logits.size(1) == n_samples:
+                logits_b_first = logits.permute(1, 0, 2)
+            elif logits.size(0) == n_samples:
+                logits_b_first = logits
+            else:
+                logits_b_first = logits.permute(1, 0, 2) if logits.size(0) != logits.size(1) else logits
+        else:
+            # Default CRNN output convention is (T, B, C)
+            logits_b_first = logits.permute(1, 0, 2) if logits.size(0) != logits.size(1) else logits
     else:
         logits_b_first = logits
 
     predictions = torch.argmax(logits_b_first, dim=-1).cpu().numpy() # (B, T)
     
+    # Convert input_lengths to list of ints if provided
+    lengths_list = None
+    if input_lengths is not None:
+        if isinstance(input_lengths, torch.Tensor):
+            lengths_list = input_lengths.cpu().tolist()
+        else:
+            lengths_list = list(input_lengths)
+
     decoded_texts: List[str] = []
-    for seq in predictions:
+    for b_idx, seq in enumerate(predictions):
+        if lengths_list is not None and b_idx < len(lengths_list):
+            valid_len = int(lengths_list[b_idx])
+            seq = seq[:valid_len]
+
         collapsed_tokens: List[int] = []
         prev_token = None
         for token in seq:
@@ -81,50 +106,63 @@ def levenshtein_distance(seq1: List, seq2: List) -> int:
             
     return dp[n][m]
 
-def compute_cer(predictions: List[str], targets: List[str]) -> float:
+def compute_cer(predictions: List[str], ground_truths: List[str]) -> float:
     """
-    Compute Character Error Rate: sum(edit_distance(pred, target)) / sum(len(target)).
-    Applies Unicode NFC normalization before calculating CER.
-    """
-    total_distance = 0
-    total_target_chars = 0
-    for pred, target in zip(predictions, targets):
-        p_norm = unicodedata.normalize('NFC', pred)
-        t_norm = unicodedata.normalize('NFC', target)
-        p_chars = list(p_norm)
-        t_chars = list(t_norm)
-        dist = levenshtein_distance(p_chars, t_chars)
-        total_distance += dist
-        total_target_chars += max(1, len(t_chars))
-        
-    return total_distance / max(1, total_target_chars)
-
-def compute_wer(predictions: List[str], targets: List[str]) -> float:
-    """
-    Compute Word Error Rate: sum(edit_distance(pred_words, target_words)) / sum(len(target_words)).
-    Applies Unicode NFC normalization before calculating WER.
+    Character Error Rate (CER) across a corpus:
+    CER = sum(Levenshtein(pred, gt)) / sum(len(gt))
+    Strict Unicode NFC normalization applied to prevent decomposed vowel discrepancies.
     """
     total_distance = 0
-    total_target_words = 0
-    for pred, target in zip(predictions, targets):
-        p_norm = unicodedata.normalize('NFC', pred)
-        t_norm = unicodedata.normalize('NFC', target)
-        p_words = p_norm.split()
-        t_words = t_norm.split()
-        dist = levenshtein_distance(p_words, t_words)
-        total_distance += dist
-        total_target_words += max(1, len(t_words))
+    total_length = 0
+    
+    for pred, gt in zip(predictions, ground_truths):
+        norm_pred = unicodedata.normalize('NFC', pred)
+        norm_gt = unicodedata.normalize('NFC', gt)
         
-    return total_distance / max(1, total_target_words)
-
-def compute_exact_accuracy(predictions: List[str], targets: List[str]) -> float:
-    """
-    Exact string match accuracy with Unicode NFC normalization.
-    """
-    if not predictions:
+        pred_chars = list(norm_pred)
+        gt_chars = list(norm_gt)
+        
+        total_distance += levenshtein_distance(pred_chars, gt_chars)
+        total_length += len(gt_chars)
+        
+    if total_length == 0:
         return 0.0
-    correct = sum(
-        1 for p, t in zip(predictions, targets)
-        if unicodedata.normalize('NFC', p.strip()) == unicodedata.normalize('NFC', t.strip())
-    )
-    return correct / len(predictions)
+    return total_distance / total_length
+
+def compute_wer(predictions: List[str], ground_truths: List[str]) -> float:
+    """
+    Word Error Rate (WER) across a corpus:
+    WER = sum(Levenshtein(pred_words, gt_words)) / sum(len(gt_words))
+    """
+    total_distance = 0
+    total_length = 0
+    
+    for pred, gt in zip(predictions, ground_truths):
+        norm_pred = unicodedata.normalize('NFC', pred)
+        norm_gt = unicodedata.normalize('NFC', gt)
+        
+        pred_words = norm_pred.split()
+        gt_words = norm_gt.split()
+        
+        total_distance += levenshtein_distance(pred_words, gt_words)
+        total_length += len(gt_words)
+        
+    if total_length == 0:
+        return 0.0
+    return total_distance / total_length
+
+def compute_exact_accuracy(predictions: List[str], ground_truths: List[str]) -> float:
+    """
+    Exact Match Accuracy: percentage of predictions identical to ground truth under NFC normalization.
+    """
+    if not ground_truths:
+        return 0.0
+        
+    correct = 0
+    for pred, gt in zip(predictions, ground_truths):
+        norm_pred = unicodedata.normalize('NFC', pred)
+        norm_gt = unicodedata.normalize('NFC', gt)
+        if norm_pred == norm_gt:
+            correct += 1
+            
+    return correct / len(ground_truths)

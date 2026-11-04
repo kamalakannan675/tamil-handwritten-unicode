@@ -209,11 +209,11 @@ class TamilWordDataset(Dataset):
             'img_path': img_rel_path
         }
 
-def pad_collate_fn(batch: List[Dict[str, Any]]) -> Dict[str, torch.Tensor]:
+def pad_collate_fn(batch: List[Dict[str, Any]]) -> Dict[str, Any]:
     """
     Collate function for variable-width word images.
     Pads each batch to the maximum width present in that specific batch (capped at multiple of 4).
-    Calculates exact CTC input sequence lengths (T = padded_width // 4).
+    Calculates exact per-sample CTC input sequence lengths (T_b = item['width'] // 4).
     """
     batch_size = len(batch)
     max_w = max(item['width'] for item in batch)
@@ -231,23 +231,31 @@ def pad_collate_fn(batch: List[Dict[str, Any]]) -> Dict[str, torch.Tensor]:
     target_lengths = []
     texts = []
     img_paths = []
+    widths = []
     
     for i, item in enumerate(batch):
         w = item['width']
+        widths.append(w)
         padded_images[i, :, :, :w] = item['image']
         targets.extend(item['target'].tolist())
         target_lengths.append(item['target_length'])
         texts.append(item['text'])
         img_paths.append(item['img_path'])
         
-    input_length = max_w // 4
-    input_lengths = torch.full((batch_size,), fill_value=input_length, dtype=torch.long)
+    # True physical downsampled sequence length (T = width // 4)
+    # Never artificially inflate time frames beyond actual image width
+    input_lengths = torch.tensor([item['width'] // 4 for item in batch], dtype=torch.long)
+    target_lengths_tensor = torch.tensor(target_lengths, dtype=torch.long)
+    assert (input_lengths >= target_lengths_tensor).all(), (
+        f"CTC violation: CNN time frames {input_lengths.tolist()} insufficient for target lengths {target_lengths}"
+    )
     
     return {
         'images': padded_images, # (B, 1, 64, max_w)
         'targets': torch.tensor(targets, dtype=torch.long), # 1D flattened targets
         'target_lengths': torch.tensor(target_lengths, dtype=torch.long),
         'input_lengths': input_lengths,
+        'widths': widths,
         'texts': texts,
         'img_paths': img_paths
     }

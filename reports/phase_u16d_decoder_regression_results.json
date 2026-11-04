@@ -1,0 +1,246 @@
+{
+  "timestamp": "2026-11-04 21:47:40",
+  "vocab_classes": 73,
+  "test_cases_total": 13,
+  "test_cases_passed": 13,
+  "nfc_normalization_test": {
+    "decomposed_input": "அங்கோர்",
+    "nfc_expected": "அங்கோர்",
+    "cer_against_nfd": 0.0,
+    "wer_against_nfd": 0.0,
+    "acc_against_nfd": 1.0,
+    "passed": true
+  },
+  "results": [
+    {
+      "test": "Pure Tamil word (Amma)",
+      "input": "அம்மா",
+      "encoded_tokens": [
+        3,
+        26,
+        49,
+        26,
+        38
+      ],
+      "decoded_standard": "அம்மா",
+      "decoded_with_lengths": "அம்மா",
+      "truncated_sample": "அ",
+      "nfc_normalized": true,
+      "passed": true
+    },
+    {
+      "test": "Pure Tamil word (Appa)",
+      "input": "அப்பா",
+      "encoded_tokens": [
+        3,
+        25,
+        49,
+        25,
+        38
+      ],
+      "decoded_standard": "அப்பா",
+      "decoded_with_lengths": "அப்பா",
+      "truncated_sample": "அ",
+      "nfc_normalized": true,
+      "passed": true
+    },
+    {
+      "test": "Pure Tamil word (Tamil)",
+      "input": "தமிழ்",
+      "encoded_tokens": [
+        22,
+        26,
+        39,
+        32,
+        49
+      ],
+      "decoded_standard": "தமிழ்",
+      "decoded_with_lengths": "தமிழ்",
+      "truncated_sample": "த",
+      "nfc_normalized": true,
+      "passed": true
+    },
+    {
+      "test": "Pure Tamil word (Vanakkam)",
+      "input": "வணக்கம்",
+      "encoded_tokens": [
+        33,
+        21,
+        15,
+        49,
+        15,
+        26,
+        49
+      ],
+      "decoded_standard": "வணக்கம்",
+      "decoded_with_lengths": "வணக்கம்",
+      "truncated_sample": "வ",
+      "nfc_normalized": true,
+      "passed": true
+    },
+    {
+      "test": "Pure Tamil word (Palli)",
+      "input": "பள்ளி",
+      "encoded_tokens": [
+        25,
+        31,
+        49,
+        31,
+        39
+      ],
+      "decoded_standard": "பள்ளி",
+      "decoded_with_lengths": "பள்ளி",
+      "truncated_sample": "ப",
+      "nfc_normalized": true,
+      "passed": true
+    },
+    {
+      "test": "Long compound word",
+      "input": "விளைவதில்லை",
+      "encoded_tokens": [
+        33,
+        39,
+        31,
+        45,
+        33,
+        22,
+        39,
+        30,
+        49,
+        30,
+        45
+      ],
+      "decoded_standard": "விளைவதில்லை",
+      "decoded_with_lengths": "விளைவதில்லை",
+      "truncated_sample": "வ",
+      "nfc_normalized": true,
+      "passed": true
+    },
+    {
+      "test": "Grantha consonants word",
+      "input": "ஸ்ரீராமஜெயம்",
+      "encoded_tokens": [
+        36,
+        49,
+        28,
+        40,
+        28,
+        38,
+        26,
+        18,
+        43,
+        27,
+        26,
+        49
+      ],
+      "decoded_standard": "ஸ்ரீராமஜெயம்",
+      "decoded_with_lengths": "ஸ்ரீராமஜெயம்",
+      "truncated_sample": "ஸ",
+      "nfc_normalized": true,
+      "passed": true
+    },
+    {
+      "test": "Adjacent identical characters with blank",
+      "input": "கக",
+      "encoded_tokens": [
+        15,
+        15
+      ],
+      "decoded_standard": "கக",
+      "decoded_with_lengths": "கக",
+      "truncated_sample": "க",
+      "nfc_normalized": true,
+      "passed": true
+    },
+    {
+      "test": "Consonant + Pulli + Consonant",
+      "input": "க்க",
+      "encoded_tokens": [
+        15,
+        49,
+        15
+      ],
+      "decoded_standard": "க்க",
+      "decoded_with_lengths": "க்க",
+      "truncated_sample": "க",
+      "nfc_normalized": true,
+      "passed": true
+    },
+    {
+      "test": "All single uyir vowels",
+      "input": "அஆஇஈஉஊஎஏஐஒஓஔ",
+      "encoded_tokens": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "decoded_standard": "அஆஇஈஉஊஎஏஐஒஓஔ",
+      "decoded_with_lengths": "அஆஇஈஉஊஎஏஐஒஓஔ",
+      "truncated_sample": "அ",
+      "nfc_normalized": true,
+      "passed": true
+    },
+    {
+      "test": "Special aytham",
+      "input": "ஃ",
+      "encoded_tokens": [
+        2
+      ],
+      "decoded_standard": "ஃ",
+      "decoded_with_lengths": "ஃ",
+      "truncated_sample": "ஃ",
+      "nfc_normalized": true,
+      "passed": true
+    },
+    {
+      "test": "Uyirmei sequence",
+      "input": "காகிகிவுகூகெகேகைகொகோகௌ",
+      "encoded_tokens": [
+        15,
+        38,
+        15,
+        39,
+        15,
+        39,
+        33,
+        41,
+        15,
+        42,
+        15,
+        43,
+        15,
+        44,
+        15,
+        45,
+        15,
+        46,
+        15,
+        47,
+        15,
+        48
+      ],
+      "decoded_standard": "காகிகிவுகூகெகேகைகொகோகௌ",
+      "decoded_with_lengths": "காகிகிவுகூகெகேகைகொகோகௌ",
+      "truncated_sample": "க",
+      "nfc_normalized": true,
+      "passed": true
+    },
+    {
+      "test": "Empty string",
+      "input": "",
+      "decoded": "",
+      "expected": "",
+      "passed": true
+    }
+  ],
+  "overall_status": "PASS"
+}
